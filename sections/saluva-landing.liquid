@@ -1,0 +1,101 @@
+<section id="landing" class="landing-hero">
+  <div class="landing-hero__bg">
+    <div class="landing-hero__orb landing-hero__orb--primary"></div>
+    <div class="landing-hero__orb landing-hero__orb--secondary"></div>
+  </div>
+
+  <div class="landing-hero__inner container">
+    <div class="landing-hero__content">
+      <span class="landing-hero__badge">{{ section.settings.badge_text }}</span>
+      <h1 class="landing-hero__title">
+        {{ section.settings.title_line1 }}
+        <span class="text-primary">{{ section.settings.title_highlight }}</span><span class="text-secondary">.</span>
+      </h1>
+      <p class="landing-hero__desc">{{ section.settings.description }}</p>
+      <div class="landing-hero__actions">
+        <a href="{{ section.settings.cta_url }}" class="btn btn--primary btn--lg">
+          {{ section.settings.cta_text }}
+        </a>
+        <a href="{{ section.settings.cta2_url }}" class="btn btn--outline btn--lg">
+          {{ section.settings.cta2_text }}
+        </a>
+      </div>
+    </div>
+    <div class="landing-hero__visual">
+      {% if section.settings.hero_image != blank %}
+        <img src="{{ section.settings.hero_image | image_url: width: 600 }}"
+             alt="{{ section.settings.hero_image.alt }}"
+             class="landing-hero__img"
+             loading="eager">
+      {% else %}
+        <div class="landing-hero__placeholder">🌿</div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Landing Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Texto del badge",
+      "default": "BIENESTAR FEMENINO NATURAL"
+    },
+    {
+      "type": "text",
+      "id": "title_line1",
+      "label": "Título línea 1",
+      "default": "Tu cuerpo merece "
+    },
+    {
+      "type": "text",
+      "id": "title_highlight",
+      "label": "Texto resaltado",
+      "default": "lo mejor"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción",
+      "default": "Suplementos naturales diseñados especialmente para el bienestar de la mujer. Descubre tu versión más saludable."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texto botón principal",
+      "default": "Explorar Tienda"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "URL botón principal",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "cta2_text",
+      "label": "Texto botón secundario",
+      "default": "Hacer el Quiz"
+    },
+    {
+      "type": "url",
+      "id": "cta2_url",
+      "label": "URL botón secundario",
+      "default": "/pages/quiz"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Imagen hero"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Landing Hero Saluva"
+    }
+  ]
+}
+{% endschema %}

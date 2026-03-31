@@ -1,0 +1,41 @@
+{
+  "sections": {
+    "landing-hero": {
+      "type": "saluva-landing",
+      "settings": {}
+    },
+    "stories": {
+      "type": "saluva-stories",
+      "settings": {}
+    },
+    "trust-badges": {
+      "type": "saluva-trust-badges",
+      "settings": {}
+    },
+    "tienda": {
+      "type": "saluva-tienda",
+      "settings": {}
+    },
+    "bestsellers": {
+      "type": "saluva-bestsellers",
+      "settings": {}
+    },
+    "aprende": {
+      "type": "saluva-aprende",
+      "settings": {}
+    },
+    "quiz": {
+      "type": "saluva-quiz",
+      "settings": {}
+    }
+  },
+  "order": [
+    "landing-hero",
+    "stories",
+    "trust-badges",
+    "tienda",
+    "bestsellers",
+    "aprende",
+    "quiz"
+  ]
+}

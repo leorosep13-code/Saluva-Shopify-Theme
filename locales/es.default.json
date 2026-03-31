@@ -1,0 +1,22 @@
+{
+  "general": {
+    "404": {
+      "title": "Página no encontrada",
+      "subtext": "La página que buscas no existe."
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Agregar al Carrito",
+      "sold_out": "Agotado",
+      "on_sale": "En Oferta"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Tu Carrito",
+      "empty": "Tu carrito está vacío",
+      "continue_shopping": "Seguir Comprando"
+    }
+  }
+}

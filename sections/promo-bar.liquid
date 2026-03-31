@@ -1,0 +1,39 @@
+<div class="promo-bar" id="promo-bar" data-end-date="{{ section.settings.end_date }}">
+  <div class="promo-bar__inner">
+    <span class="promo-bar__text">
+      {{ section.settings.icon }} {{ section.settings.text }}
+    </span>
+    <div class="promo-bar__countdown" id="promo-countdown">
+      <span class="promo-bar__unit" id="countdown-days">00<small>d</small></span>
+      <span class="promo-bar__unit" id="countdown-hours">00<small>h</small></span>
+      <span class="promo-bar__unit" id="countdown-mins">00<small>m</small></span>
+      <span class="promo-bar__unit" id="countdown-secs">00<small>s</small></span>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Barra Promocional",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Texto promocional",
+      "default": "VENTA ESPECIAL — HASTA 30% OFF"
+    },
+    {
+      "type": "text",
+      "id": "icon",
+      "label": "Emoji/Ícono",
+      "default": "✨"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "Fecha fin (YYYY-MM-DD)",
+      "default": "2026-04-30"
+    }
+  ]
+}
+{% endschema %}

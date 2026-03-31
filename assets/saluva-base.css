@@ -1,0 +1,152 @@
+/* ═══════════════════════════════════════════
+   SALUVA THEME — Base Styles
+   Brand: Saluva · Bienestar Femenino
+   Colors: #a4c93b (primary) · #d2a4f3 (secondary)
+   Font: League Spartan
+   ═══════════════════════════════════════════ */
+
+:root {
+  --color-primary: #a4c93b;
+  --color-primary-dark: #8ab52e;
+  --color-primary-light: #e8f5c8;
+  --color-primary-10: rgba(164, 201, 59, 0.1);
+  --color-primary-20: rgba(164, 201, 59, 0.2);
+  --color-primary-40: rgba(164, 201, 59, 0.4);
+
+  --color-secondary: #d2a4f3;
+  --color-secondary-dark: #b87de0;
+  --color-secondary-light: #f3e8ff;
+  --color-secondary-10: rgba(210, 164, 243, 0.1);
+  --color-secondary-20: rgba(210, 164, 243, 0.2);
+
+  --color-bg: #ffffff;
+  --color-bg-soft: #faf9f7;
+  --color-bg-warm: #f5f3ef;
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b6b6b;
+  --color-text-light: #9a9a9a;
+  --color-border: #e8e5e0;
+
+  --font-family: 'League Spartan', sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 100px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.06);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+  --transition: 0.3s ease;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: var(--font-family); cursor: pointer; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* ── Container ── */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-family);
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  line-height: 1;
+}
+.btn--primary {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 4px 16px var(--color-primary-40);
+}
+.btn--primary:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--color-primary-40);
+}
+.btn--secondary {
+  background: var(--color-secondary);
+  color: #fff;
+}
+.btn--secondary:hover {
+  background: var(--color-secondary-dark);
+}
+.btn--outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+.btn--outline:hover {
+  background: var(--color-primary-10);
+}
+.btn--lg { font-size: 15px; padding: 14px 32px; }
+.btn--md { font-size: 14px; padding: 11px 24px; }
+.btn--sm { font-size: 12px; padding: 8px 20px; }
+
+/* ── Text Utilities ── */
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+
+/* ── Section Headers ── */
+.section-header { margin-bottom: 40px; }
+.section-header--center { text-align: center; }
+.section-header--split {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.section-header__label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-primary);
+}
+.section-header__icon-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.section-header__icon-label svg { stroke: var(--color-primary); }
+.section-header__title {
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -1px;
+  line-height: 1.15;
+}
+.section-header__desc {
+  font-size: 16px;
+  color: var(--color-text-muted);
+  max-width: 520px;
+  margin: 12px auto 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .container { padding: 0 16px; }
+  .section-header__title { font-size: 28px; }
+  .section-header--split { flex-direction: column; align-items: flex-start; gap: 16px; }
+}

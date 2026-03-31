@@ -1,0 +1,55 @@
+{% comment %} templates/cart.liquid {% endcomment %}
+<section class="cart-page" style="padding: 40px 0 70px;">
+  <div class="container" style="max-width: 800px;">
+    <h1 style="font-size: 36px; font-weight: 800; margin-bottom: 32px;">Tu Carrito</h1>
+
+    {% if cart.item_count > 0 %}
+      <form action="/cart" method="post">
+        {% for item in cart.items %}
+          <div style="display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--color-border); align-items: center;">
+            <a href="{{ item.url }}" style="flex-shrink: 0;">
+              {% if item.image %}
+                <img src="{{ item.image | image_url: width: 120 }}" alt="{{ item.title }}"
+                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 12px;">
+              {% endif %}
+            </a>
+            <div style="flex: 1;">
+              <a href="{{ item.url }}" style="font-size: 16px; font-weight: 700; color: var(--color-text);">
+                {{ item.product.title }}
+              </a>
+              {% if item.variant.title != 'Default Title' %}
+                <p style="font-size: 13px; color: var(--color-text-muted);">{{ item.variant.title }}</p>
+              {% endif %}
+              <p style="font-size: 15px; font-weight: 700; margin-top: 4px;">{{ item.final_line_price | money }}</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <input type="number" name="updates[]" value="{{ item.quantity }}" min="0"
+                     style="width: 60px; padding: 8px; border: 1px solid var(--color-border); border-radius: 8px; text-align: center; font-family: var(--font-family);">
+            </div>
+          </div>
+        {% endfor %}
+
+        <div style="padding: 24px 0; text-align: right;">
+          <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 4px;">Subtotal</p>
+          <p style="font-size: 28px; font-weight: 800; margin-bottom: 20px;">{{ cart.total_price | money }}</p>
+          <div style="display: flex; gap: 12px; justify-content: flex-end;">
+            <button type="submit" name="update" class="btn btn--outline btn--md">
+              Actualizar
+            </button>
+            <button type="submit" name="checkout" class="btn btn--primary btn--lg">
+              Ir al Checkout
+            </button>
+          </div>
+        </div>
+      </form>
+    {% else %}
+      <div style="text-align: center; padding: 60px 0;">
+        <p style="font-size: 48px; margin-bottom: 16px;">🛒</p>
+        <p style="font-size: 18px; color: var(--color-text-muted); margin-bottom: 24px;">
+          Tu carrito está vacío
+        </p>
+        <a href="/" class="btn btn--primary btn--lg">Seguir Comprando</a>
+      </div>
+    {% endif %}
+  </div>
+</section>

@@ -1,0 +1,108 @@
+<section id="aprende" class="aprende-section">
+  <div class="container">
+    <div class="section-header section-header--center">
+      <span class="section-header__label text-secondary">📚 {{ section.settings.label }}</span>
+      <h2 class="section-header__title">{{ section.settings.title }}</h2>
+      <p class="section-header__desc">{{ section.settings.description }}</p>
+    </div>
+
+    <div class="aprende-grid">
+      {% for block in section.blocks %}
+        <div class="digital-card" {{ block.shopify_attributes }}>
+          <div class="digital-card__icon"
+               style="background: linear-gradient(135deg, {{ block.settings.color_start }}33, {{ block.settings.color_end }}22);">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 160 }}" alt="{{ block.settings.title }}" class="digital-card__icon-img">
+            {% else %}
+              <span class="digital-card__emoji">{{ block.settings.emoji }}</span>
+            {% endif %}
+          </div>
+          <div class="digital-card__content">
+            <div class="digital-card__meta">
+              {% if block.settings.tag != blank %}
+                <span class="digital-card__tag {% if block.settings.price == 0 %}digital-card__tag--free{% endif %}">
+                  {{ block.settings.tag }}
+                </span>
+              {% endif %}
+              <span class="digital-card__type">{{ block.settings.type_label }}</span>
+            </div>
+            <h3 class="digital-card__title">{{ block.settings.title }}</h3>
+            <p class="digital-card__desc">{{ block.settings.description }}</p>
+            <div class="digital-card__footer">
+              <span class="digital-card__price {% if block.settings.price == 0 %}text-primary{% endif %}">
+                {% if block.settings.price == 0 %}
+                  Gratis
+                {% else %}
+                  {{ block.settings.price | times: 100 | money }}
+                {% endif %}
+              </span>
+              <a href="{{ block.settings.url }}" class="btn btn--sm {% if block.settings.price == 0 %}btn--primary{% else %}btn--secondary{% endif %}">
+                {% if block.settings.price == 0 %}
+                  Descargar
+                {% else %}
+                  Comprar
+                {% endif %}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Aprende con Nosotros",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta",
+      "default": "APRENDE CON NOSOTROS"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Recursos Para Tu Bienestar"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción",
+      "default": "Guías, recetarios, masterclasses y más. Aprende a cuidarte desde adentro."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "digital_product",
+      "name": "Producto Digital",
+      "settings": [
+        { "type": "text", "id": "emoji", "label": "Emoji", "default": "📖" },
+        { "type": "image_picker", "id": "image", "label": "Imagen (reemplaza emoji)" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Guía de Bienestar" },
+        { "type": "text", "id": "type_label", "label": "Tipo", "default": "PDF · 45 páginas" },
+        { "type": "text", "id": "tag", "label": "Etiqueta", "default": "Gratis" },
+        { "type": "textarea", "id": "description", "label": "Descripción", "default": "Todo lo que necesitas saber sobre bienestar" },
+        { "type": "number", "id": "price", "label": "Precio (0 = gratis)", "default": 0 },
+        { "type": "url", "id": "url", "label": "URL de descarga/compra" },
+        { "type": "color", "id": "color_start", "label": "Color fondo inicio", "default": "#d2a4f3" },
+        { "type": "color", "id": "color_end", "label": "Color fondo fin", "default": "#a4c93b" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Aprende con Nosotros",
+      "blocks": [
+        { "type": "digital_product", "settings": { "emoji": "📖", "title": "Guía de Bienestar Femenino", "type_label": "PDF · 45 páginas", "tag": "Gratis", "description": "Todo lo que necesitas saber sobre suplementación consciente", "price": 0 } },
+        { "type": "digital_product", "settings": { "emoji": "🍽️", "title": "Recetario Saludable Vol. 1", "type_label": "PDF · 30 recetas", "description": "Recetas nutritivas para cada momento del día", "price": 29900 } },
+        { "type": "digital_product", "settings": { "emoji": "🎬", "title": "Masterclass: Equilibrio Hormonal", "type_label": "Video · 90 min", "description": "Aprende a balancear tus hormonas naturalmente", "price": 49900 } },
+        { "type": "digital_product", "settings": { "emoji": "📅", "title": "Planificador de Bienestar 2026", "type_label": "PDF interactivo", "tag": "Nuevo", "description": "Organiza tu rutina de bienestar mes a mes", "price": 19900 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

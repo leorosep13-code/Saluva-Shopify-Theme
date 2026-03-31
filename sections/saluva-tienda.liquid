@@ -1,0 +1,78 @@
+<section id="tienda" class="tienda-section">
+  <div class="container">
+    <div class="section-header section-header--center">
+      <span class="section-header__label">{{ section.settings.label }}</span>
+      <h2 class="section-header__title">{{ section.settings.title }}</h2>
+    </div>
+
+    {% assign collection = collections[section.settings.collection] | default: collections['all'] %}
+
+    <!-- Category Filters -->
+    <div class="tienda-filters" id="tienda-filters">
+      <button class="tienda-filter active" data-filter="all">Todos</button>
+      {% for product_type in collection.all_types %}
+        {% if product_type != blank %}
+          <button class="tienda-filter" data-filter="{{ product_type | handleize }}">
+            {{ product_type }}
+          </button>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- Products Grid -->
+    <div class="tienda-grid" id="tienda-grid">
+      {% for product in collection.products limit: section.settings.products_limit %}
+        <div class="tienda-grid__item" data-type="{{ product.type | handleize }}">
+          {% render 'product-card', product: product %}
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if collection.products.size > section.settings.products_limit %}
+      <div class="tienda-section__more">
+        <a href="{{ collection.url }}" class="btn btn--outline">
+          Ver Todos los Productos →
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Tienda",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta superior",
+      "default": "NUESTRA TIENDA"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Explora Nuestros Productos"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Colección a mostrar"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Máximo de productos",
+      "min": 4,
+      "max": 24,
+      "step": 4,
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tienda Saluva"
+    }
+  ]
+}
+{% endschema %}

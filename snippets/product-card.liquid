@@ -1,0 +1,87 @@
+{% comment %}
+  Renders a product card.
+  Accepts:
+  - product: {Object} Shopify product object
+  - featured: {Boolean} optional larger card style
+  Usage:
+  {% render 'product-card', product: product, featured: false %}
+{% endcomment %}
+
+<div class="product-card {% if featured %}product-card--featured{% endif %}">
+  <a href="{{ product.url }}" class="product-card__media">
+    {% if product.featured_image != blank %}
+      <img src="{{ product.featured_image | image_url: width: 480 }}"
+           alt="{{ product.featured_image.alt | default: product.title }}"
+           loading="lazy"
+           class="product-card__img">
+    {% else %}
+      <div class="product-card__placeholder">
+        {{ product.title | slice: 0 }}
+      </div>
+    {% endif %}
+
+    {% for tag in product.tags %}
+      {% if tag == 'mas-vendido' %}
+        <span class="product-card__tag product-card__tag--hot">Más Vendido</span>
+      {% elsif tag == 'nuevo' %}
+        <span class="product-card__tag product-card__tag--new">Nuevo</span>
+      {% elsif tag == 'oferta' %}
+        <span class="product-card__tag product-card__tag--sale">Oferta</span>
+      {% elsif tag == 'trending' %}
+        <span class="product-card__tag product-card__tag--trending">Trending</span>
+      {% endif %}
+    {% endfor %}
+
+    {% if product.compare_at_price > product.price %}
+      {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
+      <span class="product-card__tag product-card__tag--sale">-{{ discount }}%</span>
+    {% endif %}
+
+    <div class="product-card__hover-actions">
+      <button class="product-card__wishlist" aria-label="Agregar a favoritos">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
+    </div>
+  </a>
+
+  <div class="product-card__info">
+    {% if product.metafields.reviews.rating.value != blank %}
+      <div class="product-card__rating">
+        {% assign rating = product.metafields.reviews.rating.value | round %}
+        {% for i in (1..5) %}
+          <svg width="14" height="14" viewBox="0 0 24 24"
+               fill="{% if i <= rating %}#f5c518{% else %}none{% endif %}"
+               stroke="#f5c518" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        {% endfor %}
+        <span class="product-card__review-count">({{ product.metafields.reviews.rating_count }})</span>
+      </div>
+    {% endif %}
+
+    <p class="product-card__type">{{ product.type }}</p>
+    <h3 class="product-card__title">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+
+    <div class="product-card__price">
+      <span class="product-card__price-current">{{ product.price | money }}</span>
+      {% if product.compare_at_price > product.price %}
+        <span class="product-card__price-compare">{{ product.compare_at_price | money }}</span>
+      {% endif %}
+    </div>
+
+    {% form 'product', product %}
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      <button type="submit"
+              class="product-card__add-btn"
+              {% unless product.available %}disabled{% endunless %}>
+        {% if product.available %}
+          Agregar al Carrito
+        {% else %}
+          Agotado
+        {% endif %}
+      </button>
+    {% endform %}
+  </div>
+</div>

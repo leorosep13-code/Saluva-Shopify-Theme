@@ -1,0 +1,150 @@
+<section id="quiz" class="quiz-section">
+  <div class="container">
+    <!-- Quiz Intro -->
+    <div class="quiz-intro" id="quiz-intro">
+      <div class="quiz-intro__icon">🔮</div>
+      <span class="section-header__label text-secondary">{{ section.settings.label }}</span>
+      <h2 class="section-header__title">{{ section.settings.title }}</h2>
+      <p class="section-header__desc">{{ section.settings.description }}</p>
+      <button class="btn btn--primary btn--lg quiz-start-btn" id="quiz-start">
+        Comenzar Quiz ✨
+      </button>
+    </div>
+
+    <!-- Quiz Questions -->
+    <div class="quiz-container" id="quiz-container" style="display:none;">
+      <div class="quiz-progress" id="quiz-progress">
+        {% for block in section.blocks %}
+          {% if block.type == 'question' %}
+            <div class="quiz-progress__bar">
+              <div class="quiz-progress__fill" data-q="{{ forloop.index0 }}"></div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% assign q_index = 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == 'question' %}
+          <div class="quiz-question" id="quiz-q-{{ q_index }}" data-question="{{ q_index }}" style="{% if q_index > 0 %}display:none;{% endif %}" {{ block.shopify_attributes }}>
+            <span class="quiz-question__counter">
+              Pregunta {{ q_index | plus: 1 }}
+            </span>
+            <h2 class="quiz-question__title">{{ block.settings.question }}</h2>
+            <div class="quiz-options">
+              {% assign options = block.settings.option_1 | append: '||' | append: block.settings.option_2 | append: '||' | append: block.settings.option_3 | append: '||' | append: block.settings.option_4 %}
+              {% assign options_arr = options | split: '||' %}
+              {% for opt in options_arr %}
+                {% if opt != blank %}
+                  <button class="quiz-option"
+                          data-question="{{ q_index }}"
+                          data-answer="{{ forloop.index0 }}"
+                          data-result-key="{{ block.settings.result_key }}">
+                    {{ opt }}
+                  </button>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% assign q_index = q_index | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- Quiz Results -->
+    <div class="quiz-result" id="quiz-result" style="display:none;">
+      <div class="quiz-result__icon" id="quiz-result-icon">✨</div>
+      <h2 class="quiz-result__title">¡Tu Match Perfecto!</h2>
+      <h3 class="quiz-result__subtitle text-primary" id="quiz-result-name"></h3>
+      <div class="quiz-result__products" id="quiz-result-products">
+        <!-- Filled by JS with recommended product links -->
+      </div>
+      <button class="btn btn--outline quiz-restart" id="quiz-restart">
+        Volver a Intentar
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  /* Quiz result mapping - maps first answer index to a result key */
+  window.__quizResults = {
+    {% for block in section.blocks %}
+      {% if block.type == 'result' %}
+        "{{ block.settings.result_key }}": {
+          "title": {{ block.settings.result_title | json }},
+          "emoji": {{ block.settings.emoji | json }},
+          "product_url_1": {{ block.settings.product_1 | json }},
+          "product_url_2": {{ block.settings.product_2 | json }},
+          "description": {{ block.settings.result_description | json }}
+        },
+      {% endif %}
+    {% endfor %}
+  };
+</script>
+
+{% schema %}
+{
+  "name": "Quiz Interactivo",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta",
+      "default": "APRENDE A CONOCERTE"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Descubre Tu Rutina Ideal"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción",
+      "default": "Responde unas preguntas rápidas y te recomendaremos los productos perfectos para ti."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Pregunta",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Pregunta", "default": "¿Cuál es tu principal objetivo?" },
+        { "type": "text", "id": "option_1", "label": "Opción 1", "default": "Más energía" },
+        { "type": "text", "id": "option_2", "label": "Opción 2", "default": "Mejor piel" },
+        { "type": "text", "id": "option_3", "label": "Opción 3", "default": "Defensas fuertes" },
+        { "type": "text", "id": "option_4", "label": "Opción 4", "default": "Mejor digestión" },
+        { "type": "text", "id": "result_key", "label": "Clave de resultado (para mapear)", "default": "energia" }
+      ]
+    },
+    {
+      "type": "result",
+      "name": "Resultado",
+      "settings": [
+        { "type": "text", "id": "result_key", "label": "Clave", "default": "energia" },
+        { "type": "text", "id": "result_title", "label": "Título del resultado", "default": "Pack Energía Natural" },
+        { "type": "text", "id": "emoji", "label": "Emoji", "default": "⚡" },
+        { "type": "textarea", "id": "result_description", "label": "Descripción", "default": "Estos productos te ayudarán a sentirte más activa" },
+        { "type": "product", "id": "product_1", "label": "Producto recomendado 1" },
+        { "type": "product", "id": "product_2", "label": "Producto recomendado 2" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quiz Saluva",
+      "blocks": [
+        { "type": "question", "settings": { "question": "¿Cuál es tu principal objetivo de bienestar?", "option_1": "Más energía en el día", "option_2": "Mejorar mi piel y cabello", "option_3": "Fortalecer mis defensas", "option_4": "Mejorar mi digestión" } },
+        { "type": "question", "settings": { "question": "¿Cómo describirías tu nivel de estrés?", "option_1": "Bajo, me siento tranquila", "option_2": "Moderado, algunos días difíciles", "option_3": "Alto, me cuesta relajarme", "option_4": "Muy alto, necesito ayuda" } },
+        { "type": "question", "settings": { "question": "¿Cómo es tu alimentación?", "option_1": "Muy balanceada y variada", "option_2": "Buena pero podría mejorar", "option_3": "Irregular, como lo que puedo", "option_4": "Tengo restricciones alimentarias" } },
+        { "type": "result", "settings": { "result_key": "0", "result_title": "Pack Energía Natural", "emoji": "⚡", "result_description": "Potencia tu día con suplementos naturales" } },
+        { "type": "result", "settings": { "result_key": "1", "result_title": "Ritual de Belleza", "emoji": "✨", "result_description": "Nutre tu piel y cabello desde adentro" } },
+        { "type": "result", "settings": { "result_key": "2", "result_title": "Escudo Inmunológico", "emoji": "🛡️", "result_description": "Fortalece tus defensas naturalmente" } },
+        { "type": "result", "settings": { "result_key": "3", "result_title": "Equilibrio Digestivo", "emoji": "🌿", "result_description": "Mejora tu digestión y bienestar intestinal" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

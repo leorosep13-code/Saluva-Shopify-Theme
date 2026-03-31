@@ -1,0 +1,71 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div class="footer__logo">{{ shop.name }}</div>
+        <p class="footer__tagline">{{ section.settings.tagline }}</p>
+        <div class="footer__social">
+          {% if settings.social_instagram != blank %}
+            <a href="{{ settings.social_instagram }}" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener">📷</a>
+          {% endif %}
+          {% if settings.social_facebook != blank %}
+            <a href="{{ settings.social_facebook }}" class="footer__social-link" aria-label="Facebook" target="_blank" rel="noopener">f</a>
+          {% endif %}
+          {% if settings.social_tiktok != blank %}
+            <a href="{{ settings.social_tiktok }}" class="footer__social-link" aria-label="TikTok" target="_blank" rel="noopener">♪</a>
+          {% endif %}
+        </div>
+      </div>
+
+      {% for block in section.blocks %}
+        {% if block.type == 'menu_column' %}
+          <div class="footer__col" {{ block.shopify_attributes }}>
+            <h4 class="footer__col-title">{{ block.settings.title }}</h4>
+            {% assign menu = linklists[block.settings.menu] %}
+            {% for link in menu.links %}
+              <a href="{{ link.url }}" class="footer__link">{{ link.title }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="footer__bottom">
+      <span class="footer__copy">© {{ 'now' | date: '%Y' }} {{ shop.name }}. Todos los derechos reservados.</span>
+      <div class="footer__payments">
+        {% for type in shop.enabled_payment_types %}
+          {{ type | payment_type_svg_tag: class: 'footer__payment-icon' }}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Pie de Página",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Descripción",
+      "default": "Bienestar natural diseñado para la mujer moderna. Suplementos que tu cuerpo agradece."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu_column",
+      "name": "Columna de menú",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Título", "default": "Tienda" },
+        { "type": "link_list", "id": "menu", "label": "Menú" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer Saluva"
+    }
+  ]
+}
+{% endschema %}

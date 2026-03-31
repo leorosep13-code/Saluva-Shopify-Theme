@@ -1,0 +1,87 @@
+<section id="bestsellers" class="bestsellers-section">
+  <div class="container">
+    <div class="section-header section-header--split">
+      <div>
+        <div class="section-header__icon-label">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          <span class="section-header__label text-primary">{{ section.settings.label }}</span>
+        </div>
+        <h2 class="section-header__title">{{ section.settings.title }}</h2>
+      </div>
+      <a href="{{ section.settings.view_all_url }}" class="btn btn--outline">
+        Ver Todos →
+      </a>
+    </div>
+
+    {% assign bs_collection = collections[section.settings.collection] %}
+    <div class="bestsellers-grid">
+      {% for product in bs_collection.products limit: 4 %}
+        <div class="bestsellers-grid__item">
+          {% render 'product-card', product: product, featured: true %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Social Proof Bar -->
+    <div class="social-proof">
+      {% for block in section.blocks %}
+        <div class="social-proof__item" {{ block.shopify_attributes }}>
+          <div class="social-proof__number">{{ block.settings.number }}</div>
+          <div class="social-proof__label">{{ block.settings.label }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Más Vendidos",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta",
+      "default": "MÁS VENDIDOS"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Lo Que Más Aman Nuestras Clientas"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Colección de más vendidos"
+    },
+    {
+      "type": "url",
+      "id": "view_all_url",
+      "label": "URL ver todos",
+      "default": "/collections/bestsellers"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Estadística",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Número", "default": "12K+" },
+        { "type": "text", "id": "label", "label": "Etiqueta", "default": "Clientas Felices" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Más Vendidos Saluva",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "12K+", "label": "Clientas Felices" } },
+        { "type": "stat", "settings": { "number": "4.8★", "label": "Calificación Promedio" } },
+        { "type": "stat", "settings": { "number": "98%", "label": "Recomendarían Saluva" } },
+        { "type": "stat", "settings": { "number": "100%", "label": "Ingredientes Naturales" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

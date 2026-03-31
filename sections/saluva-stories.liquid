@@ -1,0 +1,155 @@
+<section class="stories-section">
+  <div class="container">
+    <h3 class="stories-section__label">📱 {{ section.settings.title }}</h3>
+    <div class="stories-section__track" id="stories-track">
+      {% for block in section.blocks %}
+        <button class="story-bubble" data-story-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+          <div class="story-bubble__ring"
+               style="background: {{ block.settings.gradient_start }};">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 160 }}"
+                   alt="{{ block.settings.title }}"
+                   class="story-bubble__img">
+            {% else %}
+              <span class="story-bubble__emoji">{{ block.settings.emoji }}</span>
+            {% endif %}
+          </div>
+          <span class="story-bubble__title">{{ block.settings.title }}</span>
+          <span class="story-bubble__subtitle">{{ block.settings.subtitle }}</span>
+        </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Story Overlay -->
+  <div class="story-overlay" id="story-overlay" aria-hidden="true">
+    <div class="story-overlay__backdrop" id="story-close-backdrop"></div>
+    <div class="story-overlay__card" id="story-card">
+      <div class="story-overlay__progress" id="story-progress-bar">
+        {% for block in section.blocks %}
+          <div class="story-overlay__progress-segment">
+            <div class="story-overlay__progress-fill" data-segment="{{ forloop.index0 }}"></div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="story-overlay__slides" id="story-slides">
+        {% for block in section.blocks %}
+          <div class="story-overlay__slide" data-slide="{{ forloop.index0 }}"
+               style="background: linear-gradient(135deg, {{ block.settings.gradient_start }}, {{ block.settings.gradient_end }});">
+            {% if block.settings.story_image != blank %}
+              <img src="{{ block.settings.story_image | image_url: width: 720 }}"
+                   alt="{{ block.settings.title }}"
+                   class="story-overlay__slide-img">
+            {% endif %}
+            <div class="story-overlay__slide-content">
+              <span class="story-overlay__slide-emoji">{{ block.settings.emoji }}</span>
+              <h2 class="story-overlay__slide-title">{{ block.settings.title }}</h2>
+              <p class="story-overlay__slide-text">{{ block.settings.story_text }}</p>
+              {% if block.settings.story_cta_text != blank %}
+                <a href="{{ block.settings.story_cta_url }}" class="btn btn--primary">
+                  {{ block.settings.story_cta_text }} →
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <button class="story-overlay__nav story-overlay__nav--prev" id="story-prev">‹</button>
+      <button class="story-overlay__nav story-overlay__nav--next" id="story-next">›</button>
+      <button class="story-overlay__close" id="story-close-btn">✕</button>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Stories",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título de sección",
+      "default": "Descubre Nuestro Mundo"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Historia",
+      "settings": [
+        {
+          "type": "text",
+          "id": "emoji",
+          "label": "Emoji",
+          "default": "🧘‍♀️"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Ritual AM"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtítulo",
+          "default": "Tu mañana ideal"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen del bubble"
+        },
+        {
+          "type": "color",
+          "id": "gradient_start",
+          "label": "Color gradiente inicio",
+          "default": "#a4c93b"
+        },
+        {
+          "type": "color",
+          "id": "gradient_end",
+          "label": "Color gradiente fin",
+          "default": "#d2a4f3"
+        },
+        {
+          "type": "image_picker",
+          "id": "story_image",
+          "label": "Imagen de la historia (pantalla completa)"
+        },
+        {
+          "type": "textarea",
+          "id": "story_text",
+          "label": "Texto de la historia",
+          "default": "Descubre nuestra rutina matutina perfecta"
+        },
+        {
+          "type": "text",
+          "id": "story_cta_text",
+          "label": "Texto del botón",
+          "default": "Ver más"
+        },
+        {
+          "type": "url",
+          "id": "story_cta_url",
+          "label": "URL del botón"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stories Saluva",
+      "blocks": [
+        { "type": "story", "settings": { "emoji": "🧘‍♀️", "title": "Ritual AM", "subtitle": "Tu mañana ideal", "gradient_start": "#e8f5c8", "gradient_end": "#f3e8ff", "story_text": "Empieza tu día con nuestra rutina de bienestar", "story_cta_text": "Ver rutina" } },
+        { "type": "story", "settings": { "emoji": "🥗", "title": "Receta Detox", "subtitle": "Smoothie verde", "gradient_start": "#d4edaa", "gradient_end": "#e8f5c8", "story_text": "Prepara un smoothie lleno de nutrientes", "story_cta_text": "Ver receta" } },
+        { "type": "story", "settings": { "emoji": "💆‍♀️", "title": "Self Care", "subtitle": "Noche de spa", "gradient_start": "#f3e8ff", "gradient_end": "#e8d5f7", "story_text": "Tu rutina nocturna de cuidado personal", "story_cta_text": "Descubrir" } },
+        { "type": "story", "settings": { "emoji": "🏃‍♀️", "title": "Energía", "subtitle": "Pre-workout", "gradient_start": "#e8f5c8", "gradient_end": "#d4edaa", "story_text": "Potencia tu entrenamiento de forma natural", "story_cta_text": "Ver tips" } },
+        { "type": "story", "settings": { "emoji": "🌙", "title": "Sleep Well", "subtitle": "Rutina PM", "gradient_start": "#e8d5f7", "gradient_end": "#f3e8ff", "story_text": "Mejora tu descanso con estos hábitos", "story_cta_text": "Aprender" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
