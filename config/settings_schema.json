@@ -1,5 +1,13 @@
 [
   {
+    "name": "theme_info",
+    "theme_name": "Saluva",
+    "theme_version": "1.0.0",
+    "theme_author": "Saluva",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
     "name": "Colores Saluva",
     "settings": [
       {
