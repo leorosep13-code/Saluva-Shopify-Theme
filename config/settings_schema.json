@@ -1,5 +1,13 @@
 [
   {
+    "name": "theme_info",
+    "theme_name": "Saluva",
+    "theme_version": "1.0.0",
+    "theme_author": "Saluva",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
     "name": "Colores Saluva",
     "settings": [
       {
@@ -41,13 +49,13 @@
         "type": "font_picker",
         "id": "font_heading",
         "label": "Fuente de Títulos",
-        "default": "league_spartan_n7"
+        "default": "assistant_n7"
       },
       {
         "type": "font_picker",
         "id": "font_body",
         "label": "Fuente de Cuerpo",
-        "default": "league_spartan_n4"
+        "default": "assistant_n4"
       }
     ]
   },
