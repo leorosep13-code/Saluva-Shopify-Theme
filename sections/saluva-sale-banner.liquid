@@ -1,0 +1,96 @@
+<section class="sale-banner" id="sale-banner" data-end-date="{{ section.settings.end_date }}">
+  <div class="sale-banner__bg">
+    {% if section.settings.bg_image != blank %}
+      <img src="{{ section.settings.bg_image | image_url: width: 1920 }}"
+           alt="Oferta Saluva"
+           class="sale-banner__bg-img"
+           loading="lazy">
+    {% else %}
+      <div class="sale-banner__bg-placeholder">
+        <span>🛍️</span>
+      </div>
+    {% endif %}
+    <div class="sale-banner__overlay"></div>
+  </div>
+
+  <div class="sale-banner__badges">
+    <span class="sale-badge sale-badge--1">SALE</span>
+    <span class="sale-badge sale-badge--2">SALE</span>
+    <span class="sale-badge sale-badge--3">SALE</span>
+  </div>
+
+  <div class="sale-banner__inner container">
+    <div class="sale-banner__content animate-on-scroll">
+      <span class="sale-banner__label">{{ section.settings.label }}</span>
+      <h2 class="sale-banner__title">{{ section.settings.title }}</h2>
+      <p class="sale-banner__desc">{{ section.settings.description }}</p>
+
+      <div class="sale-countdown" id="sale-countdown">
+        <div class="sale-countdown__unit" id="sale-days"></div>
+        <div class="sale-countdown__separator">:</div>
+        <div class="sale-countdown__unit" id="sale-hours"></div>
+        <div class="sale-countdown__separator">:</div>
+        <div class="sale-countdown__unit" id="sale-mins"></div>
+        <div class="sale-countdown__separator">:</div>
+        <div class="sale-countdown__unit" id="sale-secs"></div>
+      </div>
+
+      <a href="{{ section.settings.cta_url }}" class="btn btn--primary btn--lg">
+        {{ section.settings.cta_text }}
+      </a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Banner de Oferta",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta superior",
+      "default": "OFERTA ESPECIAL"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "20% Off Venta de Fin de Semana"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripcion",
+      "default": "Aprovecha nuestros descuentos en productos seleccionados. Oferta por tiempo limitado."
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "Fecha fin del countdown (YYYY-MM-DD)",
+      "default": "2026-04-30"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texto del boton",
+      "default": "COMPRAR OFERTA"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "URL del boton"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Imagen de fondo"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner de Oferta Saluva"
+    }
+  ]
+}
+{% endschema %}

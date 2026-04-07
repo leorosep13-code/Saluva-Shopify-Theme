@@ -13,6 +13,8 @@
       <img src="{{ product.featured_image | image_url: width: 480 }}"
            alt="{{ product.featured_image.alt | default: product.title }}"
            loading="lazy"
+           width="480"
+           height="480"
            class="product-card__img">
     {% else %}
       <div class="product-card__placeholder">
@@ -20,27 +22,38 @@
       </div>
     {% endif %}
 
+    {%- comment -%} Badges from tags {%- endcomment -%}
     {% for tag in product.tags %}
       {% if tag == 'mas-vendido' %}
-        <span class="product-card__tag product-card__tag--hot">Más Vendido</span>
+        <span class="product-card__tag product-card__tag--hot">Mas Vendido</span>
+        {% break %}
       {% elsif tag == 'nuevo' %}
         <span class="product-card__tag product-card__tag--new">Nuevo</span>
+        {% break %}
       {% elsif tag == 'oferta' %}
         <span class="product-card__tag product-card__tag--sale">Oferta</span>
+        {% break %}
       {% elsif tag == 'trending' %}
         <span class="product-card__tag product-card__tag--trending">Trending</span>
+        {% break %}
+      {% elsif tag == 'recomendado' %}
+        <span class="product-card__tag product-card__tag--recommended">Recomendado</span>
+        {% break %}
       {% endif %}
     {% endfor %}
 
     {% if product.compare_at_price > product.price %}
       {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
-      <span class="product-card__tag product-card__tag--sale">-{{ discount }}%</span>
+      <span class="product-card__tag product-card__tag--percent">-{{ discount }}%</span>
     {% endif %}
 
     <div class="product-card__hover-actions">
       <button class="product-card__wishlist" aria-label="Agregar a favoritos">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </button>
+      {% if product.available %}
+        <button class="quick-add-btn" aria-label="Agregar rapido al carrito" data-variant-id="{{ product.selected_or_first_available_variant.id }}">+</button>
+      {% endif %}
     </div>
   </a>
 

@@ -1,43 +1,90 @@
-<section id="landing" class="landing-hero">
-  <div class="landing-hero__bg">
-    <div class="landing-hero__orb landing-hero__orb--primary"></div>
-    <div class="landing-hero__orb landing-hero__orb--secondary"></div>
-  </div>
+{% assign layout_mode = section.settings.layout_mode %}
 
-  <div class="landing-hero__inner container">
-    <div class="landing-hero__content">
-      <span class="landing-hero__badge">{{ section.settings.badge_text }}</span>
-      <h1 class="landing-hero__title">
-        {{ section.settings.title_line1 }}
-        <span class="text-primary">{{ section.settings.title_highlight }}</span><span class="text-secondary">.</span>
-      </h1>
-      <p class="landing-hero__desc">{{ section.settings.description }}</p>
-      <div class="landing-hero__actions">
-        <a href="{{ section.settings.cta_url }}" class="btn btn--primary btn--lg">
-          {{ section.settings.cta_text }}
-        </a>
-        <a href="{{ section.settings.cta2_url }}" class="btn btn--outline btn--lg">
-          {{ section.settings.cta2_text }}
-        </a>
-      </div>
-    </div>
-    <div class="landing-hero__visual">
+<section id="landing" class="landing-hero {% if layout_mode == 'fullscreen' %}landing-hero--fullscreen{% endif %}">
+  {% if layout_mode == 'fullscreen' %}
+    {%- comment -%} Modo imagen de fondo completo {%- endcomment -%}
+    <div class="landing-hero__bg-full">
       {% if section.settings.hero_image != blank %}
-        <img src="{{ section.settings.hero_image | image_url: width: 600 }}"
-             alt="{{ section.settings.hero_image.alt }}"
-             class="landing-hero__img"
+        <img src="{{ section.settings.hero_image | image_url: width: 1920 }}"
+             alt="{{ section.settings.hero_image.alt | default: 'Hero Saluva' }}"
+             class="landing-hero__bg-image"
              loading="eager">
       {% else %}
-        <div class="landing-hero__placeholder">🌿</div>
+        <div class="landing-hero__bg-placeholder">
+          <span>🌿</span>
+        </div>
       {% endif %}
+      <div class="landing-hero__bg-overlay"></div>
     </div>
-  </div>
+    <div class="landing-hero__inner container landing-hero__inner--fullscreen">
+      <div class="landing-hero__content landing-hero__content--fullscreen">
+        <span class="landing-hero__badge landing-hero__badge--light">{{ section.settings.badge_text }}</span>
+        <h1 class="landing-hero__title landing-hero__title--light">
+          {{ section.settings.title_line1 }}
+          <span class="text-primary">{{ section.settings.title_highlight }}</span><span class="text-secondary">.</span>
+        </h1>
+        <p class="landing-hero__desc landing-hero__desc--light">{{ section.settings.description }}</p>
+        <div class="landing-hero__actions">
+          <a href="{{ section.settings.cta_url }}" class="btn btn--primary btn--lg">
+            {{ section.settings.cta_text }}
+          </a>
+          <a href="{{ section.settings.cta2_url }}" class="btn btn--outline btn--lg landing-hero__btn--light">
+            {{ section.settings.cta2_text }}
+          </a>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    {%- comment -%} Modo lateral (original) {%- endcomment -%}
+    <div class="landing-hero__bg">
+      <div class="landing-hero__orb landing-hero__orb--primary"></div>
+      <div class="landing-hero__orb landing-hero__orb--secondary"></div>
+    </div>
+    <div class="landing-hero__inner container">
+      <div class="landing-hero__content animate-on-scroll">
+        <span class="landing-hero__badge">{{ section.settings.badge_text }}</span>
+        <h1 class="landing-hero__title">
+          {{ section.settings.title_line1 }}
+          <span class="text-primary">{{ section.settings.title_highlight }}</span><span class="text-secondary">.</span>
+        </h1>
+        <p class="landing-hero__desc">{{ section.settings.description }}</p>
+        <div class="landing-hero__actions">
+          <a href="{{ section.settings.cta_url }}" class="btn btn--primary btn--lg">
+            {{ section.settings.cta_text }}
+          </a>
+          <a href="{{ section.settings.cta2_url }}" class="btn btn--outline btn--lg">
+            {{ section.settings.cta2_text }}
+          </a>
+        </div>
+      </div>
+      <div class="landing-hero__visual animate-on-scroll" data-delay="200">
+        {% if section.settings.hero_image != blank %}
+          <img src="{{ section.settings.hero_image | image_url: width: 600 }}"
+               alt="{{ section.settings.hero_image.alt }}"
+               class="landing-hero__img"
+               loading="eager">
+        {% else %}
+          <div class="landing-hero__placeholder">🌿</div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
 </section>
 
 {% schema %}
 {
   "name": "Landing Hero",
   "settings": [
+    {
+      "type": "select",
+      "id": "layout_mode",
+      "label": "Modo de diseño",
+      "options": [
+        { "value": "lateral", "label": "Imagen lateral circular" },
+        { "value": "fullscreen", "label": "Imagen de fondo completo" }
+      ],
+      "default": "lateral"
+    },
     {
       "type": "text",
       "id": "badge_text",
@@ -47,7 +94,7 @@
     {
       "type": "text",
       "id": "title_line1",
-      "label": "Título línea 1",
+      "label": "Titulo linea 1",
       "default": "Tu cuerpo merece "
     },
     {
@@ -59,30 +106,30 @@
     {
       "type": "textarea",
       "id": "description",
-      "label": "Descripción",
-      "default": "Suplementos naturales diseñados especialmente para el bienestar de la mujer. Descubre tu versión más saludable."
+      "label": "Descripcion",
+      "default": "Suplementos naturales diseñados especialmente para el bienestar de la mujer. Descubre tu version mas saludable."
     },
     {
       "type": "text",
       "id": "cta_text",
-      "label": "Texto botón principal",
+      "label": "Texto boton principal",
       "default": "Explorar Tienda"
     },
     {
       "type": "url",
       "id": "cta_url",
-      "label": "URL botón principal"
+      "label": "URL boton principal"
     },
     {
       "type": "text",
       "id": "cta2_text",
-      "label": "Texto botón secundario",
+      "label": "Texto boton secundario",
       "default": "Hacer el Quiz"
     },
     {
       "type": "url",
       "id": "cta2_url",
-      "label": "URL botón secundario"
+      "label": "URL boton secundario"
     },
     {
       "type": "image_picker",

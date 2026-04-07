@@ -1,17 +1,23 @@
 <section class="stories-section">
   <div class="container">
-    <h3 class="stories-section__label">📱 {{ section.settings.title }}</h3>
+    <h3 class="stories-section__label">{{ section.settings.title }}</h3>
     <div class="stories-section__track" id="stories-track">
       {% for block in section.blocks %}
-        <button class="story-bubble" data-story-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+        <button class="story-bubble" data-story-index="{{ forloop.index0 }}" {{ block.shopify_attributes }} aria-label="Ver historia: {{ block.settings.title }}">
           <div class="story-bubble__ring"
                style="background: {{ block.settings.gradient_start }};">
             {% if block.settings.image != blank %}
-              <img src="{{ block.settings.image | image_url: width: 160 }}"
+              <img src="{{ block.settings.image | image_url: width: 180 }}"
                    alt="{{ block.settings.title }}"
-                   class="story-bubble__img">
+                   class="story-bubble__img"
+                   loading="lazy">
             {% else %}
               <span class="story-bubble__emoji">{{ block.settings.emoji }}</span>
+            {% endif %}
+            {% if block.settings.media_type == 'video' %}
+              <span class="story-bubble__play-badge">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </span>
             {% endif %}
           </div>
           <span class="story-bubble__title">{{ block.settings.title }}</span>
@@ -25,6 +31,11 @@
   <div class="story-overlay" id="story-overlay" aria-hidden="true">
     <div class="story-overlay__backdrop" id="story-close-backdrop"></div>
     <div class="story-overlay__card" id="story-card">
+      <!-- Story title at top -->
+      <div class="story-overlay__header">
+        <span class="story-overlay__title" id="story-overlay-title"></span>
+      </div>
+
       <div class="story-overlay__progress" id="story-progress-bar">
         {% for block in section.blocks %}
           <div class="story-overlay__progress-segment">
@@ -35,30 +46,59 @@
 
       <div class="story-overlay__slides" id="story-slides">
         {% for block in section.blocks %}
-          <div class="story-overlay__slide" data-slide="{{ forloop.index0 }}"
+          <div class="story-overlay__slide"
+               data-slide="{{ forloop.index0 }}"
+               data-media-type="{{ block.settings.media_type }}"
+               data-story-title="{{ block.settings.title }}"
                style="background: linear-gradient(135deg, {{ block.settings.gradient_start }}, {{ block.settings.gradient_end }});">
-            {% if block.settings.story_image != blank %}
+
+            {% if block.settings.media_type == 'video' and block.settings.video_url != blank %}
+              {% if block.settings.story_image != blank %}
+                <img src="{{ block.settings.story_image | image_url: width: 720 }}"
+                     alt="{{ block.settings.title }}"
+                     class="story-overlay__slide-img story-overlay__slide-img--poster">
+              {% endif %}
+              <div class="story-overlay__video-wrap">
+                {{ block.settings.video_url | external_video_tag: class: 'story-overlay__video' }}
+              </div>
+            {% elsif block.settings.story_image != blank %}
               <img src="{{ block.settings.story_image | image_url: width: 720 }}"
                    alt="{{ block.settings.title }}"
                    class="story-overlay__slide-img">
             {% endif %}
+
             <div class="story-overlay__slide-content">
               <span class="story-overlay__slide-emoji">{{ block.settings.emoji }}</span>
               <h2 class="story-overlay__slide-title">{{ block.settings.title }}</h2>
               <p class="story-overlay__slide-text">{{ block.settings.story_text }}</p>
               {% if block.settings.story_cta_text != blank %}
                 <a href="{{ block.settings.story_cta_url }}" class="btn btn--primary">
-                  {{ block.settings.story_cta_text }} →
+                  {{ block.settings.story_cta_text }}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
               {% endif %}
             </div>
+
+            {% if forloop.first %}
+              <div class="story-overlay__swipe-hint">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                Desliza para ver mas
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            {% endif %}
           </div>
         {% endfor %}
       </div>
 
-      <button class="story-overlay__nav story-overlay__nav--prev" id="story-prev">‹</button>
-      <button class="story-overlay__nav story-overlay__nav--next" id="story-next">›</button>
-      <button class="story-overlay__close" id="story-close-btn">✕</button>
+      <button class="story-overlay__nav story-overlay__nav--prev" id="story-prev" aria-label="Historia anterior">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="story-overlay__nav story-overlay__nav--next" id="story-next" aria-label="Historia siguiente">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <button class="story-overlay__close" id="story-close-btn" aria-label="Cerrar historias">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
   </div>
 </section>
@@ -70,7 +110,7 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Título de sección",
+      "label": "Titulo de seccion",
       "default": "Descubre Nuestro Mundo"
     }
   ],
@@ -88,19 +128,35 @@
         {
           "type": "text",
           "id": "title",
-          "label": "Título",
+          "label": "Titulo",
           "default": "Ritual AM"
         },
         {
           "type": "text",
           "id": "subtitle",
-          "label": "Subtítulo",
-          "default": "Tu mañana ideal"
+          "label": "Subtitulo",
+          "default": "Tu manana ideal"
         },
         {
           "type": "image_picker",
           "id": "image",
           "label": "Imagen del bubble"
+        },
+        {
+          "type": "select",
+          "id": "media_type",
+          "label": "Tipo de contenido",
+          "options": [
+            { "value": "imagen", "label": "Imagen" },
+            { "value": "video", "label": "Video" }
+          ],
+          "default": "imagen"
+        },
+        {
+          "type": "video_url",
+          "id": "video_url",
+          "label": "URL del video (YouTube/Vimeo)",
+          "accept": ["youtube", "vimeo"]
         },
         {
           "type": "color",
@@ -128,13 +184,13 @@
         {
           "type": "text",
           "id": "story_cta_text",
-          "label": "Texto del botón",
-          "default": "Ver más"
+          "label": "Texto del boton",
+          "default": "Ver mas"
         },
         {
           "type": "url",
           "id": "story_cta_url",
-          "label": "URL del botón"
+          "label": "URL del boton"
         }
       ]
     }
@@ -143,11 +199,13 @@
     {
       "name": "Stories Saluva",
       "blocks": [
-        { "type": "story", "settings": { "emoji": "🧘‍♀️", "title": "Ritual AM", "subtitle": "Tu mañana ideal", "gradient_start": "#e8f5c8", "gradient_end": "#f3e8ff", "story_text": "Empieza tu día con nuestra rutina de bienestar", "story_cta_text": "Ver rutina" } },
-        { "type": "story", "settings": { "emoji": "🥗", "title": "Receta Detox", "subtitle": "Smoothie verde", "gradient_start": "#d4edaa", "gradient_end": "#e8f5c8", "story_text": "Prepara un smoothie lleno de nutrientes", "story_cta_text": "Ver receta" } },
-        { "type": "story", "settings": { "emoji": "💆‍♀️", "title": "Self Care", "subtitle": "Noche de spa", "gradient_start": "#f3e8ff", "gradient_end": "#e8d5f7", "story_text": "Tu rutina nocturna de cuidado personal", "story_cta_text": "Descubrir" } },
-        { "type": "story", "settings": { "emoji": "🏃‍♀️", "title": "Energía", "subtitle": "Pre-workout", "gradient_start": "#e8f5c8", "gradient_end": "#d4edaa", "story_text": "Potencia tu entrenamiento de forma natural", "story_cta_text": "Ver tips" } },
-        { "type": "story", "settings": { "emoji": "🌙", "title": "Sleep Well", "subtitle": "Rutina PM", "gradient_start": "#e8d5f7", "gradient_end": "#f3e8ff", "story_text": "Mejora tu descanso con estos hábitos", "story_cta_text": "Aprender" } }
+        { "type": "story", "settings": { "emoji": "🌟", "title": "Nuevo Producto", "subtitle": "Recien llegado", "gradient_start": "#e8f5c8", "gradient_end": "#f3e8ff", "story_text": "Descubre nuestro ultimo lanzamiento", "story_cta_text": "Conocer" } },
+        { "type": "story", "settings": { "emoji": "🥗", "title": "Receta del Dia", "subtitle": "Smoothie verde", "gradient_start": "#d4edaa", "gradient_end": "#e8f5c8", "story_text": "Prepara un smoothie lleno de nutrientes", "story_cta_text": "Ver receta" } },
+        { "type": "story", "settings": { "emoji": "💬", "title": "Testimonio", "subtitle": "Historia real", "gradient_start": "#f3e8ff", "gradient_end": "#e8d5f7", "story_text": "Conoce la experiencia de nuestras clientas", "story_cta_text": "Leer mas" } },
+        { "type": "story", "settings": { "emoji": "🎬", "title": "Detras de Camaras", "subtitle": "Nuestro proceso", "media_type": "video", "gradient_start": "#e8d5f7", "gradient_end": "#d4edaa", "story_text": "Mira como creamos nuestros productos", "story_cta_text": "Ver video" } },
+        { "type": "story", "settings": { "emoji": "💡", "title": "Tip de Bienestar", "subtitle": "Cuida tu cuerpo", "gradient_start": "#e8f5c8", "gradient_end": "#d4edaa", "story_text": "Un tip rapido para mejorar tu dia a dia", "story_cta_text": "Aprender" } },
+        { "type": "story", "settings": { "emoji": "🏷️", "title": "Oferta Especial", "subtitle": "Tiempo limitado", "gradient_start": "#f3e8ff", "gradient_end": "#fce4ec", "story_text": "Aprovecha nuestras ofertas exclusivas", "story_cta_text": "Comprar" } },
+        { "type": "story", "settings": { "emoji": "👥", "title": "Comunidad", "subtitle": "Unete a nosotras", "gradient_start": "#d4edaa", "gradient_end": "#e8f5c8", "story_text": "Se parte de la comunidad Saluva", "story_cta_text": "Unirse" } }
       ]
     }
   ]

@@ -1,0 +1,127 @@
+<section class="featured-product" style="background: {{ section.settings.bg_color }};">
+  <div class="container">
+    <div class="featured-product__inner animate-on-scroll">
+      <!-- Carousel -->
+      <div class="fp-carousel">
+        <div class="fp-carousel__track" id="fp-carousel-track">
+          {% for block in section.blocks %}
+            {% if block.type == 'image' %}
+              <div class="fp-carousel__slide" {{ block.shopify_attributes }}>
+                {% if block.settings.image != blank %}
+                  <img src="{{ block.settings.image | image_url: width: 800 }}"
+                       alt="{{ block.settings.alt | default: section.settings.title }}"
+                       class="fp-carousel__img"
+                       loading="lazy">
+                {% else %}
+                  <div class="fp-carousel__placeholder">
+                    <span>🌿</span>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <button class="fp-carousel__arrow fp-carousel__arrow--prev" id="fp-carousel-prev" aria-label="Imagen anterior">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="fp-carousel__arrow fp-carousel__arrow--next" id="fp-carousel-next" aria-label="Imagen siguiente">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <div class="fp-carousel__dots">
+          {% assign img_count = 0 %}
+          {% for block in section.blocks %}
+            {% if block.type == 'image' %}
+              <button class="fp-carousel__dot {% if img_count == 0 %}active{% endif %}"
+                      aria-label="Ir a imagen {{ img_count | plus: 1 }}"></button>
+              {% assign img_count = img_count | plus: 1 %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="featured-product__info">
+        <span class="featured-product__label">{{ section.settings.label }}</span>
+        <h2 class="featured-product__title">{{ section.settings.title }}</h2>
+        <div class="featured-product__desc">{{ section.settings.description }}</div>
+        <a href="{{ section.settings.cta_url }}" class="btn btn--primary btn--lg">
+          {{ section.settings.cta_text }}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Producto Destacado",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta superior",
+      "default": "DESTACADO"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "El suplemento que tu cuerpo necesita"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Descripcion",
+      "default": "<p>Nuestro producto estrella combina los mejores ingredientes naturales para tu bienestar diario. Formulado con colageno, vitaminas y minerales esenciales.</p>"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texto del boton",
+      "default": "COMPRAR AHORA"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "URL del boton"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#f0f7e0"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Imagen del carrusel",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Texto alternativo",
+          "default": "Producto Saluva"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Producto Destacado Saluva",
+      "blocks": [
+        { "type": "image", "settings": { "alt": "Vista frontal" } },
+        { "type": "image", "settings": { "alt": "Vista lateral" } },
+        { "type": "image", "settings": { "alt": "Ingredientes" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

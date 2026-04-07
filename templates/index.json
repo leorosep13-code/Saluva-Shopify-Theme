@@ -16,8 +16,20 @@
       "type": "saluva-tienda",
       "settings": {}
     },
+    "featured-collections": {
+      "type": "saluva-featured-collections",
+      "settings": {}
+    },
     "bestsellers": {
       "type": "saluva-bestsellers",
+      "settings": {}
+    },
+    "sale-banner": {
+      "type": "saluva-sale-banner",
+      "settings": {}
+    },
+    "featured-product": {
+      "type": "saluva-featured-product",
       "settings": {}
     },
     "aprende": {
@@ -27,6 +39,10 @@
     "quiz": {
       "type": "saluva-quiz",
       "settings": {}
+    },
+    "blog": {
+      "type": "saluva-blog",
+      "settings": {}
     }
   },
   "order": [
@@ -34,8 +50,12 @@
     "stories",
     "trust-badges",
     "tienda",
+    "featured-collections",
     "bestsellers",
+    "sale-banner",
+    "featured-product",
     "aprende",
-    "quiz"
+    "quiz",
+    "blog"
   ]
 }

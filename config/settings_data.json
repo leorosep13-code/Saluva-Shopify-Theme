@@ -4,6 +4,13 @@
     "color_secondary": "#d2a4f3",
     "color_background": "#ffffff",
     "color_text": "#1a1a1a",
-    "color_text_muted": "#6b6b6b"
+    "color_text_muted": "#6b6b6b",
+    "color_accent": "#f59e0b",
+    "font_size_base": 16,
+    "logo_width": 120,
+    "cart_type": "page",
+    "cart_note_enable": true,
+    "newsletter_title": "Unete a nuestra comunidad",
+    "newsletter_description": "Recibe tips de bienestar, ofertas exclusivas y novedades directamente en tu correo."
   }
 }

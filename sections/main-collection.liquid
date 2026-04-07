@@ -1,37 +1,73 @@
-<section class="collection-page" style="padding: 40px 0 70px;">
-  <div class="container">
-    <div class="section-header section-header--center">
-      <h1 class="section-header__title">{{ collection.title }}</h1>
+{% paginate collection.products by 12 %}
+<section class="collection-page">
+  <!-- Header visual -->
+  <div class="collection-header">
+    {% if collection.image != blank %}
+      <img src="{{ collection.image | image_url: width: 1920 }}"
+           alt="{{ collection.title }}"
+           class="collection-header__img"
+           loading="eager">
+    {% endif %}
+    <div class="collection-header__overlay"></div>
+    <div class="collection-header__content container">
+      <h1 class="collection-header__title">{{ collection.title }}</h1>
       {% if collection.description != blank %}
-        <p class="section-header__desc">{{ collection.description }}</p>
+        <p class="collection-header__desc">{{ collection.description }}</p>
       {% endif %}
     </div>
+  </div>
 
+  <div class="container">
+    <!-- Breadcrumbs -->
+    <nav class="collection-breadcrumbs" aria-label="Navegacion">
+      <a href="/">Inicio</a>
+      <span>/</span>
+      <span>{{ collection.title }}</span>
+    </nav>
+
+    <!-- Toolbar -->
+    <div class="collection-toolbar">
+      <span class="collection-count">{{ collection.products_count }} Productos</span>
+      <div class="collection-sort">
+        <label for="collection-sort" class="collection-sort__label">Ordenar por:</label>
+        <select id="collection-sort" class="collection-sort__select" onchange="window.location.href = this.value;">
+          {% for option in collection.sort_options %}
+            <option value="{{ collection.url }}?sort_by={{ option.value }}"
+                    {% if collection.sort_by == option.value %}selected{% endif %}>
+              {{ option.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
     <div class="tienda-grid">
       {% for product in collection.products %}
-        <div class="tienda-grid__item" data-type="{{ product.type | handleize }}">
+        <div class="tienda-grid__item animate-on-scroll" data-delay="{{ forloop.index0 | times: 60 }}">
           {% render 'product-card', product: product %}
         </div>
       {% endfor %}
     </div>
 
     {% if collection.products.size == 0 %}
-      <p style="text-align: center; color: var(--color-text-muted); padding: 60px 0;">
-        No hay productos en esta colección todavía.
+      <p class="collection-empty">
+        No hay productos en esta coleccion todavia.
       </p>
     {% endif %}
 
     {% if paginate.pages > 1 %}
-      <div style="text-align: center; margin-top: 40px;">
+      <nav class="collection-pagination" aria-label="Paginacion">
         {{ paginate | default_pagination }}
-      </div>
+      </nav>
     {% endif %}
   </div>
 </section>
+{% endpaginate %}
 
 {% schema %}
 {
-  "name": "Colección Principal",
+  "name": "Coleccion Principal",
   "settings": []
 }
 {% endschema %}

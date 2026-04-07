@@ -10,6 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initTiendaFilters();
   initQuiz();
   initMobileMenu();
+  initScrollToTop();
+  initAnimateOnScroll();
+  initSearchOverlay();
+  initSaleBannerCountdown();
+  initFeaturedProductCarousel();
+  initDigitalProductModals();
+  initMegaMenuMobile();
 });
 
 /* ── Promo Countdown ── */
@@ -57,7 +64,6 @@ function initStickyHeader() {
   window.addEventListener('scroll', () => {
     header.classList.toggle('scrolled', window.scrollY > 60);
 
-    // Update active nav link based on scroll position
     let current = '';
     sections.forEach(section => {
       const top = section.offsetTop - 120;
@@ -84,6 +90,9 @@ function initSmoothScroll() {
       if (target) {
         e.preventDefault();
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Close mobile menu if open
+        const nav = document.getElementById('main-nav');
+        if (nav) nav.classList.remove('open');
       }
     });
   });
@@ -101,12 +110,30 @@ function initStories() {
   let currentSlide = 0;
   let progressInterval = null;
   let progress = 0;
-  const STORY_DURATION = 5000; // 5 seconds per story
+  const STORY_DURATION = 5000;
   const TICK = 50;
+  const viewedStories = JSON.parse(localStorage.getItem('saluva_viewed_stories') || '[]');
+
+  // Mark viewed stories visually
+  bubbles.forEach((bubble, i) => {
+    if (viewedStories.includes(i)) {
+      bubble.querySelector('.story-bubble__ring').classList.add('story-bubble__ring--viewed');
+    }
+  });
+
+  function markViewed(index) {
+    if (!viewedStories.includes(index)) {
+      viewedStories.push(index);
+      localStorage.setItem('saluva_viewed_stories', JSON.stringify(viewedStories));
+      const ring = bubbles[index] && bubbles[index].querySelector('.story-bubble__ring');
+      if (ring) ring.classList.add('story-bubble__ring--viewed');
+    }
+  }
 
   function showSlide(index) {
     currentSlide = index;
     progress = 0;
+    markViewed(index);
 
     slides.forEach((s, i) => s.classList.toggle('active', i === index));
     progressFills.forEach((f, i) => {
@@ -118,7 +145,30 @@ function initStories() {
       }
     });
 
-    startProgress();
+    // Handle video slides
+    const currentSlideEl = slides[index];
+    const iframe = currentSlideEl.querySelector('iframe');
+    const isVideo = currentSlideEl.dataset.mediaType === 'video';
+
+    // Pause all other videos
+    slides.forEach((s, i) => {
+      if (i !== index) {
+        const otherIframe = s.querySelector('iframe');
+        if (otherIframe) otherIframe.src = otherIframe.src;
+      }
+    });
+
+    if (isVideo && iframe) {
+      clearInterval(progressInterval);
+    } else {
+      startProgress();
+    }
+
+    // Update story title
+    const titleEl = document.getElementById('story-overlay-title');
+    if (titleEl && currentSlideEl.dataset.storyTitle) {
+      titleEl.textContent = currentSlideEl.dataset.storyTitle;
+    }
   }
 
   function startProgress() {
@@ -140,6 +190,7 @@ function initStories() {
 
   function openOverlay(index) {
     overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     showSlide(index);
   }
@@ -147,6 +198,7 @@ function initStories() {
   function closeOverlay() {
     clearInterval(progressInterval);
     overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }
 
@@ -180,6 +232,29 @@ function initStories() {
       else closeOverlay();
     }
   });
+
+  // Swipe support for mobile
+  let touchStartX = 0;
+  let touchStartY = 0;
+  const storyCard = document.getElementById('story-card');
+  if (storyCard) {
+    storyCard.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    storyCard.addEventListener('touchend', (e) => {
+      const diffX = e.changedTouches[0].screenX - touchStartX;
+      const diffY = e.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+        if (diffX < 0 && currentSlide < slides.length - 1) {
+          showSlide(currentSlide + 1);
+        } else if (diffX > 0 && currentSlide > 0) {
+          showSlide(currentSlide - 1);
+        }
+      }
+    }, { passive: true });
+  }
 }
 
 /* ── Tienda Filters ── */
@@ -196,15 +271,40 @@ function initTiendaFilters() {
       filters.forEach(f => f.classList.remove('active'));
       btn.classList.add('active');
 
-      items.forEach(item => {
-        if (filter === 'all' || item.dataset.type === filter) {
-          item.classList.remove('hidden');
-        } else {
-          item.classList.add('hidden');
+      items.forEach((item, i) => {
+        const show = filter === 'all' || item.dataset.type === filter;
+        item.classList.toggle('hidden', !show);
+        if (show) {
+          item.style.animationDelay = (i * 50) + 'ms';
         }
       });
     });
   });
+
+  // Sort functionality
+  const sortSelect = document.getElementById('tienda-sort');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', () => {
+      const grid = document.getElementById('tienda-grid');
+      if (!grid) return;
+      const itemsArr = Array.from(grid.querySelectorAll('.tienda-grid__item'));
+      const val = sortSelect.value;
+
+      itemsArr.sort((a, b) => {
+        const priceA = parseFloat(a.dataset.price || 0);
+        const priceB = parseFloat(b.dataset.price || 0);
+        const dateA = parseInt(a.dataset.date || 0);
+        const dateB = parseInt(b.dataset.date || 0);
+
+        if (val === 'price-asc') return priceA - priceB;
+        if (val === 'price-desc') return priceB - priceA;
+        if (val === 'newest') return dateB - dateA;
+        return 0;
+      });
+
+      itemsArr.forEach(item => grid.appendChild(item));
+    });
+  }
 }
 
 /* ── Quiz ── */
@@ -214,63 +314,141 @@ function initQuiz() {
   const container = document.getElementById('quiz-container');
   const resultSection = document.getElementById('quiz-result');
   const restartBtn = document.getElementById('quiz-restart');
+  const shareBtn = document.getElementById('quiz-share');
 
   if (!startBtn || !intro) return;
 
   const questions = document.querySelectorAll('.quiz-question');
-  const progressFills = document.querySelectorAll('.quiz-progress__fill');
+  const progressBar = document.getElementById('quiz-progress-bar');
   let currentQuestion = 0;
-  let answers = [];
+  let scores = { energia: 0, belleza: 0, inmunidad: 0, digestion: 0 };
 
   startBtn.addEventListener('click', () => {
     intro.style.display = 'none';
     container.style.display = 'block';
+    container.classList.add('quiz-fullscreen');
     currentQuestion = 0;
-    answers = [];
+    scores = { energia: 0, belleza: 0, inmunidad: 0, digestion: 0 };
     showQuestion(0);
   });
 
   function showQuestion(index) {
     questions.forEach((q, i) => {
-      q.style.display = i === index ? 'block' : 'none';
+      q.classList.remove('quiz-slide-in', 'quiz-slide-out');
+      if (i === index) {
+        q.style.display = 'block';
+        q.classList.add('quiz-slide-in');
+      } else {
+        q.style.display = 'none';
+      }
     });
-    progressFills.forEach((f, i) => {
-      f.classList.toggle('active', i <= index);
-    });
+    if (progressBar) {
+      const pct = ((index) / questions.length) * 100;
+      progressBar.style.width = pct + '%';
+    }
+    // Update counter
+    const counter = document.getElementById('quiz-counter');
+    if (counter) {
+      counter.textContent = 'Pregunta ' + (index + 1) + ' de ' + questions.length;
+    }
   }
 
   document.querySelectorAll('.quiz-option').forEach(option => {
     option.addEventListener('click', () => {
-      const qIdx = parseInt(option.dataset.question);
-      const aIdx = parseInt(option.dataset.answer);
-      answers[qIdx] = aIdx;
+      // Visual selection feedback
+      const siblings = option.parentElement.querySelectorAll('.quiz-option');
+      siblings.forEach(s => s.classList.remove('quiz-option--selected'));
+      option.classList.add('quiz-option--selected');
 
-      if (currentQuestion < questions.length - 1) {
-        currentQuestion++;
-        showQuestion(currentQuestion);
-      } else {
-        showResult();
-      }
+      // Add points
+      const ptsE = parseInt(option.dataset.ptsEnergia || 0);
+      const ptsB = parseInt(option.dataset.ptsBelleza || 0);
+      const ptsI = parseInt(option.dataset.ptsInmunidad || 0);
+      const ptsD = parseInt(option.dataset.ptsDigestion || 0);
+      scores.energia += ptsE;
+      scores.belleza += ptsB;
+      scores.inmunidad += ptsI;
+      scores.digestion += ptsD;
+
+      // Auto-advance after 600ms
+      setTimeout(() => {
+        if (currentQuestion < questions.length - 1) {
+          currentQuestion++;
+          showQuestion(currentQuestion);
+        } else {
+          showResult();
+        }
+      }, 600);
     });
   });
 
+  // Back button
+  const backBtn = document.getElementById('quiz-back');
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+      }
+    });
+  }
+
   function showResult() {
     container.style.display = 'none';
+    container.classList.remove('quiz-fullscreen');
     resultSection.style.display = 'block';
 
-    // Map first answer to result
-    const firstAnswer = answers[0] || 0;
+    // Determine winner
+    let maxCat = 'energia';
+    let maxScore = 0;
+    for (const cat in scores) {
+      if (scores[cat] > maxScore) {
+        maxScore = scores[cat];
+        maxCat = cat;
+      }
+    }
+
     const results = window.__quizResults || {};
-    const resultKey = String(firstAnswer);
-    const result = results[resultKey];
+    const result = results[maxCat];
 
     const iconEl = document.getElementById('quiz-result-icon');
     const nameEl = document.getElementById('quiz-result-name');
+    const descEl = document.getElementById('quiz-result-desc');
+    const productsEl = document.getElementById('quiz-result-products');
 
     if (result) {
-      if (iconEl) iconEl.textContent = result.emoji || '✨';
+      if (iconEl) {
+        iconEl.textContent = result.emoji || '✨';
+        iconEl.classList.add('quiz-result__icon--animate');
+      }
       if (nameEl) nameEl.textContent = result.title || 'Tu Pack Ideal';
+      if (descEl) descEl.textContent = result.description || '';
+
+      // Render product cards
+      if (productsEl) {
+        productsEl.innerHTML = '';
+        [result.product_url_1, result.product_url_2].forEach(url => {
+          if (url && url !== '') {
+            const card = document.createElement('a');
+            card.href = url;
+            card.className = 'quiz-product-card';
+            card.innerHTML = '<div class="quiz-product-card__img"><div class="quiz-product-card__placeholder">🌿</div></div><span class="quiz-product-card__cta">Ver Producto</span>';
+            productsEl.appendChild(card);
+          }
+        });
+        // Fallback placeholder cards
+        if (productsEl.children.length === 0) {
+          for (let i = 0; i < 2; i++) {
+            const card = document.createElement('div');
+            card.className = 'quiz-product-card';
+            card.innerHTML = '<div class="quiz-product-card__img"><div class="quiz-product-card__placeholder">🌿</div></div><span class="quiz-product-card__name">Producto Recomendado</span><span class="quiz-product-card__cta">Pronto Disponible</span>';
+            productsEl.appendChild(card);
+          }
+        }
+      }
     }
+
+    if (progressBar) progressBar.style.width = '100%';
   }
 
   if (restartBtn) {
@@ -278,7 +456,25 @@ function initQuiz() {
       resultSection.style.display = 'none';
       intro.style.display = 'block';
       currentQuestion = 0;
-      answers = [];
+      scores = { energia: 0, belleza: 0, inmunidad: 0, digestion: 0 };
+      if (progressBar) progressBar.style.width = '0%';
+      const iconEl = document.getElementById('quiz-result-icon');
+      if (iconEl) iconEl.classList.remove('quiz-result__icon--animate');
+    });
+  }
+
+  // Share button
+  if (shareBtn) {
+    shareBtn.addEventListener('click', () => {
+      const nameEl = document.getElementById('quiz-result-name');
+      const text = 'Mi resultado en el Quiz de Saluva: ' + (nameEl ? nameEl.textContent : 'Mi Pack Ideal');
+      if (navigator.share) {
+        navigator.share({ title: 'Mi Quiz Saluva', text: text, url: window.location.href });
+      } else {
+        navigator.clipboard.writeText(text + ' ' + window.location.href).then(() => {
+          showToast('Enlace copiado al portapapeles', 'success');
+        });
+      }
     });
   }
 }
@@ -296,18 +492,263 @@ function initMobileMenu() {
   });
 }
 
-/* ── AJAX Add to Cart ── */
+/* ── Mega Menu Mobile Toggle ── */
+function initMegaMenuMobile() {
+  if (window.innerWidth > 768) return;
+  document.querySelectorAll('.header__nav-item--mega > .header__nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768) {
+        e.preventDefault();
+        link.parentElement.classList.toggle('mobile-open');
+      }
+    });
+  });
+}
+
+/* ── Scroll to Top ── */
+function initScrollToTop() {
+  const btn = document.getElementById('scroll-top-btn');
+  if (!btn) return;
+
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 500);
+  });
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+/* ── Animate on Scroll ── */
+function initAnimateOnScroll() {
+  const elements = document.querySelectorAll('.animate-on-scroll');
+  if (elements.length === 0) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = entry.target.dataset.delay || 0;
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, parseInt(delay));
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  elements.forEach(el => observer.observe(el));
+}
+
+/* ── Search Overlay ── */
+function initSearchOverlay() {
+  const toggleBtn = document.getElementById('search-toggle');
+  const overlay = document.getElementById('search-overlay');
+  const input = document.getElementById('search-input');
+  const resultsContainer = document.getElementById('search-results');
+  const backdrop = document.getElementById('search-close-backdrop');
+
+  if (!toggleBtn || !overlay) return;
+
+  let debounceTimer = null;
+
+  function openSearch() {
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => input && input.focus(), 100);
+  }
+
+  function closeSearch() {
+    overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (input) input.value = '';
+    if (resultsContainer) {
+      resultsContainer.style.display = 'none';
+      resultsContainer.innerHTML = '';
+    }
+  }
+
+  toggleBtn.addEventListener('click', openSearch);
+  if (backdrop) backdrop.addEventListener('click', closeSearch);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) closeSearch();
+  });
+
+  if (input) {
+    input.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      const query = input.value.trim();
+
+      if (query.length < 2) {
+        resultsContainer.style.display = 'none';
+        resultsContainer.innerHTML = '';
+        return;
+      }
+
+      debounceTimer = setTimeout(() => {
+        fetch('/search/suggest.json?q=' + encodeURIComponent(query) + '&resources[type]=product&resources[limit]=4')
+          .then(r => r.json())
+          .then(data => {
+            const products = data.resources && data.resources.results && data.resources.results.products
+              ? data.resources.results.products
+              : [];
+
+            if (products.length === 0) {
+              resultsContainer.innerHTML = '<div class="search-overlay__no-results">No se encontraron resultados para "' + query + '"</div>';
+              resultsContainer.style.display = 'block';
+              return;
+            }
+
+            resultsContainer.innerHTML = products.map(p => {
+              const img = p.image ? '<img src="' + p.image + '" alt="' + p.title + '" class="search-overlay__result-img" loading="lazy">' : '<div class="search-overlay__result-img"></div>';
+              const price = p.price ? ('$' + (parseFloat(p.price) / 100).toLocaleString()) : '';
+              return '<a href="' + p.url + '" class="search-overlay__result-item">' + img + '<div class="search-overlay__result-info"><div class="search-overlay__result-title">' + p.title + '</div><div class="search-overlay__result-price">' + price + '</div></div></a>';
+            }).join('');
+            resultsContainer.style.display = 'block';
+          })
+          .catch(() => {
+            resultsContainer.innerHTML = '<div class="search-overlay__no-results">Error al buscar. Intenta de nuevo.</div>';
+            resultsContainer.style.display = 'block';
+          });
+      }, 300);
+    });
+  }
+}
+
+/* ── Sale Banner Countdown ── */
+function initSaleBannerCountdown() {
+  const banner = document.getElementById('sale-banner');
+  if (!banner) return;
+
+  const endDate = banner.dataset.endDate;
+  if (!endDate) return;
+
+  const target = new Date(endDate).getTime();
+
+  function update() {
+    const now = Date.now();
+    const diff = Math.max(0, target - now);
+
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+    const setEl = (id, val, label) => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<span class="sale-countdown__number">' + String(val).padStart(2, '0') + '</span><span class="sale-countdown__label">' + label + '</span>';
+    };
+
+    setEl('sale-days', d, 'Dias');
+    setEl('sale-hours', h, 'Horas');
+    setEl('sale-mins', m, 'Min');
+    setEl('sale-secs', s, 'Seg');
+  }
+
+  update();
+  setInterval(update, 1000);
+}
+
+/* ── Featured Product Carousel ── */
+function initFeaturedProductCarousel() {
+  const track = document.getElementById('fp-carousel-track');
+  const dots = document.querySelectorAll('.fp-carousel__dot');
+  const prevBtn = document.getElementById('fp-carousel-prev');
+  const nextBtn = document.getElementById('fp-carousel-next');
+
+  if (!track) return;
+
+  const slides = track.querySelectorAll('.fp-carousel__slide');
+  let current = 0;
+
+  function goTo(index) {
+    current = Math.max(0, Math.min(index, slides.length - 1));
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', () => goTo(current - 1));
+  if (nextBtn) nextBtn.addEventListener('click', () => goTo(current + 1));
+  dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+}
+
+/* ── Digital Product Modals ── */
+function initDigitalProductModals() {
+  document.querySelectorAll('.digital-card[data-modal]').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return;
+      const modalId = card.dataset.modal;
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  });
+
+  document.querySelectorAll('.digital-modal__close, .digital-modal__backdrop').forEach(el => {
+    el.addEventListener('click', () => {
+      const modal = el.closest('.digital-modal');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.digital-modal.active').forEach(modal => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    }
+  });
+}
+
+/* ── AJAX Add to Cart with Toast ── */
 document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.product-card__add-btn');
+  const btn = e.target.closest('.product-card__add-btn, .quick-add-btn');
   if (!btn || btn.disabled) return;
 
   e.preventDefault();
   const form = btn.closest('form');
-  if (!form) return;
+  if (!form) {
+    // Quick add button with data-variant-id
+    const variantId = btn.dataset.variantId;
+    if (!variantId) return;
+    btn.innerHTML = '<span class="spinner"></span>';
+    btn.disabled = true;
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: parseInt(variantId), quantity: 1 })
+    })
+      .then(r => r.json())
+      .then(() => {
+        showToast('Producto agregado al carrito', 'success');
+        updateCartCount();
+        btn.innerHTML = '✓';
+        setTimeout(() => {
+          btn.innerHTML = '+';
+          btn.disabled = false;
+        }, 1500);
+      })
+      .catch(() => {
+        showToast('Error al agregar al carrito', 'error');
+        btn.innerHTML = '+';
+        btn.disabled = false;
+      });
+    return;
+  }
 
   const formData = new FormData(form);
+  const originalText = btn.textContent;
 
-  btn.textContent = 'Agregando...';
+  btn.innerHTML = '<span class="spinner"></span> Agregando...';
   btn.disabled = true;
 
   fetch('/cart/add.js', {
@@ -315,31 +756,61 @@ document.addEventListener('click', (e) => {
     body: formData,
   })
     .then(res => res.json())
-    .then(data => {
+    .then(() => {
       btn.textContent = '✓ Agregado';
       btn.style.background = 'var(--color-primary)';
       btn.style.color = '#fff';
-
-      // Update cart count
-      const countEl = document.getElementById('cart-count');
-      if (countEl) {
-        fetch('/cart.js')
-          .then(r => r.json())
-          .then(cart => { countEl.textContent = cart.item_count; });
-      }
+      showToast('Producto agregado al carrito', 'success');
+      updateCartCount();
 
       setTimeout(() => {
-        btn.textContent = 'Agregar al Carrito';
+        btn.textContent = originalText;
         btn.disabled = false;
         btn.style.background = '';
         btn.style.color = '';
       }, 2000);
     })
     .catch(() => {
-      btn.textContent = 'Error';
-      setTimeout(() => {
-        btn.textContent = 'Agregar al Carrito';
-        btn.disabled = false;
-      }, 1500);
+      showToast('Error al agregar al carrito', 'error');
+      btn.textContent = originalText;
+      btn.disabled = false;
     });
+});
+
+/* ── Update Cart Count ── */
+function updateCartCount() {
+  const countEl = document.getElementById('cart-count');
+  if (countEl) {
+    fetch('/cart.js')
+      .then(r => r.json())
+      .then(cart => { countEl.textContent = cart.item_count; });
+  }
+}
+
+/* ── Toast Helper ── */
+function showToast(message, type) {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = 'toast toast--' + (type || 'success');
+  toast.textContent = message;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add('toast-out');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+/* ── Hero Parallax ── */
+window.addEventListener('scroll', () => {
+  const hero = document.querySelector('.landing-hero--fullscreen');
+  if (hero) {
+    const bgImg = hero.querySelector('.landing-hero__bg-image');
+    if (bgImg) {
+      const scroll = window.scrollY;
+      bgImg.style.transform = 'translateY(' + (scroll * 0.3) + 'px)';
+    }
+  }
 });

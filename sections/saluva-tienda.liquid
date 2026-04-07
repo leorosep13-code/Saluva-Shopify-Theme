@@ -1,28 +1,46 @@
 <section id="tienda" class="tienda-section">
   <div class="container">
-    <div class="section-header section-header--center">
+    <div class="section-header section-header--center animate-on-scroll">
       <span class="section-header__label">{{ section.settings.label }}</span>
       <h2 class="section-header__title">{{ section.settings.title }}</h2>
     </div>
 
     {% assign collection = collections[section.settings.collection] | default: collections['all'] %}
 
-    <!-- Category Filters -->
-    <div class="tienda-filters" id="tienda-filters">
-      <button class="tienda-filter active" data-filter="all">Todos</button>
-      {% for product_type in collection.all_types %}
-        {% if product_type != blank %}
-          <button class="tienda-filter" data-filter="{{ product_type | handleize }}">
-            {{ product_type }}
-          </button>
-        {% endif %}
-      {% endfor %}
+    <!-- Filters + Sort Bar -->
+    <div class="tienda-toolbar">
+      <div class="tienda-filters" id="tienda-filters">
+        <button class="tienda-filter active" data-filter="all">Todos</button>
+        {% for product_type in collection.all_types %}
+          {% if product_type != blank %}
+            <button class="tienda-filter" data-filter="{{ product_type | handleize }}">
+              {{ product_type }}
+            </button>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="tienda-sort">
+        <label for="tienda-sort" class="tienda-sort__label">Ordenar por:</label>
+        <select id="tienda-sort" class="tienda-sort__select">
+          <option value="best-selling">Mas vendidos</option>
+          <option value="price-asc">Precio: Menor a Mayor</option>
+          <option value="price-desc">Precio: Mayor a Menor</option>
+          <option value="newest">Mas recientes</option>
+        </select>
+      </div>
     </div>
+
+    <!-- Products count -->
+    <p class="tienda-count">{{ collection.products_count }} Productos</p>
 
     <!-- Products Grid -->
     <div class="tienda-grid" id="tienda-grid">
       {% for product in collection.products limit: section.settings.products_limit %}
-        <div class="tienda-grid__item" data-type="{{ product.type | handleize }}">
+        <div class="tienda-grid__item animate-on-scroll"
+             data-type="{{ product.type | handleize }}"
+             data-price="{{ product.price }}"
+             data-date="{{ product.published_at | date: '%s' }}"
+             data-delay="{{ forloop.index0 | times: 80 }}">
           {% render 'product-card', product: product %}
         </div>
       {% endfor %}
@@ -30,8 +48,9 @@
 
     {% if collection.products.size > section.settings.products_limit %}
       <div class="tienda-section__more">
-        <a href="{{ collection.url }}" class="btn btn--outline">
-          Ver Todos los Productos →
+        <a href="{{ collection.url }}" class="btn btn--outline btn--md">
+          Ver Todos los Productos
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
       </div>
     {% endif %}
@@ -51,18 +70,18 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Título",
+      "label": "Titulo",
       "default": "Explora Nuestros Productos"
     },
     {
       "type": "collection",
       "id": "collection",
-      "label": "Colección a mostrar"
+      "label": "Coleccion a mostrar"
     },
     {
       "type": "range",
       "id": "products_limit",
-      "label": "Máximo de productos",
+      "label": "Maximo de productos",
       "min": 4,
       "max": 24,
       "step": 4,

@@ -1,49 +1,92 @@
 <section id="quiz" class="quiz-section">
   <div class="container">
     <!-- Quiz Intro -->
-    <div class="quiz-intro" id="quiz-intro">
+    <div class="quiz-intro animate-on-scroll" id="quiz-intro">
       <div class="quiz-intro__icon">🔮</div>
       <span class="section-header__label text-secondary">{{ section.settings.label }}</span>
       <h2 class="section-header__title">{{ section.settings.title }}</h2>
       <p class="section-header__desc">{{ section.settings.description }}</p>
       <button class="btn btn--primary btn--lg quiz-start-btn" id="quiz-start">
-        Comenzar Quiz ✨
+        Comenzar Quiz
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </button>
     </div>
 
     <!-- Quiz Questions -->
     <div class="quiz-container" id="quiz-container" style="display:none;">
-      <div class="quiz-progress" id="quiz-progress">
-        {% for block in section.blocks %}
-          {% if block.type == 'question' %}
-            <div class="quiz-progress__bar">
-              <div class="quiz-progress__fill" data-q="{{ forloop.index0 }}"></div>
-            </div>
-          {% endif %}
-        {% endfor %}
+      <!-- Progress bar continua -->
+      <div class="quiz-progress-continuous">
+        <div class="quiz-progress-continuous__fill" id="quiz-progress-bar" style="width: 0%;"></div>
       </div>
+      <span class="quiz-counter" id="quiz-counter">Pregunta 1 de {{ section.blocks | where: 'type', 'question' | size }}</span>
+
+      <!-- Back button -->
+      <button class="quiz-back-btn" id="quiz-back" aria-label="Volver a la pregunta anterior">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Atras
+      </button>
 
       {% assign q_index = 0 %}
       {% for block in section.blocks %}
         {% if block.type == 'question' %}
           <div class="quiz-question" id="quiz-q-{{ q_index }}" data-question="{{ q_index }}" style="{% if q_index > 0 %}display:none;{% endif %}" {{ block.shopify_attributes }}>
-            <span class="quiz-question__counter">
-              Pregunta {{ q_index | plus: 1 }}
-            </span>
             <h2 class="quiz-question__title">{{ block.settings.question }}</h2>
             <div class="quiz-options">
-              {% assign options = block.settings.option_1 | append: '||' | append: block.settings.option_2 | append: '||' | append: block.settings.option_3 | append: '||' | append: block.settings.option_4 %}
-              {% assign options_arr = options | split: '||' %}
-              {% for opt in options_arr %}
-                {% if opt != blank %}
-                  <button class="quiz-option"
-                          data-question="{{ q_index }}"
-                          data-answer="{{ forloop.index0 }}"
-                          data-result-key="{{ block.settings.result_key }}">
-                    {{ opt }}
-                  </button>
-                {% endif %}
-              {% endfor %}
+              {%- comment -%} Option 1 {%- endcomment -%}
+              {% if block.settings.option_1 != blank %}
+                <button class="quiz-option"
+                        data-question="{{ q_index }}"
+                        data-answer="0"
+                        data-pts-energia="{{ block.settings.opt1_energia }}"
+                        data-pts-belleza="{{ block.settings.opt1_belleza }}"
+                        data-pts-inmunidad="{{ block.settings.opt1_inmunidad }}"
+                        data-pts-digestion="{{ block.settings.opt1_digestion }}">
+                  <span class="quiz-option__emoji">{{ block.settings.opt1_emoji }}</span>
+                  <span class="quiz-option__text">{{ block.settings.option_1 }}</span>
+                </button>
+              {% endif %}
+
+              {%- comment -%} Option 2 {%- endcomment -%}
+              {% if block.settings.option_2 != blank %}
+                <button class="quiz-option"
+                        data-question="{{ q_index }}"
+                        data-answer="1"
+                        data-pts-energia="{{ block.settings.opt2_energia }}"
+                        data-pts-belleza="{{ block.settings.opt2_belleza }}"
+                        data-pts-inmunidad="{{ block.settings.opt2_inmunidad }}"
+                        data-pts-digestion="{{ block.settings.opt2_digestion }}">
+                  <span class="quiz-option__emoji">{{ block.settings.opt2_emoji }}</span>
+                  <span class="quiz-option__text">{{ block.settings.option_2 }}</span>
+                </button>
+              {% endif %}
+
+              {%- comment -%} Option 3 {%- endcomment -%}
+              {% if block.settings.option_3 != blank %}
+                <button class="quiz-option"
+                        data-question="{{ q_index }}"
+                        data-answer="2"
+                        data-pts-energia="{{ block.settings.opt3_energia }}"
+                        data-pts-belleza="{{ block.settings.opt3_belleza }}"
+                        data-pts-inmunidad="{{ block.settings.opt3_inmunidad }}"
+                        data-pts-digestion="{{ block.settings.opt3_digestion }}">
+                  <span class="quiz-option__emoji">{{ block.settings.opt3_emoji }}</span>
+                  <span class="quiz-option__text">{{ block.settings.option_3 }}</span>
+                </button>
+              {% endif %}
+
+              {%- comment -%} Option 4 {%- endcomment -%}
+              {% if block.settings.option_4 != blank %}
+                <button class="quiz-option"
+                        data-question="{{ q_index }}"
+                        data-answer="3"
+                        data-pts-energia="{{ block.settings.opt4_energia }}"
+                        data-pts-belleza="{{ block.settings.opt4_belleza }}"
+                        data-pts-inmunidad="{{ block.settings.opt4_inmunidad }}"
+                        data-pts-digestion="{{ block.settings.opt4_digestion }}">
+                  <span class="quiz-option__emoji">{{ block.settings.opt4_emoji }}</span>
+                  <span class="quiz-option__text">{{ block.settings.option_4 }}</span>
+                </button>
+              {% endif %}
             </div>
           </div>
           {% assign q_index = q_index | plus: 1 %}
@@ -54,29 +97,33 @@
     <!-- Quiz Results -->
     <div class="quiz-result" id="quiz-result" style="display:none;">
       <div class="quiz-result__icon" id="quiz-result-icon">✨</div>
-      <h2 class="quiz-result__title">¡Tu Match Perfecto!</h2>
+      <h2 class="quiz-result__title">Tu Match Perfecto!</h2>
       <h3 class="quiz-result__subtitle text-primary" id="quiz-result-name"></h3>
-      <div class="quiz-result__products" id="quiz-result-products">
-        <!-- Filled by JS with recommended product links -->
+      <p class="quiz-result__desc" id="quiz-result-desc"></p>
+      <div class="quiz-result__products" id="quiz-result-products"></div>
+      <div class="quiz-result__actions">
+        <button class="btn btn--primary btn--md" id="quiz-share">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Compartir Resultado
+        </button>
+        <button class="btn btn--outline btn--md" id="quiz-restart">
+          Volver a Intentar
+        </button>
       </div>
-      <button class="btn btn--outline quiz-restart" id="quiz-restart">
-        Volver a Intentar
-      </button>
     </div>
   </div>
 </section>
 
 <script>
-  /* Quiz result mapping - maps first answer index to a result key */
   window.__quizResults = {
     {% for block in section.blocks %}
       {% if block.type == 'result' %}
         "{{ block.settings.result_key }}": {
           "title": {{ block.settings.result_title | json }},
           "emoji": {{ block.settings.emoji | json }},
+          "description": {{ block.settings.result_description | json }},
           "product_url_1": {{ block.settings.product_1 | json }},
-          "product_url_2": {{ block.settings.product_2 | json }},
-          "description": {{ block.settings.result_description | json }}
+          "product_url_2": {{ block.settings.product_2 | json }}
         },
       {% endif %}
     {% endfor %}
@@ -96,14 +143,14 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Título",
+      "label": "Titulo",
       "default": "Descubre Tu Rutina Ideal"
     },
     {
       "type": "textarea",
       "id": "description",
-      "label": "Descripción",
-      "default": "Responde unas preguntas rápidas y te recomendaremos los productos perfectos para ti."
+      "label": "Descripcion",
+      "default": "Responde unas preguntas rapidas y te recomendaremos los productos perfectos para ti."
     }
   ],
   "blocks": [
@@ -111,22 +158,41 @@
       "type": "question",
       "name": "Pregunta",
       "settings": [
-        { "type": "text", "id": "question", "label": "Pregunta", "default": "¿Cuál es tu principal objetivo?" },
-        { "type": "text", "id": "option_1", "label": "Opción 1", "default": "Más energía" },
-        { "type": "text", "id": "option_2", "label": "Opción 2", "default": "Mejor piel" },
-        { "type": "text", "id": "option_3", "label": "Opción 3", "default": "Defensas fuertes" },
-        { "type": "text", "id": "option_4", "label": "Opción 4", "default": "Mejor digestión" },
-        { "type": "text", "id": "result_key", "label": "Clave de resultado (para mapear)", "default": "energia" }
+        { "type": "text", "id": "question", "label": "Pregunta", "default": "Cual es tu principal objetivo?" },
+        { "type": "text", "id": "option_1", "label": "Opcion 1", "default": "Mas energia" },
+        { "type": "text", "id": "opt1_emoji", "label": "Emoji opcion 1", "default": "⚡" },
+        { "type": "number", "id": "opt1_energia", "label": "Pts Energia (op 1)", "default": 3 },
+        { "type": "number", "id": "opt1_belleza", "label": "Pts Belleza (op 1)", "default": 0 },
+        { "type": "number", "id": "opt1_inmunidad", "label": "Pts Inmunidad (op 1)", "default": 1 },
+        { "type": "number", "id": "opt1_digestion", "label": "Pts Digestion (op 1)", "default": 0 },
+        { "type": "text", "id": "option_2", "label": "Opcion 2", "default": "Mejor piel" },
+        { "type": "text", "id": "opt2_emoji", "label": "Emoji opcion 2", "default": "✨" },
+        { "type": "number", "id": "opt2_energia", "label": "Pts Energia (op 2)", "default": 0 },
+        { "type": "number", "id": "opt2_belleza", "label": "Pts Belleza (op 2)", "default": 3 },
+        { "type": "number", "id": "opt2_inmunidad", "label": "Pts Inmunidad (op 2)", "default": 0 },
+        { "type": "number", "id": "opt2_digestion", "label": "Pts Digestion (op 2)", "default": 1 },
+        { "type": "text", "id": "option_3", "label": "Opcion 3", "default": "Defensas fuertes" },
+        { "type": "text", "id": "opt3_emoji", "label": "Emoji opcion 3", "default": "🛡️" },
+        { "type": "number", "id": "opt3_energia", "label": "Pts Energia (op 3)", "default": 1 },
+        { "type": "number", "id": "opt3_belleza", "label": "Pts Belleza (op 3)", "default": 0 },
+        { "type": "number", "id": "opt3_inmunidad", "label": "Pts Inmunidad (op 3)", "default": 3 },
+        { "type": "number", "id": "opt3_digestion", "label": "Pts Digestion (op 3)", "default": 0 },
+        { "type": "text", "id": "option_4", "label": "Opcion 4", "default": "Mejor digestion" },
+        { "type": "text", "id": "opt4_emoji", "label": "Emoji opcion 4", "default": "🌿" },
+        { "type": "number", "id": "opt4_energia", "label": "Pts Energia (op 4)", "default": 0 },
+        { "type": "number", "id": "opt4_belleza", "label": "Pts Belleza (op 4)", "default": 0 },
+        { "type": "number", "id": "opt4_inmunidad", "label": "Pts Inmunidad (op 4)", "default": 1 },
+        { "type": "number", "id": "opt4_digestion", "label": "Pts Digestion (op 4)", "default": 3 }
       ]
     },
     {
       "type": "result",
       "name": "Resultado",
       "settings": [
-        { "type": "text", "id": "result_key", "label": "Clave", "default": "energia" },
-        { "type": "text", "id": "result_title", "label": "Título del resultado", "default": "Pack Energía Natural" },
+        { "type": "text", "id": "result_key", "label": "Clave (energia/belleza/inmunidad/digestion)", "default": "energia" },
+        { "type": "text", "id": "result_title", "label": "Titulo del resultado", "default": "Pack Energia Natural" },
         { "type": "text", "id": "emoji", "label": "Emoji", "default": "⚡" },
-        { "type": "textarea", "id": "result_description", "label": "Descripción", "default": "Estos productos te ayudarán a sentirte más activa" },
+        { "type": "textarea", "id": "result_description", "label": "Descripcion", "default": "Estos productos te ayudaran a sentirte mas activa y llena de energia durante todo el dia." },
         { "type": "product", "id": "product_1", "label": "Producto recomendado 1" },
         { "type": "product", "id": "product_2", "label": "Producto recomendado 2" }
       ]
@@ -136,13 +202,60 @@
     {
       "name": "Quiz Saluva",
       "blocks": [
-        { "type": "question", "settings": { "question": "¿Cuál es tu principal objetivo de bienestar?", "option_1": "Más energía en el día", "option_2": "Mejorar mi piel y cabello", "option_3": "Fortalecer mis defensas", "option_4": "Mejorar mi digestión" } },
-        { "type": "question", "settings": { "question": "¿Cómo describirías tu nivel de estrés?", "option_1": "Bajo, me siento tranquila", "option_2": "Moderado, algunos días difíciles", "option_3": "Alto, me cuesta relajarme", "option_4": "Muy alto, necesito ayuda" } },
-        { "type": "question", "settings": { "question": "¿Cómo es tu alimentación?", "option_1": "Muy balanceada y variada", "option_2": "Buena pero podría mejorar", "option_3": "Irregular, como lo que puedo", "option_4": "Tengo restricciones alimentarias" } },
-        { "type": "result", "settings": { "result_key": "0", "result_title": "Pack Energía Natural", "emoji": "⚡", "result_description": "Potencia tu día con suplementos naturales" } },
-        { "type": "result", "settings": { "result_key": "1", "result_title": "Ritual de Belleza", "emoji": "✨", "result_description": "Nutre tu piel y cabello desde adentro" } },
-        { "type": "result", "settings": { "result_key": "2", "result_title": "Escudo Inmunológico", "emoji": "🛡️", "result_description": "Fortalece tus defensas naturalmente" } },
-        { "type": "result", "settings": { "result_key": "3", "result_title": "Equilibrio Digestivo", "emoji": "🌿", "result_description": "Mejora tu digestión y bienestar intestinal" } }
+        {
+          "type": "question",
+          "settings": {
+            "question": "Cual es tu principal objetivo de bienestar?",
+            "option_1": "Mas energia en el dia", "opt1_emoji": "⚡", "opt1_energia": 3, "opt1_belleza": 0, "opt1_inmunidad": 1, "opt1_digestion": 0,
+            "option_2": "Mejorar mi piel y cabello", "opt2_emoji": "✨", "opt2_energia": 0, "opt2_belleza": 3, "opt2_inmunidad": 0, "opt2_digestion": 1,
+            "option_3": "Fortalecer mis defensas", "opt3_emoji": "🛡️", "opt3_energia": 1, "opt3_belleza": 0, "opt3_inmunidad": 3, "opt3_digestion": 0,
+            "option_4": "Mejorar mi digestion", "opt4_emoji": "🌿", "opt4_energia": 0, "opt4_belleza": 0, "opt4_inmunidad": 1, "opt4_digestion": 3
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Como describirias tu nivel de estres?",
+            "option_1": "Bajo, me siento tranquila", "opt1_emoji": "😌", "opt1_energia": 1, "opt1_belleza": 1, "opt1_inmunidad": 1, "opt1_digestion": 1,
+            "option_2": "Moderado, algunos dias dificiles", "opt2_emoji": "😐", "opt2_energia": 2, "opt2_belleza": 1, "opt2_inmunidad": 1, "opt2_digestion": 0,
+            "option_3": "Alto, me cuesta relajarme", "opt3_emoji": "😰", "opt3_energia": 1, "opt3_belleza": 0, "opt3_inmunidad": 2, "opt3_digestion": 1,
+            "option_4": "Muy alto, necesito ayuda", "opt4_emoji": "😫", "opt4_energia": 0, "opt4_belleza": 1, "opt4_inmunidad": 1, "opt4_digestion": 2
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Como es tu alimentacion?",
+            "option_1": "Muy balanceada y variada", "opt1_emoji": "🥗", "opt1_energia": 1, "opt1_belleza": 2, "opt1_inmunidad": 1, "opt1_digestion": 0,
+            "option_2": "Buena pero podria mejorar", "opt2_emoji": "🍽️", "opt2_energia": 1, "opt2_belleza": 1, "opt2_inmunidad": 1, "opt2_digestion": 1,
+            "option_3": "Irregular, como lo que puedo", "opt3_emoji": "🍕", "opt3_energia": 2, "opt3_belleza": 0, "opt3_inmunidad": 1, "opt3_digestion": 2,
+            "option_4": "Tengo restricciones alimentarias", "opt4_emoji": "🚫", "opt4_energia": 0, "opt4_belleza": 1, "opt4_inmunidad": 2, "opt4_digestion": 1
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Que momento del dia te cuesta mas?",
+            "option_1": "La manana, me cuesta arrancar", "opt1_emoji": "🌅", "opt1_energia": 3, "opt1_belleza": 0, "opt1_inmunidad": 0, "opt1_digestion": 1,
+            "option_2": "Despues de almuerzo, me da sueno", "opt2_emoji": "😴", "opt2_energia": 2, "opt2_belleza": 0, "opt2_inmunidad": 1, "opt2_digestion": 2,
+            "option_3": "La tarde, pierdo concentracion", "opt3_emoji": "🧠", "opt3_energia": 2, "opt3_belleza": 1, "opt3_inmunidad": 1, "opt3_digestion": 0,
+            "option_4": "La noche, no logro descansar bien", "opt4_emoji": "🌙", "opt4_energia": 0, "opt4_belleza": 1, "opt4_inmunidad": 2, "opt4_digestion": 1
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Que area de tu cuerpo sientes que necesita mas atencion?",
+            "option_1": "Piel, cabello y unas", "opt1_emoji": "💅", "opt1_energia": 0, "opt1_belleza": 3, "opt1_inmunidad": 0, "opt1_digestion": 1,
+            "option_2": "Sistema digestivo", "opt2_emoji": "🫄", "opt2_energia": 0, "opt2_belleza": 0, "opt2_inmunidad": 1, "opt2_digestion": 3,
+            "option_3": "Sistema inmune", "opt3_emoji": "🛡️", "opt3_energia": 1, "opt3_belleza": 0, "opt3_inmunidad": 3, "opt3_digestion": 0,
+            "option_4": "Energia y vitalidad general", "opt4_emoji": "💪", "opt4_energia": 3, "opt4_belleza": 1, "opt4_inmunidad": 0, "opt4_digestion": 0
+          }
+        },
+        { "type": "result", "settings": { "result_key": "energia", "result_title": "Pack Energia Natural", "emoji": "⚡", "result_description": "Tu cuerpo necesita un impulso de energia natural. Estos productos te ayudaran a sentirte activa, enfocada y llena de vitalidad durante todo el dia." } },
+        { "type": "result", "settings": { "result_key": "belleza", "result_title": "Ritual de Belleza", "emoji": "✨", "result_description": "Tu belleza viene de adentro. Estos productos nutren tu piel, fortalecen tu cabello y te hacen brillar con salud y confianza." } },
+        { "type": "result", "settings": { "result_key": "inmunidad", "result_title": "Escudo Inmunologico", "emoji": "🛡️", "result_description": "Fortalecer tus defensas es clave para sentirte bien. Estos productos refuerzan tu sistema inmune de forma natural y efectiva." } },
+        { "type": "result", "settings": { "result_key": "digestion", "result_title": "Equilibrio Digestivo", "emoji": "🌿", "result_description": "Una buena digestion es la base del bienestar. Estos productos te ayudan a equilibrar tu sistema digestivo y sentirte liviana." } }
       ]
     }
   ]

@@ -1,7 +1,9 @@
 <header class="header" id="site-header">
   <div class="header__inner container">
     <a href="/" class="header__logo">
-      {% if section.settings.logo != blank %}
+      {% if settings.logo != blank %}
+        <img src="{{ settings.logo | image_url: width: 200 }}" alt="{{ shop.name }}" class="header__logo-img" style="width: {{ settings.logo_width }}px;">
+      {% elsif section.settings.logo != blank %}
         <img src="{{ section.settings.logo | image_url: width: 200 }}" alt="{{ shop.name }}" class="header__logo-img">
       {% else %}
         <span class="header__logo-text">{{ shop.name }}</span>
@@ -11,11 +13,97 @@
     <nav class="header__nav" id="main-nav">
       {% for block in section.blocks %}
         {% if block.type == 'nav_link' %}
-          <a href="{{ block.settings.url }}"
-             class="header__nav-link {% if block.settings.is_anchor %}nav-anchor{% endif %}"
-             {% if block.settings.is_anchor %}data-section="{{ block.settings.anchor_id }}"{% endif %}>
-            {{ block.settings.label }}
-          </a>
+          <div class="header__nav-item {% if block.settings.has_megamenu %}header__nav-item--mega{% endif %}">
+            <a href="{{ block.settings.url }}"
+               class="header__nav-link {% if block.settings.is_anchor %}nav-anchor{% endif %}"
+               {% if block.settings.is_anchor %}data-section="{{ block.settings.anchor_id }}"{% endif %}
+               {% if block.settings.has_megamenu %}aria-haspopup="true" aria-expanded="false"{% endif %}>
+              {{ block.settings.label }}
+              {% if block.settings.has_megamenu %}
+                <svg class="header__nav-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              {% endif %}
+            </a>
+
+            {% if block.settings.has_megamenu %}
+              <div class="mega-menu" id="mega-menu">
+                <div class="mega-menu__inner container">
+                  <div class="mega-menu__columns">
+                    <div class="mega-menu__col">
+                      <h4 class="mega-menu__col-title">{{ block.settings.mega_col1_title }}</h4>
+                      {% assign links1 = block.settings.mega_col1_links | split: '|' %}
+                      {% for link_text in links1 %}
+                        {% assign parts = link_text | split: ':' %}
+                        {% if parts.size >= 2 %}
+                          <a href="{{ parts[1] }}" class="mega-menu__link">{{ parts[0] }}</a>
+                        {% elsif link_text != blank %}
+                          <a href="/collections/{{ link_text | handleize }}" class="mega-menu__link">{{ link_text }}</a>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                    <div class="mega-menu__col">
+                      <h4 class="mega-menu__col-title">{{ block.settings.mega_col2_title }}</h4>
+                      {% assign links2 = block.settings.mega_col2_links | split: '|' %}
+                      {% for link_text in links2 %}
+                        {% assign parts = link_text | split: ':' %}
+                        {% if parts.size >= 2 %}
+                          <a href="{{ parts[1] }}" class="mega-menu__link">{{ parts[0] }}</a>
+                        {% elsif link_text != blank %}
+                          <a href="/collections/{{ link_text | handleize }}" class="mega-menu__link">{{ link_text }}</a>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="mega-menu__featured">
+                    {% if block.settings.mega_img_1 != blank %}
+                      <a href="{{ block.settings.mega_img_1_url }}" class="mega-menu__featured-card">
+                        <div class="mega-menu__featured-img-wrap">
+                          <img src="{{ block.settings.mega_img_1 | image_url: width: 300 }}" alt="{{ block.settings.mega_img_1_title }}" class="mega-menu__featured-img" loading="lazy">
+                        </div>
+                        <span class="mega-menu__featured-title">{{ block.settings.mega_img_1_title }} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                      </a>
+                    {% endif %}
+                    {% if block.settings.mega_img_2 != blank %}
+                      <a href="{{ block.settings.mega_img_2_url }}" class="mega-menu__featured-card">
+                        <div class="mega-menu__featured-img-wrap">
+                          <img src="{{ block.settings.mega_img_2 | image_url: width: 300 }}" alt="{{ block.settings.mega_img_2_title }}" class="mega-menu__featured-img" loading="lazy">
+                        </div>
+                        <span class="mega-menu__featured-title">{{ block.settings.mega_img_2_title }} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                      </a>
+                    {% endif %}
+                    {% if block.settings.mega_img_3 != blank %}
+                      <a href="{{ block.settings.mega_img_3_url }}" class="mega-menu__featured-card">
+                        <div class="mega-menu__featured-img-wrap">
+                          <img src="{{ block.settings.mega_img_3 | image_url: width: 300 }}" alt="{{ block.settings.mega_img_3_title }}" class="mega-menu__featured-img" loading="lazy">
+                        </div>
+                        <span class="mega-menu__featured-title">{{ block.settings.mega_img_3_title }} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                      </a>
+                    {% endif %}
+                    {%- comment -%} Placeholders si no hay imagenes {%- endcomment -%}
+                    {% if block.settings.mega_img_1 == blank and block.settings.mega_img_2 == blank and block.settings.mega_img_3 == blank %}
+                      <a href="/collections/all" class="mega-menu__featured-card">
+                        <div class="mega-menu__featured-img-wrap mega-menu__featured-placeholder">
+                          <span>🌿</span>
+                        </div>
+                        <span class="mega-menu__featured-title">Novedades <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                      </a>
+                      <a href="/collections/bestsellers" class="mega-menu__featured-card">
+                        <div class="mega-menu__featured-img-wrap mega-menu__featured-placeholder">
+                          <span>🔥</span>
+                        </div>
+                        <span class="mega-menu__featured-title">Mas Vendidos <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                      </a>
+                      <a href="/collections/ofertas" class="mega-menu__featured-card">
+                        <div class="mega-menu__featured-img-wrap mega-menu__featured-placeholder">
+                          <span>✨</span>
+                        </div>
+                        <span class="mega-menu__featured-title">Ofertas <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
         {% endif %}
       {% endfor %}
     </nav>
@@ -32,12 +120,29 @@
         <span class="header__cart-count" id="cart-count">{{ cart.item_count }}</span>
       </a>
 
-      <button class="header__hamburger" id="mobile-toggle" aria-label="Menú">
+      <button class="header__hamburger" id="mobile-toggle" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
     </div>
   </div>
 </header>
+
+<!-- Search Overlay -->
+<div class="search-overlay" id="search-overlay" aria-hidden="true">
+  <div class="search-overlay__backdrop" id="search-close-backdrop"></div>
+  <div class="search-overlay__inner">
+    <div class="search-overlay__input-wrap">
+      <svg class="search-overlay__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text"
+             class="search-overlay__input"
+             id="search-input"
+             placeholder="Buscar productos..."
+             autocomplete="off"
+             aria-label="Buscar productos">
+    </div>
+    <div class="search-overlay__results" id="search-results" style="display:none;"></div>
+  </div>
+</div>
 
 {% schema %}
 {
@@ -52,7 +157,7 @@
   "blocks": [
     {
       "type": "nav_link",
-      "name": "Enlace de navegación",
+      "name": "Enlace de navegacion",
       "settings": [
         {
           "type": "text",
@@ -68,14 +173,92 @@
         {
           "type": "checkbox",
           "id": "is_anchor",
-          "label": "¿Es un ancla en la página?",
+          "label": "Es un ancla en la pagina?",
           "default": true
         },
         {
           "type": "text",
           "id": "anchor_id",
-          "label": "ID de la sección",
+          "label": "ID de la seccion",
           "default": "landing"
+        },
+        {
+          "type": "checkbox",
+          "id": "has_megamenu",
+          "label": "Tiene mega menu?",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "mega_col1_title",
+          "label": "Mega Menu - Titulo columna 1",
+          "default": "POR CATEGORIA"
+        },
+        {
+          "type": "text",
+          "id": "mega_col1_links",
+          "label": "Mega Menu - Links columna 1 (nombre|nombre)",
+          "default": "Vitaminas|Minerales|Superfoods|Proteinas|Collageno"
+        },
+        {
+          "type": "text",
+          "id": "mega_col2_title",
+          "label": "Mega Menu - Titulo columna 2",
+          "default": "POR BENEFICIO"
+        },
+        {
+          "type": "text",
+          "id": "mega_col2_links",
+          "label": "Mega Menu - Links columna 2 (nombre|nombre)",
+          "default": "Energia|Belleza|Inmunidad|Digestion|Relajacion"
+        },
+        {
+          "type": "image_picker",
+          "id": "mega_img_1",
+          "label": "Mega Menu - Imagen destacada 1"
+        },
+        {
+          "type": "text",
+          "id": "mega_img_1_title",
+          "label": "Mega Menu - Titulo imagen 1",
+          "default": "Novedades"
+        },
+        {
+          "type": "url",
+          "id": "mega_img_1_url",
+          "label": "Mega Menu - URL imagen 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "mega_img_2",
+          "label": "Mega Menu - Imagen destacada 2"
+        },
+        {
+          "type": "text",
+          "id": "mega_img_2_title",
+          "label": "Mega Menu - Titulo imagen 2",
+          "default": "Mas Vendidos"
+        },
+        {
+          "type": "url",
+          "id": "mega_img_2_url",
+          "label": "Mega Menu - URL imagen 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "mega_img_3",
+          "label": "Mega Menu - Imagen destacada 3"
+        },
+        {
+          "type": "text",
+          "id": "mega_img_3_title",
+          "label": "Mega Menu - Titulo imagen 3",
+          "default": "Ofertas"
+        },
+        {
+          "type": "url",
+          "id": "mega_img_3_url",
+          "label": "Mega Menu - URL imagen 3"
         }
       ]
     }
@@ -85,10 +268,10 @@
       "name": "Encabezado Saluva",
       "blocks": [
         { "type": "nav_link", "settings": { "label": "Inicio", "url": "/", "is_anchor": true, "anchor_id": "landing" } },
-        { "type": "nav_link", "settings": { "label": "Tienda", "url": "/collections/all", "is_anchor": true, "anchor_id": "tienda" } },
-        { "type": "nav_link", "settings": { "label": "Más Vendidos", "url": "/collections/bestsellers", "is_anchor": true, "anchor_id": "bestsellers" } },
-        { "type": "nav_link", "settings": { "label": "Aprende con Nosotros", "url": "/pages/aprende", "is_anchor": true, "anchor_id": "aprende" } },
-        { "type": "nav_link", "settings": { "label": "Aprende a Conocerte", "url": "/pages/quiz", "is_anchor": true, "anchor_id": "quiz" } }
+        { "type": "nav_link", "settings": { "label": "Tienda", "url": "/collections/all", "is_anchor": true, "anchor_id": "tienda", "has_megamenu": true } },
+        { "type": "nav_link", "settings": { "label": "Mas Vendidos", "url": "/collections/bestsellers", "is_anchor": true, "anchor_id": "bestsellers" } },
+        { "type": "nav_link", "settings": { "label": "Crece con Nosotros", "url": "/pages/aprende", "is_anchor": true, "anchor_id": "aprende" } },
+        { "type": "nav_link", "settings": { "label": "Tu Quiz", "url": "/pages/quiz", "is_anchor": true, "anchor_id": "quiz" } }
       ]
     }
   ]

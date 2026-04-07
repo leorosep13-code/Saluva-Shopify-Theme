@@ -1,1 +1,180 @@
-[]
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Saluva",
+    "theme_version": "1.0.0",
+    "theme_author": "Saluva Team",
+    "theme_documentation_url": "https://saluva.co"
+  },
+  {
+    "name": "Colores",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Color primario",
+        "default": "#a4c93b"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Color secundario",
+        "default": "#d2a4f3"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Color de fondo",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Color de texto",
+        "default": "#1a1a1a"
+      },
+      {
+        "type": "color",
+        "id": "color_text_muted",
+        "label": "Color de texto secundario",
+        "default": "#6b6b6b"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Color de acento",
+        "default": "#f59e0b"
+      }
+    ]
+  },
+  {
+    "name": "Tipografia",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Fuente de titulos",
+        "default": "league_spartan_n7"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Fuente del cuerpo",
+        "default": "league_spartan_n4"
+      },
+      {
+        "type": "range",
+        "id": "font_size_base",
+        "label": "Tamano de fuente base (px)",
+        "min": 14,
+        "max": 20,
+        "step": 1,
+        "default": 16,
+        "unit": "px"
+      }
+    ]
+  },
+  {
+    "name": "Logo",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo de la tienda"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "label": "Ancho del logo (px)",
+        "min": 60,
+        "max": 200,
+        "step": 10,
+        "default": 120,
+        "unit": "px"
+      }
+    ]
+  },
+  {
+    "name": "Redes Sociales",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_instagram",
+        "label": "URL de Instagram"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook",
+        "label": "URL de Facebook"
+      },
+      {
+        "type": "url",
+        "id": "social_tiktok",
+        "label": "URL de TikTok"
+      },
+      {
+        "type": "url",
+        "id": "social_twitter",
+        "label": "URL de Twitter / X"
+      },
+      {
+        "type": "url",
+        "id": "social_youtube",
+        "label": "URL de YouTube"
+      }
+    ]
+  },
+  {
+    "name": "Carrito",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Tipo de carrito",
+        "options": [
+          { "value": "page", "label": "Pagina completa" },
+          { "value": "drawer", "label": "Panel lateral" }
+        ],
+        "default": "page"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_note_enable",
+        "label": "Permitir nota en el carrito",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Newsletter",
+    "settings": [
+      {
+        "type": "text",
+        "id": "newsletter_title",
+        "label": "Titulo del newsletter",
+        "default": "Unete a nuestra comunidad"
+      },
+      {
+        "type": "textarea",
+        "id": "newsletter_description",
+        "label": "Descripcion del newsletter",
+        "default": "Recibe tips de bienestar, ofertas exclusivas y novedades directamente en tu correo."
+      }
+    ]
+  },
+  {
+    "name": "SEO y Metadatos",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "og_image",
+        "label": "Imagen para compartir (Open Graph)"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      }
+    ]
+  }
+]

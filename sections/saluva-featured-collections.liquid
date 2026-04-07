@@ -1,0 +1,70 @@
+<section class="featured-collections">
+  <div class="container">
+    <div class="featured-collections__grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.url }}" class="featured-collections__card animate-on-scroll" data-delay="{{ forloop.index0 | times: 150 }}" {{ block.shopify_attributes }}>
+          <div class="featured-collections__img-wrap">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 800 }}"
+                   alt="{{ block.settings.title }}"
+                   class="featured-collections__img"
+                   loading="lazy">
+            {% else %}
+              <div class="featured-collections__placeholder">
+                {% if forloop.index == 1 %}🔥{% else %}🎁{% endif %}
+              </div>
+            {% endif %}
+          </div>
+          <div class="featured-collections__content">
+            <h3 class="featured-collections__title">{{ block.settings.title }}</h3>
+            <span class="featured-collections__cta">
+              Explorar
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Colecciones Destacadas",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "collection_card",
+      "name": "Tarjeta de coleccion",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titulo",
+          "default": "Mas Vendidos"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen de fondo"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "URL de la coleccion"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Colecciones Destacadas",
+      "blocks": [
+        { "type": "collection_card", "settings": { "title": "Productos Mas Vendidos" } },
+        { "type": "collection_card", "settings": { "title": "Ahorra con Bundles" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
