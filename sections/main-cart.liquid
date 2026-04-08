@@ -1,3 +1,10 @@
+<style>
+  .cart-remove-btn:hover {
+    background: #fee2e2 !important;
+    border-color: #fca5a5 !important;
+    color: #dc2626 !important;
+  }
+</style>
 <section class="cart-page" style="padding: 40px 0 70px;">
   <div class="container" style="max-width: 800px;">
     <h1 style="font-size: 36px; font-weight: 800; margin-bottom: 32px;">Tu Carrito</h1>
@@ -21,9 +28,20 @@
               {% endif %}
               <p style="font-size: 15px; font-weight: 700; margin-top: 4px;">{{ item.final_line_price | money }}</p>
             </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
               <input type="number" name="updates[]" value="{{ item.quantity }}" min="0"
                      style="width: 60px; padding: 8px; border: 1px solid var(--color-border); border-radius: 8px; text-align: center; font-family: var(--font-family);">
+              <a href="/cart/change?id={{ item.key }}&quantity=0"
+                 class="cart-remove-btn"
+                 aria-label="Eliminar {{ item.product.title }}"
+                 style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--color-border); background: none; color: var(--color-text-muted); transition: all 0.2s; text-decoration: none;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  <line x1="10" y1="11" x2="10" y2="17"/>
+                  <line x1="14" y1="11" x2="14" y2="17"/>
+                </svg>
+              </a>
             </div>
           </div>
         {% endfor %}
