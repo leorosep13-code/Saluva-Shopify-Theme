@@ -38,8 +38,8 @@
             "gradient_end": "#d2a4f3",
             "story_image": "shopify://shop_images/Captura_de_pantalla_2026-04-08_120400.png",
             "story_text": "Descubre nuestra rutina matutina perfecta",
-            "story_cta_text": "Ver mas",
-            "story_cta_url": ""
+            "story_cta_text": "Omega 3",
+            "story_cta_url": "shopify://products/omega-3-active-plus-1300-mg"
           }
         },
         "story_pBGA6K": {
@@ -54,8 +54,8 @@
             "gradient_end": "#d2a4f3",
             "story_image": "shopify://shop_images/uro.png",
             "story_text": "",
-            "story_cta_text": "Ver más",
-            "story_cta_url": "shopify://products/biotina-100-softgels"
+            "story_cta_text": "Uro Probióticos",
+            "story_cta_url": "shopify://products/uro-probiotico-vaginal"
           }
         },
         "story_nrkHAg": {
@@ -70,7 +70,7 @@
             "gradient_end": "#d2a4f3",
             "story_image": "shopify://shop_images/creatina_video.png",
             "story_text": "",
-            "story_cta_text": "Ver más",
+            "story_cta_text": "Creatina",
             "story_cta_url": "shopify://products/creatina-monohidratada-for-women"
           }
         }
