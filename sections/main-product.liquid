@@ -82,8 +82,24 @@
             <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
           {% endif %}
 
+          <!-- Quantity selector -->
+          <div style="margin-bottom: 16px;">
+            <label for="product-quantity" style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 8px;">
+              Cantidad
+            </label>
+            <div style="display: flex; align-items: center; gap: 0; width: fit-content; border: 2px solid var(--color-border); border-radius: 12px; overflow: hidden;">
+              <button type="button" class="qty-btn" data-action="minus"
+                      style="width: 44px; height: 44px; background: none; border: none; font-size: 20px; font-weight: 700; cursor: pointer; color: var(--color-text); display: flex; align-items: center; justify-content: center;">−</button>
+              <input type="number" name="quantity" id="product-quantity" value="1" min="1"
+                     style="width: 50px; height: 44px; border: none; border-left: 1px solid var(--color-border); border-right: 1px solid var(--color-border); text-align: center; font-family: var(--font-family); font-size: 16px; font-weight: 700; -moz-appearance: textfield;"
+                     onwheel="this.blur()">
+              <button type="button" class="qty-btn" data-action="plus"
+                      style="width: 44px; height: 44px; background: none; border: none; font-size: 20px; font-weight: 700; cursor: pointer; color: var(--color-text); display: flex; align-items: center; justify-content: center;">+</button>
+            </div>
+          </div>
+
           <button type="submit"
-                  class="btn btn--primary btn--lg"
+                  class="btn btn--primary btn--lg product-add-btn"
                   style="width: 100%; justify-content: center; padding: 16px; font-size: 16px;"
                   {% unless product.available %}disabled{% endunless %}>
             {% if product.available %}

@@ -831,7 +831,54 @@ function initDigitalProductModals() {
   });
 }
 
-/* ── AJAX Add to Cart with Toast ── */
+/* ── Quantity Buttons ── */
+document.addEventListener('click', (e) => {
+  const qtyBtn = e.target.closest('.qty-btn');
+  if (!qtyBtn) return;
+  const input = qtyBtn.parentElement.querySelector('input[type="number"]');
+  if (!input) return;
+  const current = parseInt(input.value) || 1;
+  if (qtyBtn.dataset.action === 'minus' && current > 1) {
+    input.value = current - 1;
+  } else if (qtyBtn.dataset.action === 'plus') {
+    input.value = current + 1;
+  }
+});
+
+/* ── Product Page AJAX Add to Cart ── */
+document.addEventListener('submit', (e) => {
+  const form = e.target.closest('form[action="/cart/add"]');
+  if (!form) return;
+  const btn = form.querySelector('.product-add-btn');
+  if (!btn) return;
+
+  e.preventDefault();
+  const formData = new FormData(form);
+  const originalText = btn.textContent.trim();
+
+  btn.innerHTML = '<span class="spinner"></span> Agregando...';
+  btn.disabled = true;
+
+  fetch('/cart/add.js', { method: 'POST', body: formData })
+    .then(r => r.json())
+    .then(() => {
+      btn.textContent = '✓ Agregado';
+      showToast('Producto agregado al carrito', 'success');
+      updateCartCount();
+      updateFloatingCheckout();
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }, 2000);
+    })
+    .catch(() => {
+      showToast('Error al agregar al carrito', 'error');
+      btn.textContent = originalText;
+      btn.disabled = false;
+    });
+});
+
+/* ── AJAX Add to Cart with Toast (product cards) ── */
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.product-card__add-btn, .quick-add-btn');
   if (!btn || btn.disabled) return;
@@ -906,9 +953,44 @@ function updateCartCount() {
   if (countEl) {
     fetch('/cart.js')
       .then(r => r.json())
-      .then(cart => { countEl.textContent = cart.item_count; });
+      .then(cart => {
+        countEl.textContent = cart.item_count;
+        updateFloatingCheckout(cart.item_count);
+      });
   }
 }
+
+/* ── Floating Checkout Button ── */
+function updateFloatingCheckout(count) {
+  const btn = document.getElementById('floating-checkout');
+  const countEl = document.getElementById('floating-checkout-count');
+  if (!btn) return;
+
+  if (count === undefined) {
+    fetch('/cart.js')
+      .then(r => r.json())
+      .then(cart => {
+        updateFloatingCheckout(cart.item_count);
+      });
+    return;
+  }
+
+  if (countEl) countEl.textContent = count;
+  if (count > 0) {
+    btn.style.display = 'flex';
+    requestAnimationFrame(() => {
+      btn.classList.add('visible');
+    });
+  } else {
+    btn.classList.remove('visible');
+    setTimeout(() => { btn.style.display = 'none'; }, 400);
+  }
+}
+
+// Initialize floating checkout on page load
+document.addEventListener('DOMContentLoaded', () => {
+  updateFloatingCheckout();
+});
 
 /* ── Toast Helper ── */
 function showToast(message, type) {
