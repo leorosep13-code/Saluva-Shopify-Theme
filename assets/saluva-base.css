@@ -523,6 +523,7 @@ input[type="number"]::-webkit-outer-spin-button {
   .section-header__title { font-size: 28px; }
   .section-header--split { flex-direction: column; align-items: flex-start; gap: 16px; }
   .search-overlay { padding-top: 80px; }
+  .floating-checkout { bottom: 16px; padding: 12px 22px; font-size: 14px; }
   .scroll-top-btn { bottom: 16px; right: 16px; }
-  .toast-container { bottom: 70px; right: 16px; left: 16px; }
+  .toast-container { bottom: 80px; right: 16px; left: 16px; }
 }

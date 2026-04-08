@@ -978,8 +978,11 @@ function updateFloatingCheckout(count) {
   if (countEl) countEl.textContent = count;
   if (count > 0) {
     btn.style.display = 'flex';
+    // Double rAF ensures display:flex is painted before adding transition class
     requestAnimationFrame(() => {
-      btn.classList.add('visible');
+      requestAnimationFrame(() => {
+        btn.classList.add('visible');
+      });
     });
   } else {
     btn.classList.remove('visible');
