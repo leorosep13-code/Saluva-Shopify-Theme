@@ -127,6 +127,14 @@ function initStories() {
   const STORY_DURATION = 5000;
   const TICK = 50;
   const viewedStories = JSON.parse(localStorage.getItem('saluva_viewed_stories') || '[]');
+  const ytPlayers = {};
+
+  // Load YouTube IFrame API
+  if (!window.YT) {
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  }
 
   // Mark viewed stories visually
   bubbles.forEach((bubble, i) => {
@@ -143,7 +151,87 @@ function initStories() {
     }
   }
 
+  function destroyAllPlayers() {
+    Object.keys(ytPlayers).forEach(key => {
+      try { ytPlayers[key].destroy(); } catch(e) {}
+      delete ytPlayers[key];
+    });
+  }
+
+  function loadVideo(slideIndex) {
+    const slide = slides[slideIndex];
+    const videoId = slide.dataset.videoId;
+    if (!videoId || videoId.trim() === '') return;
+
+    const containerId = 'story-video-' + slideIndex;
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // Clear previous content
+    container.innerHTML = '<div id="yt-player-' + slideIndex + '"></div>';
+
+    function createPlayer() {
+      if (ytPlayers[slideIndex]) {
+        try { ytPlayers[slideIndex].destroy(); } catch(e) {}
+      }
+      ytPlayers[slideIndex] = new YT.Player('yt-player-' + slideIndex, {
+        videoId: videoId,
+        playerVars: {
+          autoplay: 1,
+          controls: 1,
+          modestbranding: 1,
+          rel: 0,
+          playsinline: 1,
+          vq: 'hd720'
+        },
+        events: {
+          onReady: function(event) {
+            event.target.setVolume(50);
+            event.target.setPlaybackQuality('hd720');
+            event.target.playVideo();
+            // Hide poster once video starts
+            const poster = slide.querySelector('.story-overlay__slide-img--poster');
+            if (poster) setTimeout(() => { poster.style.display = 'none'; }, 500);
+          },
+          onStateChange: function(event) {
+            // Video ended
+            if (event.data === YT.PlayerState.ENDED) {
+              if (currentSlide < slides.length - 1) {
+                showSlide(currentSlide + 1);
+              }
+            }
+          }
+        }
+      });
+    }
+
+    if (window.YT && window.YT.Player) {
+      createPlayer();
+    } else {
+      // Wait for API to load
+      const prevCallback = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = function() {
+        if (prevCallback) prevCallback();
+        createPlayer();
+      };
+    }
+  }
+
+  function stopVideo(slideIndex) {
+    if (ytPlayers[slideIndex]) {
+      try { ytPlayers[slideIndex].pauseVideo(); } catch(e) {}
+    }
+    // Reset poster
+    const poster = slides[slideIndex].querySelector('.story-overlay__slide-img--poster');
+    if (poster) poster.style.display = '';
+  }
+
   function showSlide(index) {
+    if (index < 0 || index >= slides.length) return;
+
+    // Stop previous video
+    stopVideo(currentSlide);
+
     currentSlide = index;
     progress = 0;
     markViewed(index);
@@ -158,30 +246,37 @@ function initStories() {
       }
     });
 
-    // Handle video slides
     const currentSlideEl = slides[index];
-    const iframe = currentSlideEl.querySelector('iframe');
     const isVideo = currentSlideEl.dataset.mediaType === 'video';
 
-    // Pause all other videos
-    slides.forEach((s, i) => {
-      if (i !== index) {
-        const otherIframe = s.querySelector('iframe');
-        if (otherIframe) otherIframe.src = otherIframe.src;
-      }
-    });
+    // Update header: avatar + title
+    const titleEl = document.getElementById('story-overlay-title');
+    const avatarEl = document.getElementById('story-overlay-avatar');
+    if (titleEl) titleEl.textContent = currentSlideEl.dataset.storyTitle || '';
+    if (avatarEl) {
+      const thumb = currentSlideEl.dataset.storyThumb;
+      avatarEl.style.backgroundImage = thumb ? 'url(' + thumb + ')' : '';
+    }
 
-    if (isVideo && iframe) {
+    // Hide touch zones on video slides so YT controls are accessible
+    const touchZones = document.querySelector('.story-overlay__touch-zones');
+    if (touchZones) touchZones.style.display = isVideo ? 'none' : 'flex';
+
+    if (isVideo) {
       clearInterval(progressInterval);
+      loadVideo(index);
     } else {
       startProgress();
     }
+  }
 
-    // Update story title
-    const titleEl = document.getElementById('story-overlay-title');
-    if (titleEl && currentSlideEl.dataset.storyTitle) {
-      titleEl.textContent = currentSlideEl.dataset.storyTitle;
-    }
+  function goPrev() {
+    if (currentSlide > 0) showSlide(currentSlide - 1);
+  }
+
+  function goNext() {
+    if (currentSlide < slides.length - 1) showSlide(currentSlide + 1);
+    else closeOverlay();
   }
 
   function startProgress() {
@@ -192,11 +287,7 @@ function initStories() {
         progressFills[currentSlide].style.width = Math.min(progress, 100) + '%';
       }
       if (progress >= 100) {
-        if (currentSlide < slides.length - 1) {
-          showSlide(currentSlide + 1);
-        } else {
-          closeOverlay();
-        }
+        goNext();
       }
     }, TICK);
   }
@@ -210,64 +301,69 @@ function initStories() {
 
   function closeOverlay() {
     clearInterval(progressInterval);
+    stopVideo(currentSlide);
+    destroyAllPlayers();
+    // Clear all video containers
+    slides.forEach((s, i) => {
+      const vc = document.getElementById('story-video-' + i);
+      if (vc) vc.innerHTML = '';
+      const poster = s.querySelector('.story-overlay__slide-img--poster');
+      if (poster) poster.style.display = '';
+    });
     overlay.classList.remove('active');
     overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }
 
+  // Open from card click
   bubbles.forEach(bubble => {
     bubble.addEventListener('click', () => {
-      const idx = parseInt(bubble.dataset.storyIndex);
-      openOverlay(idx);
+      openOverlay(parseInt(bubble.dataset.storyIndex));
     });
   });
 
+  // Close button + backdrop
   const closeBtn = document.getElementById('story-close-btn');
   const closeBg = document.getElementById('story-close-backdrop');
-  const prevBtn = document.getElementById('story-prev');
-  const nextBtn = document.getElementById('story-next');
-
   if (closeBtn) closeBtn.addEventListener('click', closeOverlay);
   if (closeBg) closeBg.addEventListener('click', closeOverlay);
-  if (prevBtn) prevBtn.addEventListener('click', () => showSlide(Math.max(0, currentSlide - 1)));
-  if (nextBtn) nextBtn.addEventListener('click', () => {
-    if (currentSlide < slides.length - 1) showSlide(currentSlide + 1);
-    else closeOverlay();
-  });
+
+  // Desktop nav arrows
+  const prevBtn = document.getElementById('story-prev');
+  const nextBtn = document.getElementById('story-next');
+  if (prevBtn) prevBtn.addEventListener('click', goPrev);
+  if (nextBtn) nextBtn.addEventListener('click', goNext);
+
+  // Tap zones (Instagram style: left 30% = prev, right 70% = next)
+  const touchPrev = document.getElementById('story-touch-prev');
+  const touchNext = document.getElementById('story-touch-next');
+  if (touchPrev) touchPrev.addEventListener('click', goPrev);
+  if (touchNext) touchNext.addEventListener('click', goNext);
 
   // Keyboard nav
   document.addEventListener('keydown', (e) => {
     if (!overlay.classList.contains('active')) return;
     if (e.key === 'Escape') closeOverlay();
-    if (e.key === 'ArrowLeft') showSlide(Math.max(0, currentSlide - 1));
-    if (e.key === 'ArrowRight') {
-      if (currentSlide < slides.length - 1) showSlide(currentSlide + 1);
-      else closeOverlay();
-    }
+    if (e.key === 'ArrowLeft') goPrev();
+    if (e.key === 'ArrowRight') goNext();
   });
 
-  // Swipe support for mobile
+  // Swipe support - on entire overlay for easy swiping anywhere
   let touchStartX = 0;
   let touchStartY = 0;
-  const storyCard = document.getElementById('story-card');
-  if (storyCard) {
-    storyCard.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    }, { passive: true });
+  overlay.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
 
-    storyCard.addEventListener('touchend', (e) => {
-      const diffX = e.changedTouches[0].screenX - touchStartX;
-      const diffY = e.changedTouches[0].screenY - touchStartY;
-      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-        if (diffX < 0 && currentSlide < slides.length - 1) {
-          showSlide(currentSlide + 1);
-        } else if (diffX > 0 && currentSlide > 0) {
-          showSlide(currentSlide - 1);
-        }
-      }
-    }, { passive: true });
-  }
+  overlay.addEventListener('touchend', (e) => {
+    const diffX = e.changedTouches[0].screenX - touchStartX;
+    const diffY = e.changedTouches[0].screenY - touchStartY;
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+      if (diffX < 0) goNext();
+      else goPrev();
+    }
+  }, { passive: true });
 }
 
 /* ── Tienda Filters ── */

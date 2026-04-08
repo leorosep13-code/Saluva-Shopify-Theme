@@ -37,9 +37,16 @@
   <div class="story-overlay" id="story-overlay" aria-hidden="true">
     <div class="story-overlay__backdrop" id="story-close-backdrop"></div>
     <div class="story-overlay__card" id="story-card">
-      <!-- Story title at top -->
+
+      <!-- Header: avatar + name (Instagram style) -->
       <div class="story-overlay__header">
-        <span class="story-overlay__title" id="story-overlay-title"></span>
+        <div class="story-overlay__user">
+          <div class="story-overlay__avatar" id="story-overlay-avatar"></div>
+          <span class="story-overlay__username" id="story-overlay-title"></span>
+        </div>
+        <button class="story-overlay__close" id="story-close-btn" aria-label="Cerrar historias">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
 
       <div class="story-overlay__progress" id="story-progress-bar">
@@ -50,12 +57,20 @@
         {% endfor %}
       </div>
 
+      <!-- Touch zones: tap left = prev, tap right = next -->
+      <div class="story-overlay__touch-zones">
+        <div class="story-overlay__touch-prev" id="story-touch-prev"></div>
+        <div class="story-overlay__touch-next" id="story-touch-next"></div>
+      </div>
+
       <div class="story-overlay__slides" id="story-slides">
         {% for block in section.blocks %}
           <div class="story-overlay__slide"
                data-slide="{{ forloop.index0 }}"
                data-media-type="{{ block.settings.media_type }}"
                data-story-title="{{ block.settings.title }}"
+               data-story-thumb="{% if block.settings.story_image != blank %}{{ block.settings.story_image | image_url: width: 80 }}{% elsif block.settings.image != blank %}{{ block.settings.image | image_url: width: 80 }}{% endif %}"
+               data-video-id="{% if block.settings.media_type == 'video' and block.settings.video_url != blank %}{% assign vurl = block.settings.video_url | default: '' %}{% if vurl contains 'youtube.com' or vurl contains 'youtu.be' %}{% assign vid = vurl | split: 'v=' | last | split: '&' | first %}{% if vid == vurl %}{% assign vid = vurl | split: 'youtu.be/' | last | split: '?' | first %}{% endif %}{{ vid }}{% endif %}{% endif %}"
                style="background: linear-gradient(135deg, {{ block.settings.gradient_start }}, {{ block.settings.gradient_end }});">
 
             {% if block.settings.media_type == 'video' and block.settings.video_url != blank %}
@@ -64,26 +79,8 @@
                      alt="{{ block.settings.title }}"
                      class="story-overlay__slide-img story-overlay__slide-img--poster">
               {% endif %}
-              <div class="story-overlay__video-wrap">
-                {% assign video_url_str = block.settings.video_url | default: '' %}
-                {% if video_url_str contains 'youtube.com' or video_url_str contains 'youtu.be' %}
-                  {% assign video_id = video_url_str | split: 'v=' | last | split: '&' | first %}
-                  {% if video_id == video_url_str %}
-                    {% assign video_id = video_url_str | split: 'youtu.be/' | last | split: '?' | first %}
-                  {% endif %}
-                  <iframe src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&mute=1&playsinline=1&rel=0"
-                          class="story-overlay__video"
-                          allow="autoplay; encrypted-media"
-                          allowfullscreen
-                          frameborder="0"></iframe>
-                {% elsif video_url_str contains 'vimeo.com' %}
-                  {% assign vimeo_id = video_url_str | split: 'vimeo.com/' | last | split: '?' | first %}
-                  <iframe src="https://player.vimeo.com/video/{{ vimeo_id }}?autoplay=1&muted=1"
-                          class="story-overlay__video"
-                          allow="autoplay; encrypted-media"
-                          allowfullscreen
-                          frameborder="0"></iframe>
-                {% endif %}
+              <div class="story-overlay__video-wrap" id="story-video-{{ forloop.index0 }}">
+                <!-- Video loaded by JS via YouTube IFrame API -->
               </div>
             {% elsif block.settings.story_image != blank %}
               <img src="{{ block.settings.story_image | image_url: width: 720 }}"
@@ -93,23 +90,14 @@
 
             <div class="story-overlay__slide-content">
               <span class="story-overlay__slide-emoji">{{ block.settings.emoji }}</span>
-              <h2 class="story-overlay__slide-title">{{ block.settings.title }}</h2>
               <p class="story-overlay__slide-text">{{ block.settings.story_text }}</p>
               {% if block.settings.story_cta_text != blank %}
-                <a href="{{ block.settings.story_cta_url }}" class="btn btn--primary">
+                <a href="{{ block.settings.story_cta_url }}" class="btn btn--primary story-overlay__cta-btn">
                   {{ block.settings.story_cta_text }}
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
               {% endif %}
             </div>
-
-            {% if forloop.first %}
-              <div class="story-overlay__swipe-hint">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-                Desliza para ver mas
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-              </div>
-            {% endif %}
           </div>
         {% endfor %}
       </div>
@@ -119,9 +107,6 @@
       </button>
       <button class="story-overlay__nav story-overlay__nav--next" id="story-next" aria-label="Historia siguiente">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-      <button class="story-overlay__close" id="story-close-btn" aria-label="Cerrar historias">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
   </div>
