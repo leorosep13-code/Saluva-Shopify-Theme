@@ -262,6 +262,12 @@ function initStories() {
     const touchZones = document.querySelector('.story-overlay__touch-zones');
     if (touchZones) touchZones.style.display = isVideo ? 'none' : 'flex';
 
+    // Show/hide nav arrows based on position
+    const prevArrow = document.getElementById('story-prev');
+    const nextArrow = document.getElementById('story-next');
+    if (prevArrow) prevArrow.classList.toggle('story-overlay__nav--hidden', index === 0);
+    if (nextArrow) nextArrow.classList.toggle('story-overlay__nav--hidden', index === slides.length - 1);
+
     if (isVideo) {
       clearInterval(progressInterval);
       loadVideo(index);

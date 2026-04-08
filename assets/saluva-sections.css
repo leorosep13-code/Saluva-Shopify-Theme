@@ -574,15 +574,15 @@
   z-index: 15;
 }
 
-/* Nav arrows (desktop) */
+/* Nav arrows - inside card, always visible */
 .story-overlay__nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.15);
+  background: rgba(0,0,0,0.3);
   backdrop-filter: blur(4px);
   border: none;
   color: #fff;
@@ -591,11 +591,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: background 0.2s, opacity 0.2s;
+  opacity: 0.7;
 }
-.story-overlay__nav:hover { background: rgba(255,255,255,0.3); }
-.story-overlay__nav--prev { left: -52px; }
-.story-overlay__nav--next { right: -52px; }
+.story-overlay__nav:hover { background: rgba(0,0,0,0.5); opacity: 1; }
+.story-overlay__nav--prev { left: 8px; }
+.story-overlay__nav--next { right: 8px; }
+.story-overlay__nav--hidden { opacity: 0; pointer-events: none; }
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -2069,9 +2071,7 @@
   .digital-modal__img-wrap { height: 200px; }
   .story-card { width: 140px; }
   .story-overlay__card { width: 100%; height: 100%; border-radius: 0; }
-  .story-overlay__nav { display: none; }
-  .story-overlay__nav--prev,
-  .story-overlay__nav--next { display: none; }
+  .story-overlay__nav { width: 32px; height: 32px; }
   .header__nav {
     display: none;
     position: absolute;
