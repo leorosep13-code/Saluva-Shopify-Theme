@@ -3,25 +3,31 @@
     <h3 class="stories-section__label">{{ section.settings.title }}</h3>
     <div class="stories-section__track" id="stories-track">
       {% for block in section.blocks %}
-        <button class="story-bubble" data-story-index="{{ forloop.index0 }}" {{ block.shopify_attributes }} aria-label="Ver historia: {{ block.settings.title }}">
-          <div class="story-bubble__ring"
-               style="background: {{ block.settings.gradient_start }};">
-            {% if block.settings.image != blank %}
-              <img src="{{ block.settings.image | image_url: width: 180 }}"
+        <button class="story-card" data-story-index="{{ forloop.index0 }}" {{ block.shopify_attributes }} aria-label="Ver historia: {{ block.settings.title }}">
+          <div class="story-card__media"
+               style="background: linear-gradient(135deg, {{ block.settings.gradient_start }}, {{ block.settings.gradient_end }});">
+            {% if block.settings.story_image != blank %}
+              <img src="{{ block.settings.story_image | image_url: width: 400 }}"
                    alt="{{ block.settings.title }}"
-                   class="story-bubble__img"
+                   class="story-card__img"
                    loading="lazy">
-            {% else %}
-              <span class="story-bubble__emoji">{{ block.settings.emoji }}</span>
+            {% elsif block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 400 }}"
+                   alt="{{ block.settings.title }}"
+                   class="story-card__img"
+                   loading="lazy">
             {% endif %}
             {% if block.settings.media_type == 'video' %}
-              <span class="story-bubble__play-badge">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <span class="story-card__play-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
               </span>
             {% endif %}
+            <div class="story-card__overlay">
+              <span class="story-card__emoji">{{ block.settings.emoji }}</span>
+              <span class="story-card__title">{{ block.settings.title }}</span>
+              <span class="story-card__subtitle">{{ block.settings.subtitle }}</span>
+            </div>
           </div>
-          <span class="story-bubble__title">{{ block.settings.title }}</span>
-          <span class="story-bubble__subtitle">{{ block.settings.subtitle }}</span>
         </button>
       {% endfor %}
     </div>

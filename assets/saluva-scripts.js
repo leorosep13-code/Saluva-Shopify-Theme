@@ -103,7 +103,7 @@ function initStories() {
   const overlay = document.getElementById('story-overlay');
   const slides = document.querySelectorAll('.story-overlay__slide');
   const progressFills = document.querySelectorAll('.story-overlay__progress-fill');
-  const bubbles = document.querySelectorAll('.story-bubble');
+  const bubbles = document.querySelectorAll('.story-card');
 
   if (!overlay || slides.length === 0) return;
 
@@ -117,7 +117,7 @@ function initStories() {
   // Mark viewed stories visually
   bubbles.forEach((bubble, i) => {
     if (viewedStories.includes(i)) {
-      bubble.querySelector('.story-bubble__ring').classList.add('story-bubble__ring--viewed');
+      bubble.classList.add('story-card--viewed');
     }
   });
 
@@ -125,8 +125,7 @@ function initStories() {
     if (!viewedStories.includes(index)) {
       viewedStories.push(index);
       localStorage.setItem('saluva_viewed_stories', JSON.stringify(viewedStories));
-      const ring = bubbles[index] && bubbles[index].querySelector('.story-bubble__ring');
-      if (ring) ring.classList.add('story-bubble__ring--viewed');
+      if (bubbles[index]) bubbles[index].classList.add('story-card--viewed');
     }
   }
 
