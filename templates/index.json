@@ -26,40 +26,56 @@
     "stories": {
       "type": "saluva-stories",
       "blocks": {
+        "story_pBGA6K": {
+          "type": "story",
+          "settings": {
+            "emoji": "",
+            "title": "Probioticos",
+            "subtitle": "",
+            "media_type": "video",
+            "video_url": "https://www.youtube.com/watch?v=QyojWP-hKcE",
+            "gradient_start": "#a4c93b",
+            "gradient_end": "#d2a4f3",
+            "story_text": "",
+            "story_cta_text": "Ver más",
+            "story_cta_url": "shopify://products/biotina-100-softgels"
+          }
+        },
+        "story_dcqE4D": {
+          "type": "story",
+          "settings": {
+            "emoji": "",
+            "title": "Para tu piel",
+            "subtitle": "",
+            "media_type": "video",
+            "video_url": "https://youtube.com/watch?v=xML725I6z40",
+            "gradient_start": "#a4c93b",
+            "gradient_end": "#d2a4f3",
+            "story_text": "Descubre nuestra rutina matutina perfecta",
+            "story_cta_text": "Ver mas",
+            "story_cta_url": ""
+          }
+        },
         "story_nrkHAg": {
           "type": "story",
           "settings": {
             "emoji": "",
-            "title": "Unboxing",
+            "title": "Mandamientos de la Creatina",
             "subtitle": "",
             "media_type": "video",
-            "video_url": "https://www.youtube.com/watch?v=A_CDJ1lVbPI",
+            "video_url": "https://www.youtube.com/watch?v=FdGnqPKuI7w",
             "gradient_start": "#a4c93b",
             "gradient_end": "#d2a4f3",
             "story_text": "",
-            "story_cta_text": "",
-            "story_cta_url": ""
-          }
-        },
-        "story_6hhCJP": {
-          "type": "story",
-          "settings": {
-            "emoji": "",
-            "title": "Ritual AM",
-            "subtitle": "",
-            "media_type": "video",
-            "video_url": "https://www.youtube.com/watch?v=z2ZtfAREeDQ",
-            "gradient_start": "#a4c93b",
-            "gradient_end": "#d2a4f3",
-            "story_text": "",
-            "story_cta_text": "",
-            "story_cta_url": ""
+            "story_cta_text": "Ver más",
+            "story_cta_url": "shopify://products/creatina-monohidratada-for-women"
           }
         }
       },
       "block_order": [
-        "story_nrkHAg",
-        "story_6hhCJP"
+        "story_pBGA6K",
+        "story_dcqE4D",
+        "story_nrkHAg"
       ],
       "settings": {
         "title": "Descubre Nuestro Mundo"
