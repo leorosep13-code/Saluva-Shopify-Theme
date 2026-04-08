@@ -65,7 +65,25 @@
                      class="story-overlay__slide-img story-overlay__slide-img--poster">
               {% endif %}
               <div class="story-overlay__video-wrap">
-                {{ block.settings.video_url | external_video_tag: class: 'story-overlay__video' }}
+                {% assign video_url_str = block.settings.video_url | default: '' %}
+                {% if video_url_str contains 'youtube.com' or video_url_str contains 'youtu.be' %}
+                  {% assign video_id = video_url_str | split: 'v=' | last | split: '&' | first %}
+                  {% if video_id == video_url_str %}
+                    {% assign video_id = video_url_str | split: 'youtu.be/' | last | split: '?' | first %}
+                  {% endif %}
+                  <iframe src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&mute=1&playsinline=1&rel=0"
+                          class="story-overlay__video"
+                          allow="autoplay; encrypted-media"
+                          allowfullscreen
+                          frameborder="0"></iframe>
+                {% elsif video_url_str contains 'vimeo.com' %}
+                  {% assign vimeo_id = video_url_str | split: 'vimeo.com/' | last | split: '?' | first %}
+                  <iframe src="https://player.vimeo.com/video/{{ vimeo_id }}?autoplay=1&muted=1"
+                          class="story-overlay__video"
+                          allow="autoplay; encrypted-media"
+                          allowfullscreen
+                          frameborder="0"></iframe>
+                {% endif %}
               </div>
             {% elsif block.settings.story_image != blank %}
               <img src="{{ block.settings.story_image | image_url: width: 720 }}"
