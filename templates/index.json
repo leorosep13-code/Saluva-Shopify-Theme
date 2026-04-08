@@ -26,21 +26,6 @@
     "stories": {
       "type": "saluva-stories",
       "blocks": {
-        "story_pBGA6K": {
-          "type": "story",
-          "settings": {
-            "emoji": "",
-            "title": "Probioticos",
-            "subtitle": "",
-            "media_type": "video",
-            "video_url": "https://www.youtube.com/watch?v=QyojWP-hKcE",
-            "gradient_start": "#a4c93b",
-            "gradient_end": "#d2a4f3",
-            "story_text": "",
-            "story_cta_text": "Ver más",
-            "story_cta_url": "shopify://products/biotina-100-softgels"
-          }
-        },
         "story_dcqE4D": {
           "type": "story",
           "settings": {
@@ -54,6 +39,21 @@
             "story_text": "Descubre nuestra rutina matutina perfecta",
             "story_cta_text": "Ver mas",
             "story_cta_url": ""
+          }
+        },
+        "story_pBGA6K": {
+          "type": "story",
+          "settings": {
+            "emoji": "",
+            "title": "Probioticos",
+            "subtitle": "",
+            "media_type": "video",
+            "video_url": "https://www.youtube.com/watch?v=QyojWP-hKcE",
+            "gradient_start": "#a4c93b",
+            "gradient_end": "#d2a4f3",
+            "story_text": "",
+            "story_cta_text": "Ver más",
+            "story_cta_url": "shopify://products/biotina-100-softgels"
           }
         },
         "story_nrkHAg": {
@@ -73,8 +73,8 @@
         }
       },
       "block_order": [
-        "story_pBGA6K",
         "story_dcqE4D",
+        "story_pBGA6K",
         "story_nrkHAg"
       ],
       "settings": {
