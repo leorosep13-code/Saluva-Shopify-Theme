@@ -534,7 +534,8 @@ function initScrollToTop() {
 
 /* ── Animate on Scroll ── */
 function initAnimateOnScroll() {
-  const elements = document.querySelectorAll('.animate-on-scroll');
+  const selectors = '.animate-on-scroll, .anim-slide-left, .anim-slide-right, .anim-zoom, .anim-fade, .anim-bounce-up, .anim-flip, .anim-stagger';
+  const elements = document.querySelectorAll(selectors);
   if (elements.length === 0) return;
 
   const observer = new IntersectionObserver((entries) => {
@@ -547,7 +548,7 @@ function initAnimateOnScroll() {
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.08 });
 
   elements.forEach(el => observer.observe(el));
 }

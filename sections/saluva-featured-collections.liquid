@@ -2,7 +2,7 @@
   <div class="container">
     <div class="featured-collections__grid">
       {% for block in section.blocks %}
-        <a href="{{ block.settings.url }}" class="featured-collections__card animate-on-scroll" data-delay="{{ forloop.index0 | times: 150 }}" {{ block.shopify_attributes }}>
+        <a href="{{ block.settings.url }}" class="featured-collections__card anim-zoom" data-delay="{{ forloop.index0 | times: 150 }}" {{ block.shopify_attributes }}>
           <div class="featured-collections__img-wrap">
             {% if block.settings.image != blank %}
               <img src="{{ block.settings.image | image_url: width: 800 }}"

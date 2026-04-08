@@ -37,11 +37,11 @@
   {% else %}
     {%- comment -%} Modo lateral (original) {%- endcomment -%}
     <div class="landing-hero__bg">
-      <div class="landing-hero__orb landing-hero__orb--primary"></div>
-      <div class="landing-hero__orb landing-hero__orb--secondary"></div>
+      <div class="landing-hero__orb landing-hero__orb--primary anim-float"></div>
+      <div class="landing-hero__orb landing-hero__orb--secondary anim-float" style="animation-delay: -3s;"></div>
     </div>
     <div class="landing-hero__inner container">
-      <div class="landing-hero__content animate-on-scroll">
+      <div class="landing-hero__content anim-slide-left">
         <span class="landing-hero__badge">{{ section.settings.badge_text }}</span>
         <h1 class="landing-hero__title">
           {{ section.settings.title_line1 }}
@@ -57,7 +57,7 @@
           </a>
         </div>
       </div>
-      <div class="landing-hero__visual animate-on-scroll" data-delay="200">
+      <div class="landing-hero__visual anim-slide-right" data-delay="200">
         {% if section.settings.hero_image != blank %}
           <img src="{{ section.settings.hero_image | image_url: width: 600 }}"
                alt="{{ section.settings.hero_image.alt }}"

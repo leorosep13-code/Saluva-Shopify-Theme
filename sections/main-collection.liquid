@@ -44,7 +44,7 @@
     <!-- Products Grid -->
     <div class="tienda-grid">
       {% for product in collection.products %}
-        <div class="tienda-grid__item animate-on-scroll" data-delay="{{ forloop.index0 | times: 60 }}">
+        <div class="tienda-grid__item anim-zoom" data-delay="{{ forloop.index0 | times: 60 }}">
           {% render 'product-card', product: product %}
         </div>
       {% endfor %}

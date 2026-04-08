@@ -1,6 +1,6 @@
 <section id="aprende" class="aprende-section">
   <div class="container">
-    <div class="section-header section-header--center animate-on-scroll">
+    <div class="section-header section-header--center anim-flip">
       <span class="section-header__label text-secondary">{{ section.settings.label }}</span>
       <h2 class="section-header__title">{{ section.settings.title }}</h2>
       <p class="section-header__desc">{{ section.settings.description }}</p>
@@ -18,7 +18,7 @@
     <!-- Recurso Destacado -->
     {% for block in section.blocks %}
       {% if block.type == 'featured_resource' %}
-        <div class="aprende-featured animate-on-scroll" {{ block.shopify_attributes }}>
+        <div class="aprende-featured anim-slide-right" {{ block.shopify_attributes }}>
           <div class="aprende-featured__img-wrap">
             {% if block.settings.image != blank %}
               <img src="{{ block.settings.image | image_url: width: 600 }}"
@@ -53,7 +53,7 @@
       {% assign card_idx = 0 %}
       {% for block in section.blocks %}
         {% if block.type == 'digital_product' %}
-          <div class="digital-card digital-card--vertical animate-on-scroll"
+          <div class="digital-card digital-card--vertical anim-bounce-up"
                data-type="{{ block.settings.content_type }}"
                data-modal="digital-modal-{{ card_idx }}"
                data-delay="{{ card_idx | times: 100 }}"

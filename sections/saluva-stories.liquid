@@ -1,7 +1,7 @@
 <section class="stories-section">
   <div class="container">
-    <h3 class="stories-section__label">{{ section.settings.title }}</h3>
-    <div class="stories-section__track" id="stories-track">
+    <h3 class="stories-section__label anim-fade">{{ section.settings.title }}</h3>
+    <div class="stories-section__track anim-slide-left" id="stories-track">
       {% for block in section.blocks %}
         <button class="story-card" data-story-index="{{ forloop.index0 }}" {{ block.shopify_attributes }} aria-label="Ver historia: {{ block.settings.title }}">
           <div class="story-card__media"

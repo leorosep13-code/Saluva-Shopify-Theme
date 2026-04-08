@@ -1,6 +1,6 @@
 <section id="tienda" class="tienda-section">
   <div class="container">
-    <div class="section-header section-header--center animate-on-scroll">
+    <div class="section-header section-header--center anim-flip">
       <span class="section-header__label">{{ section.settings.label }}</span>
       <h2 class="section-header__title">{{ section.settings.title }}</h2>
     </div>
@@ -36,7 +36,7 @@
     <!-- Products Grid -->
     <div class="tienda-grid" id="tienda-grid">
       {% for product in collection.products limit: section.settings.products_limit %}
-        <div class="tienda-grid__item animate-on-scroll"
+        <div class="tienda-grid__item anim-zoom"
              data-type="{{ product.type | handleize }}"
              data-price="{{ product.price }}"
              data-date="{{ product.published_at | date: '%s' }}"

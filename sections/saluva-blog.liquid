@@ -1,6 +1,6 @@
 <section class="blog-section">
   <div class="container">
-    <div class="section-header section-header--split animate-on-scroll">
+    <div class="section-header section-header--split anim-slide-left">
       <div>
         <span class="section-header__label">{{ section.settings.label }}</span>
         <h2 class="section-header__title">{{ section.settings.title }}</h2>
@@ -18,7 +18,7 @@
       {% assign target_blog = blogs[blog_handle] %}
       {% if target_blog.articles.size > 0 %}
         {% for article in target_blog.articles limit: 3 %}
-          <article class="blog-card animate-on-scroll" data-delay="{{ forloop.index0 | times: 120 }}">
+          <article class="blog-card anim-zoom" data-delay="{{ forloop.index0 | times: 120 }}">
             <a href="{{ article.url }}" class="blog-card__media">
               {% if article.image != blank %}
                 <img src="{{ article.image | image_url: width: 600 }}"
@@ -45,7 +45,7 @@
       {% else %}
         {%- comment -%} Placeholder blog cards {%- endcomment -%}
         {% for i in (1..3) %}
-          <article class="blog-card animate-on-scroll" data-delay="{{ forloop.index0 | times: 120 }}">
+          <article class="blog-card anim-zoom" data-delay="{{ forloop.index0 | times: 120 }}">
             <div class="blog-card__media">
               <div class="blog-card__placeholder">
                 <span>📝</span>

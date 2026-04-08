@@ -154,20 +154,130 @@ img { max-width: 100%; height: auto; display: block; }
 /* ── Animate on Scroll ── */
 .animate-on-scroll {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .animate-on-scroll.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
+/* Slide from left */
+.anim-slide-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.anim-slide-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Slide from right */
+.anim-slide-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.anim-slide-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Scale up (zoom in) */
+.anim-zoom {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.anim-zoom.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Fade only */
+.anim-fade {
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.anim-fade.visible {
+  opacity: 1;
+}
+
+/* Slide up with bounce */
+.anim-bounce-up {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.anim-bounce-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Flip in */
+.anim-flip {
+  opacity: 0;
+  transform: perspective(600px) rotateX(15deg) translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.anim-flip.visible {
+  opacity: 1;
+  transform: perspective(600px) rotateX(0) translateY(0);
+}
+
+/* Stagger children - applied to parent, animates direct children */
+.anim-stagger > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.anim-stagger.visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+.anim-stagger.visible > *:nth-child(1) { transition-delay: 0ms; }
+.anim-stagger.visible > *:nth-child(2) { transition-delay: 80ms; }
+.anim-stagger.visible > *:nth-child(3) { transition-delay: 160ms; }
+.anim-stagger.visible > *:nth-child(4) { transition-delay: 240ms; }
+.anim-stagger.visible > *:nth-child(5) { transition-delay: 320ms; }
+.anim-stagger.visible > *:nth-child(6) { transition-delay: 400ms; }
+.anim-stagger.visible > *:nth-child(7) { transition-delay: 480ms; }
+.anim-stagger.visible > *:nth-child(8) { transition-delay: 560ms; }
+
+/* Parallax-style subtle float for decorative elements */
+.anim-float {
+  animation: animFloat 6s ease-in-out infinite;
+}
+@keyframes animFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* Counter / number count-up glow */
+.anim-counter.visible {
+  animation: counterPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes counterPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-on-scroll {
+  .animate-on-scroll,
+  .anim-slide-left,
+  .anim-slide-right,
+  .anim-zoom,
+  .anim-fade,
+  .anim-bounce-up,
+  .anim-flip,
+  .anim-stagger > * {
     opacity: 1;
     transform: none;
     transition: none;
   }
+  .anim-float { animation: none; }
 }
 
 /* ── Scroll to Top ── */
