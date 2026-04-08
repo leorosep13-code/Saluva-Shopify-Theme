@@ -1,12 +1,53 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "landing-hero": {
       "type": "saluva-landing",
-      "settings": {}
+      "settings": {
+        "layout_mode": "lateral",
+        "badge_text": "BIENESTAR FEMENINO NATURAL",
+        "title_line1": "Tu cuerpo merece",
+        "title_highlight": "lo mejor",
+        "description": "Suplementos naturales diseñados especialmente para el bienestar de la mujer. Descubre tu version mas saludable.",
+        "cta_text": "Explorar Tienda",
+        "cta_url": "",
+        "cta2_text": "Hacer el Quiz",
+        "cta2_url": ""
+      }
     },
     "stories": {
       "type": "saluva-stories",
-      "settings": {}
+      "blocks": {
+        "story_6hhCJP": {
+          "type": "story",
+          "settings": {
+            "emoji": "🧘‍♀️",
+            "title": "Ritual AM",
+            "subtitle": "Tu mañana ideal",
+            "media_type": "imagen",
+            "video_url": "https://www.youtube.com/watch?v=GEECQTBuCZs",
+            "gradient_start": "#a4c93b",
+            "gradient_end": "#d2a4f3",
+            "story_text": "Descubre nuestra rutina matutina perfecta",
+            "story_cta_text": "Ver mas",
+            "story_cta_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "story_6hhCJP"
+      ],
+      "settings": {
+        "title": "Descubre Nuestro Mundo"
+      }
     },
     "trust-badges": {
       "type": "saluva-trust-badges",
@@ -14,7 +55,12 @@
     },
     "tienda": {
       "type": "saluva-tienda",
-      "settings": {}
+      "settings": {
+        "label": "NUESTRA TIENDA",
+        "title": "Explora Nuestros Productos",
+        "collection": "",
+        "products_limit": 8
+      }
     },
     "featured-collections": {
       "type": "saluva-featured-collections",
@@ -22,27 +68,59 @@
     },
     "bestsellers": {
       "type": "saluva-bestsellers",
-      "settings": {}
+      "settings": {
+        "label": "MÁS VENDIDOS",
+        "title": "Lo Que Más Aman Nuestras Clientas",
+        "collection": "",
+        "view_all_url": ""
+      }
     },
     "sale-banner": {
       "type": "saluva-sale-banner",
-      "settings": {}
+      "settings": {
+        "label": "OFERTA ESPECIAL",
+        "title": "20% Off Venta de Fin de Semana",
+        "description": "Aprovecha nuestros descuentos en productos seleccionados. Oferta por tiempo limitado.",
+        "end_date": "2026-04-30",
+        "cta_text": "COMPRAR OFERTA",
+        "cta_url": ""
+      }
     },
     "featured-product": {
       "type": "saluva-featured-product",
-      "settings": {}
+      "settings": {
+        "label": "DESTACADO",
+        "title": "El suplemento que tu cuerpo necesita",
+        "description": "<p>Nuestro producto estrella combina los mejores ingredientes naturales para tu bienestar diario. Formulado con colageno, vitaminas y minerales esenciales.</p>",
+        "cta_text": "COMPRAR AHORA",
+        "cta_url": "",
+        "bg_color": "#f0f7e0"
+      }
     },
     "aprende": {
       "type": "saluva-aprende",
-      "settings": {}
+      "settings": {
+        "label": "CRECE CON NOSOTROS",
+        "title": "Productos Digitales",
+        "description": "Guias, recetarios, masterclasses y mas. Aprende a cuidarte desde adentro."
+      }
     },
     "quiz": {
       "type": "saluva-quiz",
-      "settings": {}
+      "settings": {
+        "label": "APRENDE A CONOCERTE",
+        "title": "Descubre Tu Rutina Ideal",
+        "description": "Responde unas preguntas rapidas y te recomendaremos los productos perfectos para ti."
+      }
     },
     "blog": {
       "type": "saluva-blog",
-      "settings": {}
+      "settings": {
+        "label": "NUESTRO BLOG",
+        "title": "Blog Destacado",
+        "blog": "",
+        "view_all_url": ""
+      }
     }
   },
   "order": [

@@ -11,6 +11,17 @@
     </a>
 
     <nav class="header__nav" id="main-nav">
+      <!-- Enlaces fijos de navegación -->
+      <div class="header__nav-item">
+        <a href="/" class="header__nav-link nav-anchor" data-section="landing">Inicio</a>
+      </div>
+      <div class="header__nav-item">
+        <a href="/#tienda" class="header__nav-link nav-anchor" data-section="tienda">Tienda Online</a>
+      </div>
+      <div class="header__nav-item">
+        <a href="/#aprende" class="header__nav-link nav-anchor" data-section="aprende">Aprende a Cuidarte</a>
+      </div>
+
       {% for block in section.blocks %}
         {% if block.type == 'nav_link' %}
           <div class="header__nav-item {% if block.settings.has_megamenu %}header__nav-item--mega{% endif %}">

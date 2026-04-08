@@ -94,8 +94,22 @@ function initSmoothScroll() {
         const nav = document.getElementById('main-nav');
         if (nav) nav.classList.remove('open');
       }
+      // If section not found on this page, navigate to home with hash
+      else if (sectionId) {
+        window.location.href = '/#' + sectionId;
+      }
     });
   });
+
+  // On page load, scroll to hash target if present
+  if (window.location.hash) {
+    const hashTarget = document.getElementById(window.location.hash.substring(1));
+    if (hashTarget) {
+      setTimeout(() => {
+        hashTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
+  }
 }
 
 /* ── Stories ── */
