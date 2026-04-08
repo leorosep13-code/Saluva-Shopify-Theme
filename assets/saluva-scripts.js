@@ -533,26 +533,33 @@ function initQuiz() {
       if (nameEl) nameEl.textContent = result.title || 'Tu Pack Ideal';
       if (descEl) descEl.textContent = result.description || '';
 
-      // Render product cards
+      // Render product cards with real product data
       if (productsEl) {
         productsEl.innerHTML = '';
-        [result.product_url_1, result.product_url_2].forEach(url => {
-          if (url && url !== '') {
-            const card = document.createElement('a');
-            card.href = url;
-            card.className = 'quiz-product-card';
-            card.innerHTML = '<div class="quiz-product-card__img"><div class="quiz-product-card__placeholder">🌿</div></div><span class="quiz-product-card__cta">Ver Producto</span>';
-            productsEl.appendChild(card);
+        const products = result.products || [];
+        products.forEach(p => {
+          if (!p || !p.url) return;
+          const card = document.createElement('a');
+          card.href = p.url;
+          card.className = 'quiz-product-card';
+          let priceHtml = '<span class="quiz-product-card__price">' + p.price + '</span>';
+          if (p.compare_price) {
+            priceHtml += '<span class="quiz-product-card__compare">' + p.compare_price + '</span>';
           }
+          card.innerHTML =
+            '<div class="quiz-product-card__img">' +
+              (p.image ? '<img src="' + p.image + '" alt="' + (p.title || '') + '" loading="lazy">' : '<div class="quiz-product-card__placeholder">🌿</div>') +
+            '</div>' +
+            '<div class="quiz-product-card__info">' +
+              '<span class="quiz-product-card__name">' + (p.title || 'Producto Recomendado') + '</span>' +
+              '<div class="quiz-product-card__prices">' + priceHtml + '</div>' +
+              '<span class="quiz-product-card__cta">' + (p.available ? 'Ver Producto →' : 'Agotado') + '</span>' +
+            '</div>';
+          productsEl.appendChild(card);
         });
-        // Fallback placeholder cards
+        // Fallback if no products configured
         if (productsEl.children.length === 0) {
-          for (let i = 0; i < 2; i++) {
-            const card = document.createElement('div');
-            card.className = 'quiz-product-card';
-            card.innerHTML = '<div class="quiz-product-card__img"><div class="quiz-product-card__placeholder">🌿</div></div><span class="quiz-product-card__name">Producto Recomendado</span><span class="quiz-product-card__cta">Pronto Disponible</span>';
-            productsEl.appendChild(card);
-          }
+          productsEl.innerHTML = '<p style="color: var(--color-text-muted); font-size: 14px;">Pronto agregaremos productos recomendados para ti.</p>';
         }
       }
     }

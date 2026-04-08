@@ -122,8 +122,30 @@
           "title": {{ block.settings.result_title | json }},
           "emoji": {{ block.settings.emoji | json }},
           "description": {{ block.settings.result_description | json }},
-          "product_url_1": {{ block.settings.product_1 | json }},
-          "product_url_2": {{ block.settings.product_2 | json }}
+          "products": [
+            {% if block.settings.product_1 != blank %}
+              {% assign p1 = block.settings.product_1 %}
+              {
+                "url": {{ p1.url | json }},
+                "title": {{ p1.title | json }},
+                "price": {{ p1.price | money | json }},
+                "compare_price": {% if p1.compare_at_price > p1.price %}{{ p1.compare_at_price | money | json }}{% else %}""{% endif %},
+                "image": {{ p1.featured_image | image_url: width: 400 | json }},
+                "available": {{ p1.available | json }}
+              },
+            {% endif %}
+            {% if block.settings.product_2 != blank %}
+              {% assign p2 = block.settings.product_2 %}
+              {
+                "url": {{ p2.url | json }},
+                "title": {{ p2.title | json }},
+                "price": {{ p2.price | money | json }},
+                "compare_price": {% if p2.compare_at_price > p2.price %}{{ p2.compare_at_price | money | json }}{% else %}""{% endif %},
+                "image": {{ p2.featured_image | image_url: width: 400 | json }},
+                "available": {{ p2.available | json }}
+              },
+            {% endif %}
+          ]
         },
       {% endif %}
     {% endfor %}
