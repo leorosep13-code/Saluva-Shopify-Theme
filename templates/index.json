@@ -123,6 +123,19 @@
     },
     "featured-product": {
       "type": "saluva-featured-product",
+      "blocks": {
+        "image_TaCUND": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/colageno_promocional_1.png",
+            "alt": "Producto Saluva"
+          }
+        }
+      },
+      "block_order": [
+        "image_TaCUND"
+      ],
+      "custom_css": [],
       "settings": {
         "label": "DESTACADO",
         "title": "El suplemento que tu cuerpo necesita",
@@ -134,6 +147,7 @@
     },
     "aprende": {
       "type": "saluva-aprende",
+      "disabled": true,
       "settings": {
         "label": "CRECE CON NOSOTROS",
         "title": "Productos Digitales",
@@ -142,6 +156,7 @@
     },
     "quiz": {
       "type": "saluva-quiz",
+      "disabled": true,
       "settings": {
         "label": "APRENDE A CONOCERTE",
         "title": "Descubre Tu Rutina Ideal",
@@ -150,6 +165,7 @@
     },
     "blog": {
       "type": "saluva-blog",
+      "disabled": true,
       "settings": {
         "label": "NUESTRO BLOG",
         "title": "Blog Destacado",
