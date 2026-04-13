@@ -20,7 +20,8 @@
         "cta_text": "Explorar Tienda",
         "cta_url": "shopify://collections/all",
         "cta2_text": "Hacer el Test",
-        "cta2_url": "https://test-suplementos-saluva.lovable.app/"
+        "cta2_url": "https://test-suplementos-saluva.lovable.app/",
+        "hero_image": "shopify://shop_images/Saluva_logo_3.png"
       }
     },
     "stories": {
@@ -124,24 +125,24 @@
     "featured-product": {
       "type": "saluva-featured-product",
       "blocks": {
-        "image_RkHjhX": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/Gemini_Generated_Image_28j0xp28j0xp28j0.png",
-            "alt": "Producto Saluva"
-          }
-        },
         "image_TaCUND": {
           "type": "image",
           "settings": {
             "image": "shopify://shop_images/colageno_promocional_1.png",
             "alt": "Producto Saluva"
           }
+        },
+        "image_RkHjhX": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Gemini_Generated_Image_28j0xp28j0xp28j0.png",
+            "alt": "Producto Saluva"
+          }
         }
       },
       "block_order": [
-        "image_RkHjhX",
-        "image_TaCUND"
+        "image_TaCUND",
+        "image_RkHjhX"
       ],
       "custom_css": [],
       "settings": {
