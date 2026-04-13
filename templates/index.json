@@ -19,8 +19,8 @@
         "description": "Suplementos naturales diseñados especialmente para el bienestar de la mujer. Descubre tu version mas saludable.",
         "cta_text": "Explorar Tienda",
         "cta_url": "shopify://collections/all",
-        "cta2_text": "Hacer el Quiz",
-        "cta2_url": ""
+        "cta2_text": "Hacer el Test",
+        "cta2_url": "https://test-suplementos-saluva.lovable.app/"
       }
     },
     "stories": {
