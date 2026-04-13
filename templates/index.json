@@ -106,7 +106,7 @@
       "settings": {
         "label": "MÁS VENDIDOS",
         "title": "Lo Que Más Aman Nuestras Clientas",
-        "collection": "",
+        "collection": "los-mas-vendidos",
         "view_all_url": ""
       }
     },
