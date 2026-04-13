@@ -124,6 +124,13 @@
     "featured-product": {
       "type": "saluva-featured-product",
       "blocks": {
+        "image_RkHjhX": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Gemini_Generated_Image_28j0xp28j0xp28j0.png",
+            "alt": "Producto Saluva"
+          }
+        },
         "image_TaCUND": {
           "type": "image",
           "settings": {
@@ -133,6 +140,7 @@
         }
       },
       "block_order": [
+        "image_RkHjhX",
         "image_TaCUND"
       ],
       "custom_css": [],
