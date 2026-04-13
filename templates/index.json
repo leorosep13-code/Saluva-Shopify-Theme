@@ -128,7 +128,7 @@
         "title": "El suplemento que tu cuerpo necesita",
         "description": "<p>Nuestro producto estrella combina los mejores ingredientes naturales para tu bienestar diario. Formulado con colageno, vitaminas y minerales esenciales.</p>",
         "cta_text": "COMPRAR AHORA",
-        "cta_url": "",
+        "cta_url": "shopify://products/colageno-hidrolizado-frutos-rojos",
         "bg_color": "#f0f7e0"
       }
     },
