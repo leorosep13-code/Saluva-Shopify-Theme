@@ -94,8 +94,8 @@
         "story_nrkHAg": {
           "type": "story",
           "settings": {
-            "emoji": "",
-            "title": "Mandamientos de la Creatina",
+            "emoji": "💪",
+            "title": "Reglas de la Creatina",
             "subtitle": "",
             "media_type": "video",
             "video_url": "https://www.youtube.com/watch?v=FdGnqPKuI7w",
@@ -115,43 +115,6 @@
       ],
       "settings": {
         "title": "Descubre Nuestro Mundo"
-      }
-    },
-    "trust-badges": {
-      "type": "saluva-trust-badges",
-      "settings": {}
-    },
-    "tienda": {
-      "type": "saluva-tienda",
-      "settings": {
-        "label": "NUESTRA TIENDA",
-        "title": "Explora Nuestros Productos",
-        "collection": "",
-        "products_limit": 8
-      }
-    },
-    "featured-collections": {
-      "type": "saluva-featured-collections",
-      "settings": {}
-    },
-    "bestsellers": {
-      "type": "saluva-bestsellers",
-      "settings": {
-        "label": "MÁS VENDIDOS",
-        "title": "Lo Que Más Aman Nuestras Clientas",
-        "collection": "los-mas-vendidos",
-        "view_all_url": ""
-      }
-    },
-    "sale-banner": {
-      "type": "saluva-sale-banner",
-      "settings": {
-        "label": "OFERTA ESPECIAL",
-        "title": "20% Off Venta de Fin de Semana",
-        "description": "Aprovecha nuestros descuentos en productos seleccionados. Oferta por tiempo limitado.",
-        "end_date": "2026-04-30",
-        "cta_text": "COMPRAR OFERTA",
-        "cta_url": "shopify://products/lemme-burn"
       }
     },
     "featured-product": {
@@ -184,6 +147,39 @@
         "cta_text": "COMPRAR AHORA",
         "cta_url": "shopify://products/colageno-hidrolizado-frutos-rojos",
         "bg_color": "#f0f7e0"
+      }
+    },
+    "trust-badges": {
+      "type": "saluva-trust-badges",
+      "settings": {}
+    },
+    "tienda": {
+      "type": "saluva-tienda",
+      "settings": {
+        "label": "NUESTRA TIENDA",
+        "title": "Explora Nuestros Productos",
+        "collection": "",
+        "products_limit": 8
+      }
+    },
+    "sale-banner": {
+      "type": "saluva-sale-banner",
+      "settings": {
+        "label": "OFERTA ESPECIAL",
+        "title": "20% Off Venta de Fin de Semana",
+        "description": "Aprovecha nuestros descuentos en productos seleccionados. Oferta por tiempo limitado.",
+        "end_date": "2026-04-30",
+        "cta_text": "COMPRAR OFERTA",
+        "cta_url": "shopify://products/lemme-burn"
+      }
+    },
+    "bestsellers": {
+      "type": "saluva-bestsellers",
+      "settings": {
+        "label": "MÁS VENDIDOS",
+        "title": "Lo Que Más Aman Nuestras Clientas",
+        "collection": "los-mas-vendidos",
+        "view_all_url": ""
       }
     },
     "aprende": {
@@ -219,12 +215,11 @@
     "landing-hero",
     "1776438283cae0ebdf",
     "stories",
+    "featured-product",
     "trust-badges",
     "tienda",
-    "featured-collections",
-    "bestsellers",
     "sale-banner",
-    "featured-product",
+    "bestsellers",
     "aprende",
     "quiz",
     "blog"

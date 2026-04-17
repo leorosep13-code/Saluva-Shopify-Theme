@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "color_primary": "#a4c93b",
@@ -11,6 +20,27 @@
     "cart_type": "page",
     "cart_note_enable": true,
     "newsletter_title": "Unete a nuestra comunidad",
-    "newsletter_description": "Recibe tips de bienestar, ofertas exclusivas y novedades directamente en tu correo."
+    "newsletter_description": "Recibe tips de bienestar, ofertas exclusivas y novedades directamente en tu correo.",
+    "sections": {
+      "promo-bar": {
+        "type": "promo-bar",
+        "settings": {
+          "text": "VENTA ESPECIAL — HASTA 20% OFF",
+          "icon": "✨",
+          "end_date": "2026-04-30"
+        }
+      },
+      "header": {
+        "type": "header",
+        "settings": {}
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "tagline": "Bienestar natural diseñado para la mujer moderna. Suplementos que tu cuerpo agradece."
+        }
+      }
+    },
+    "content_for_index": []
   }
 }
