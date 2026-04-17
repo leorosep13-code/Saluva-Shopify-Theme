@@ -12,7 +12,7 @@
     "landing-hero": {
       "type": "saluva-landing",
       "settings": {
-        "layout_mode": "lateral",
+        "layout_mode": "fullscreen",
         "badge_text": "BIENESTAR FEMENINO NATURAL",
         "title_line1": "Tu cuerpo merece",
         "title_highlight": "lo mejor",
@@ -21,8 +21,40 @@
         "cta_url": "shopify://collections/all",
         "cta2_text": "Hacer el Test",
         "cta2_url": "https://test-suplementos-saluva.lovable.app/",
-        "hero_image": "shopify://shop_images/Saluva_logo_3.png"
+        "hero_image": "shopify://shop_images/Gemini_Generated_Image_ttqd09ttqd09ttqd.png"
       }
+    },
+    "1776438283cae0ebdf": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_c5eb1ea_Lei3kC": {
+          "type": "ai_gen_block_c5eb1ea",
+          "settings": {
+            "promo_text": "Envío gratis en compras superiores a $160.000 y Pagos contra Entrega",
+            "show_icon": true,
+            "icon_type": "tag",
+            "show_separator": true,
+            "background_color": "#a4c93b",
+            "text_color": "#ffffff",
+            "icon_color": "#ffffff",
+            "separator_color": "#ffffff",
+            "font_size": 16,
+            "font_weight": "500",
+            "icon_size": 20,
+            "separator_size": 6,
+            "padding_vertical": 12,
+            "item_spacing": 40,
+            "icon_text_gap": 8,
+            "animation_speed": 20,
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_c5eb1ea_Lei3kC"
+      ],
+      "settings": {}
     },
     "stories": {
       "type": "saluva-stories",
@@ -185,6 +217,7 @@
   },
   "order": [
     "landing-hero",
+    "1776438283cae0ebdf",
     "stories",
     "trust-badges",
     "tienda",
