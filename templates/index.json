@@ -119,7 +119,7 @@
         "description": "Aprovecha nuestros descuentos en productos seleccionados. Oferta por tiempo limitado.",
         "end_date": "2026-04-30",
         "cta_text": "COMPRAR OFERTA",
-        "cta_url": ""
+        "cta_url": "shopify://products/lemme-burn"
       }
     },
     "featured-product": {
