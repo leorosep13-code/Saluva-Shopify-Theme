@@ -5,7 +5,7 @@
     {%- comment -%} Modo imagen de fondo completo {%- endcomment -%}
     <div class="landing-hero__bg-full">
       {% if section.settings.hero_image != blank %}
-        <img src="{{ section.settings.hero_image | image_url: width: 1920 }}"
+        <img src="{{ section.settings.hero_image | image_url: width: 1200 }}"
              alt="{{ section.settings.hero_image.alt | default: 'Hero Saluva' }}"
              class="landing-hero__bg-image"
              loading="eager">

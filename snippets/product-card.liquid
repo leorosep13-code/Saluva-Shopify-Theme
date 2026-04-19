@@ -10,11 +10,11 @@
 <div class="product-card {% if featured %}product-card--featured{% endif %}">
   <a href="{{ product.url }}" class="product-card__media">
     {% if product.featured_image != blank %}
-      <img src="{{ product.featured_image | image_url: width: 480 }}"
+      <img src="{{ product.featured_image | image_url: width: 400 }}"
            alt="{{ product.featured_image.alt | default: product.title }}"
            loading="lazy"
-           width="480"
-           height="480"
+           width="400"
+           height="400"
            class="product-card__img">
     {% else %}
       <div class="product-card__placeholder">

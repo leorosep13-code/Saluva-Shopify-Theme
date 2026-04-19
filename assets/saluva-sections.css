@@ -673,17 +673,20 @@
   box-shadow: 0 12px 32px rgba(164,201,59,0.15);
 }
 .product-card__media {
-  display: block;
-  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
   background: linear-gradient(135deg, var(--color-primary-10), var(--color-secondary-10));
   position: relative;
   overflow: hidden;
 }
-.product-card--featured .product-card__media { height: 240px; }
+.product-card--featured .product-card__media { height: 280px; }
 .product-card__img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 16px;
   transition: transform 0.4s;
 }
 .product-card:hover .product-card__img { transform: scale(1.06); }
@@ -2106,243 +2109,6 @@
   .header__hamburger { display: flex; }
 }
 
-/* ═══════════════════════════════════════════
-   HERO SCROLL — GSAP Premium Animation
-   ═══════════════════════════════════════════ */
-
-.saluva-hero {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  background: #fff;
-}
-
-/* ── Grid: texto | animación | video ── */
-.saluva-hero__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  align-items: center;
-  height: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 32px;
-  gap: 24px;
-}
-
-/* ── Columna izquierda: Texto ── */
-.saluva-hero__text {
-  z-index: 3;
-}
-
-.saluva-hero__title {
-  font-family: var(--font-family);
-  font-size: clamp(28px, 3vw, 44px);
-  font-weight: 800;
-  line-height: 1.1;
-  color: var(--color-text);
-  letter-spacing: -1px;
-  margin-bottom: 16px;
-}
-
-.saluva-hero__subtitle {
-  font-size: clamp(14px, 1.1vw, 17px);
-  color: var(--color-text-muted);
-  line-height: 1.6;
-  margin-bottom: 28px;
-}
-
-.saluva-hero__cta {
-  display: inline-flex;
-}
-
-/* ── Columna central: Animación ── */
-.saluva-hero__animation {
-  position: relative;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  perspective: 1000px;
-  overflow: hidden;
-}
-
-.saluva-hero__frasco,
-.saluva-hero__capsulas {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  user-select: none;
-}
-
-/* Frasco — 75% del tamaño anterior (450 * 0.75 ≈ 338) */
-.saluva-hero__frasco {
-  max-width: 338px;
-  width: 30vw;
-  height: auto;
-  z-index: 2;
-}
-
-/* Cápsulas — 50% más pequeñas que el frasco */
-.saluva-hero__capsulas {
-  max-width: 169px;
-  width: 15vw;
-  height: auto;
-  z-index: 1;
-  will-change: transform, opacity;
-  transform-style: preserve-3d;
-}
-
-/* ── Columna derecha: Video vlog ── */
-.saluva-hero__vlog {
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.saluva-hero__vlog-wrapper {
-  position: relative;
-  width: 100%;
-  padding-top: 56.25%; /* 16:9 */
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-  background: #000;
-}
-
-.saluva-hero__vlog-wrapper iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.saluva-hero__vlog-title {
-  font-family: var(--font-family);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--color-text);
-  text-align: center;
-}
-
-.saluva-hero__vlog-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 48px 24px;
-  border: 2px dashed var(--color-border);
-  border-radius: var(--radius-lg);
-  color: var(--color-text-light);
-  text-align: center;
-  font-size: 13px;
-}
-
-/* ── Responsive: Tablet ── */
-@media (max-width: 1024px) {
-  .saluva-hero__grid {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    padding: 0 24px;
-  }
-
-  .saluva-hero__text {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .saluva-hero__animation {
-    grid-column: 2;
-    grid-row: 1 / 3;
-  }
-
-  .saluva-hero__vlog {
-    grid-column: 1;
-    grid-row: 2;
-    max-width: 360px;
-  }
-
-  .saluva-hero__frasco {
-    width: 35vw;
-    max-width: 280px;
-  }
-
-  .saluva-hero__capsulas {
-    width: 17.5vw;
-    max-width: 140px;
-  }
-}
-
-/* ── Responsive: Móvil ── */
-@media (max-width: 749px) {
-  /* Altura fija en móvil para que el pin de ScrollTrigger funcione */
-  .saluva-hero {
-    height: 100svh; /* svh respeta barra del navegador */
-    padding: 0;
-  }
-
-  /* Fallback para navegadores sin svh */
-  @supports not (height: 100svh) {
-    .saluva-hero {
-      height: calc(var(--vh, 1vh) * 100);
-    }
-  }
-
-  .saluva-hero__grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
-    text-align: center;
-    gap: 16px;
-    padding: 60px 20px 24px;
-  }
-
-  .saluva-hero__text {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .saluva-hero__subtitle {
-    margin-bottom: 12px;
-  }
-
-  .saluva-hero__animation {
-    grid-column: 1;
-    grid-row: 2;
-    min-height: 0;
-  }
-
-  .saluva-hero__vlog {
-    grid-column: 1;
-    grid-row: 3;
-    max-width: 100%;
-  }
-
-  .saluva-hero__frasco {
-    width: 40vw;
-    max-width: 180px;
-  }
-
-  .saluva-hero__capsulas {
-    width: 20vw;
-    max-width: 90px;
-  }
-
-  .saluva-hero__title {
-    font-size: clamp(22px, 6vw, 30px);
-    margin-bottom: 8px;
-  }
-
-  .saluva-hero__vlog-wrapper {
-    border-radius: var(--radius-md);
-  }
-
-  .saluva-hero__vlog-placeholder {
-    padding: 28px 16px;
-  }
-}
 
 /* ═══════════════════════════════════════════
    PDP — Página de Producto

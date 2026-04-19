@@ -16,7 +16,7 @@
           <div class="pdp__carousel-slide">
             {% if media.media_type == 'image' %}
               <img
-                src="{{ media | image_url: width: 900 }}"
+                src="{{ media | image_url: width: 600 }}"
                 alt="{{ media.alt | default: product.title }}"
                 loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
                 draggable="false"
