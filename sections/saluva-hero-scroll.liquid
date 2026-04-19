@@ -1,242 +1,41 @@
 {% comment %}
   SALUVA Hero Scroll — Premium GSAP ScrollTrigger Animation
-  Frasco con racimo de cápsulas emergiendo en scroll con tumble 3D.
-  Assets: tapa_abierta.png (frasco base) + capsulas.png (racimo único)
+  Assets: frasco_abierto.png (base) + capsulas.png (racimo único)
+  CSS → saluva-sections.css | JS → saluva-scripts.js
 {% endcomment %}
 
-<section class="hero-saluva" id="hero-saluva" style="background: {{ section.settings.bg_color }}">
-
-  {%- comment -%} Capa 1 — Frasco base (z-index: 1) {%- endcomment -%}
+<section
+  class="saluva-hero"
+  id="saluva-hero"
+  data-section-id="{{ section.id }}"
+>
+  {%- comment -%} Capa 1 — Frasco base {%- endcomment -%}
   <img
-    class="hero-saluva__frasco"
-    id="hero-frasco"
-    src="{{ 'tapa_abierta.png' | asset_url }}"
+    class="saluva-hero__frasco"
+    id="saluva-hero-frasco"
+    src="{{ 'frasco_abierto.png' | asset_url }}"
     alt="Frasco Saluva"
+    loading="eager"
     draggable="false"
   >
 
-  {%- comment -%} Capa 2 — Racimo de cápsulas (z-index: 2) {%- endcomment -%}
+  {%- comment -%} Capa 2 — Racimo de cápsulas {%- endcomment -%}
   <img
-    class="hero-saluva__capsulas"
-    id="hero-capsulas"
+    class="saluva-hero__capsulas"
+    id="saluva-hero-capsulas"
     src="{{ 'capsulas.png' | asset_url }}"
     alt="Cápsulas Saluva"
+    loading="eager"
     draggable="false"
   >
-
 </section>
-
-<style>
-  /* ═══════════════════════════════════════════
-     HERO SALUVA — Layout & Composición
-     ═══════════════════════════════════════════ */
-
-  .hero-saluva {
-    position: relative;
-    height: 100vh;
-    width: 100%;
-    background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    perspective: 1000px;
-  }
-
-  /* ── Capas compartidas ── */
-  .hero-saluva__frasco,
-  .hero-saluva__capsulas {
-    position: absolute;
-    pointer-events: none;
-    user-select: none;
-  }
-
-  /* ── Capa 1: Frasco ── */
-  .hero-saluva__frasco {
-    height: 40vh;
-    width: auto;
-    z-index: 1;
-    /* GPU layer */
-    will-change: transform;
-    transform: translateZ(0);
-  }
-
-  /* ── Capa 2: Racimo de cápsulas ── */
-  .hero-saluva__capsulas {
-    height: auto;
-    width: auto;
-    z-index: 2;
-    /* Tamaño proporcional al frasco — se ajusta vía JS con GSAP .set() */
-    max-height: 40vh;
-    will-change: transform, opacity;
-    transform-style: preserve-3d;
-  }
-
-  /* ═══════════════════════════════════════════
-     Responsive
-     ═══════════════════════════════════════════ */
-
-  @media (max-width: 1024px) {
-    .hero-saluva__frasco {
-      height: 35vh;
-    }
-    .hero-saluva__capsulas {
-      max-height: 35vh;
-    }
-  }
-
-  @media (max-width: 749px) {
-    .hero-saluva__frasco {
-      height: 30vh;
-    }
-    .hero-saluva__capsulas {
-      max-height: 30vh;
-    }
-  }
-</style>
-
-<script>
-(function () {
-  'use strict';
-
-  /* ══════════════════════════════════════════════
-     1. CARGA DINÁMICA DE GSAP + ScrollTrigger
-     ══════════════════════════════════════════════ */
-
-  var CDN = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/';
-
-  function loadScript(src) {
-    return new Promise(function (resolve, reject) {
-      if (document.querySelector('script[src="' + src + '"]')) {
-        resolve();
-        return;
-      }
-      var s = document.createElement('script');
-      s.src = src;
-      s.onload = resolve;
-      s.onerror = reject;
-      document.head.appendChild(s);
-    });
-  }
-
-  function ensureGSAP() {
-    if (window.gsap && window.ScrollTrigger) return Promise.resolve();
-    return loadScript(CDN + 'gsap.min.js').then(function () {
-      return loadScript(CDN + 'ScrollTrigger.min.js');
-    });
-  }
-
-  /* ══════════════════════════════════════════════
-     2. CONFIGURACIÓN RESPONSIVA
-     ══════════════════════════════════════════════ */
-
-  function getConfig() {
-    var vw = window.innerWidth;
-
-    if (vw <= 749) {
-      return { rise: -200, endScale: 1.2, scrollLength: '120%' };
-    }
-    if (vw <= 1024) {
-      return { rise: -280, endScale: 1.4, scrollLength: '140%' };
-    }
-    return { rise: -350, endScale: 1.6, scrollLength: '150%' };
-  }
-
-  /* ══════════════════════════════════════════════
-     3. ANIMACIÓN PRINCIPAL
-     ══════════════════════════════════════════════ */
-
-  function initHeroSaluva() {
-    var section  = document.getElementById('hero-saluva');
-    var capsulas = document.getElementById('hero-capsulas');
-
-    if (!section || !capsulas) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    var cfg = getConfig();
-
-    /* ── Estado inicial: cápsulas pequeñas y ocultas dentro del cuello ── */
-    gsap.set(capsulas, {
-      scale: 0.15,
-      opacity: 0,
-      y: 0,
-      rotationX: 0,
-      rotationY: 0,
-      rotationZ: 0,
-      transformPerspective: 1000
-    });
-
-    /* ── Timeline unificada con scrub ── */
-    var tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: '+=' + cfg.scrollLength,
-        pin: true,
-        scrub: true,
-        anticipatePin: 1
-      }
-    });
-
-    /*
-     * Animación en un solo tween compuesto:
-     *  - y           → emerge hacia arriba
-     *  - scale       → crece orgánicamente (perspective amplifica)
-     *  - opacity     → aparición suave
-     *  - rotationXYZ → tumble tumultuoso en 3 ejes
-     */
-    tl.to(capsulas, {
-      y: cfg.rise,
-      scale: cfg.endScale,
-      opacity: 1,
-      rotationX: 15,
-      rotationY: -20,
-      rotationZ: 12,
-      duration: 1,
-      ease: 'power2.out'
-    });
-
-    /* ── Refresh en resize (debounced) ── */
-    var timer;
-    window.addEventListener('resize', function () {
-      clearTimeout(timer);
-      timer = setTimeout(function () {
-        ScrollTrigger.refresh();
-      }, 250);
-    });
-  }
-
-  /* ══════════════════════════════════════════════
-     4. BOOT
-     ══════════════════════════════════════════════ */
-
-  function boot() {
-    ensureGSAP().then(initHeroSaluva);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
-
-})();
-</script>
 
 {% schema %}
 {
   "name": "Hero Scroll Premium",
   "tag": "section",
   "class": "section-hero-saluva",
-  "settings": [
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Color de fondo",
-      "default": "#000000"
-    }
-  ],
+  "settings": [],
   "presets": [
     {
       "name": "Hero Scroll Premium"

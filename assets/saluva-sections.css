@@ -2105,3 +2105,62 @@
   .mega-menu__featured { overflow-x: auto; }
   .header__hamburger { display: flex; }
 }
+
+/* ═══════════════════════════════════════════
+   HERO SCROLL — GSAP Premium Animation
+   ═══════════════════════════════════════════ */
+
+.saluva-hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
+  perspective: 1000px;
+}
+
+/* ── Capas compartidas ── */
+.saluva-hero__frasco,
+.saluva-hero__capsulas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Capa 1: Frasco (encima) ── */
+.saluva-hero__frasco {
+  max-width: 450px;
+  width: 40vw;
+  height: auto;
+  z-index: 2;
+}
+
+/* ── Capa 2: Cápsulas (detrás, dentro del frasco al inicio) ── */
+.saluva-hero__capsulas {
+  max-width: 450px;
+  width: 40vw;
+  height: auto;
+  z-index: 1;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .saluva-hero__frasco,
+  .saluva-hero__capsulas {
+    width: 50vw;
+    max-width: 380px;
+  }
+}
+
+@media (max-width: 749px) {
+  .saluva-hero__frasco,
+  .saluva-hero__capsulas {
+    width: 65vw;
+    max-width: 300px;
+  }
+}

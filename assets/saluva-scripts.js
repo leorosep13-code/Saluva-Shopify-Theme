@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFeaturedProductCarousel();
   initDigitalProductModals();
   initMegaMenuMobile();
+  initHeroScroll();
 });
 
 /* ── Promo Countdown ── */
@@ -1022,3 +1023,84 @@ window.addEventListener('scroll', () => {
     }
   }
 });
+
+/* ── Hero Scroll — GSAP ScrollTrigger Animation ── */
+function initHeroScroll() {
+  const section  = document.getElementById('saluva-hero');
+  const capsulas = document.getElementById('saluva-hero-capsulas');
+
+  if (!section || !capsulas) return;
+
+  const CDN = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/';
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector('script[src="' + src + '"]')) { resolve(); return; }
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  function ensureGSAP() {
+    if (window.gsap && window.ScrollTrigger) return Promise.resolve();
+    return loadScript(CDN + 'gsap.min.js').then(() => {
+      return loadScript(CDN + 'ScrollTrigger.min.js');
+    });
+  }
+
+  function getConfig() {
+    const vw = window.innerWidth;
+    if (vw <= 749)  return { rise: -200, endScale: 1.2, rotation: 8,  scrollEnd: '120%' };
+    if (vw <= 1024) return { rise: -280, endScale: 1.35, rotation: 10, scrollEnd: '140%' };
+    return { rise: -350, endScale: 1.5, rotation: 10, scrollEnd: '150%' };
+  }
+
+  function buildAnimation() {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const cfg = getConfig();
+
+    /* Estado inicial: escondidas dentro del cuello del frasco */
+    gsap.set(capsulas, {
+      scale: 0.2,
+      opacity: 0,
+      y: 0,
+      rotation: 0,
+      transformPerspective: 1000
+    });
+
+    /* Timeline scrubbed al scroll */
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: '+=' + cfg.scrollEnd,
+        pin: true,
+        scrub: true,
+        anticipatePin: 1
+      }
+    });
+
+    /* Emergencia + crecimiento + aparición + balanceo orgánico */
+    tl.to(capsulas, {
+      y: cfg.rise,
+      scale: cfg.endScale,
+      opacity: 1,
+      rotation: cfg.rotation,
+      duration: 1,
+      ease: 'power2.out'
+    });
+
+    /* Refresh en resize (debounced) */
+    let timer;
+    window.addEventListener('resize', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => ScrollTrigger.refresh(), 250);
+    });
+  }
+
+  ensureGSAP().then(buildAnimation);
+}
