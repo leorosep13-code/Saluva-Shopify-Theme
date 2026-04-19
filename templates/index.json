@@ -202,7 +202,6 @@
     },
     "blog": {
       "type": "saluva-blog",
-      "disabled": true,
       "settings": {
         "label": "NUESTRO BLOG",
         "title": "Blog Destacado",
