@@ -1215,21 +1215,25 @@ function initPdpVariants() {
         /* Actualizar precios */
         const priceEl = document.getElementById('pdp-price');
         const compareEl = document.getElementById('pdp-compare');
-        const discountEl = document.getElementById('pdp-discount');
+        const savingsEl = document.getElementById('pdp-savings');
 
         if (priceEl) priceEl.textContent = formatMoney(match.price);
         if (compareEl) {
           if (match.compare_at_price && match.compare_at_price > match.price) {
             compareEl.textContent = formatMoney(match.compare_at_price);
             compareEl.style.display = '';
-            if (discountEl) {
-              const pct = Math.round((match.compare_at_price - match.price) / match.compare_at_price * 100);
-              discountEl.textContent = '-' + pct + '%';
-              discountEl.style.display = '';
-            }
           } else {
             compareEl.style.display = 'none';
-            if (discountEl) discountEl.style.display = 'none';
+          }
+        }
+        if (savingsEl) {
+          if (match.compare_at_price && match.compare_at_price > match.price) {
+            const pct = Math.round((match.compare_at_price - match.price) / match.compare_at_price * 100);
+            const saved = formatMoney(match.compare_at_price - match.price);
+            savingsEl.querySelector('span:last-child').textContent = pct + '% OFF — Ahorras ' + saved;
+            savingsEl.style.display = '';
+          } else {
+            savingsEl.style.display = 'none';
           }
         }
 

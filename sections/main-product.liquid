@@ -102,10 +102,16 @@
       <span class="pdp__price" id="pdp-price">{{ current_variant.price | money }}</span>
       {% if current_variant.compare_at_price > current_variant.price %}
         <span class="pdp__compare" id="pdp-compare">{{ current_variant.compare_at_price | money }}</span>
-        {% assign discount = current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price %}
-        <span class="pdp__discount" id="pdp-discount">-{{ discount }}%</span>
       {% endif %}
     </div>
+    {% if current_variant.compare_at_price > current_variant.price %}
+      {% assign discount_pct = current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price %}
+      {% assign savings = current_variant.compare_at_price | minus: current_variant.price %}
+      <div class="pdp__savings" id="pdp-savings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        <span>{{ discount_pct }}% OFF — Ahorras {{ savings | money }}</span>
+      </div>
+    {% endif %}
 
     <!-- Variantes -->
     {% if product.variants.size > 1 %}

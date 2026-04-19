@@ -2380,12 +2380,19 @@
 .pdp__carousel-slide {
   min-width: 100%;
   flex-shrink: 0;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-primary-10), var(--color-secondary-10));
 }
 
 .pdp__carousel-slide img {
   width: 100%;
+  height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .pdp__video-wrapper {
@@ -2581,13 +2588,17 @@
   text-decoration: line-through;
 }
 
-.pdp__discount {
+.pdp__savings {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13px;
   font-weight: 700;
-  background: var(--color-secondary);
-  color: #fff;
-  padding: 4px 12px;
-  border-radius: 12px;
+  color: #16a34a;
+  background: #dcfce7;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 24px;
 }
 
 /* Variantes */
