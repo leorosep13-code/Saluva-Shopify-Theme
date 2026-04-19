@@ -2114,12 +2114,58 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  background: #000;
+  background: #fff;
   overflow: hidden;
+}
+
+/* ── Grid: texto | animación | video ── */
+.saluva-hero__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  gap: 24px;
+}
+
+/* ── Columna izquierda: Texto ── */
+.saluva-hero__text {
+  z-index: 3;
+}
+
+.saluva-hero__title {
+  font-family: var(--font-family);
+  font-size: clamp(28px, 3vw, 44px);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--color-text);
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+
+.saluva-hero__subtitle {
+  font-size: clamp(14px, 1.1vw, 17px);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.saluva-hero__cta {
+  display: inline-flex;
+}
+
+/* ── Columna central: Animación ── */
+.saluva-hero__animation {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   perspective: 1000px;
 }
 
-/* ── Capas compartidas ── */
 .saluva-hero__frasco,
 .saluva-hero__capsulas {
   position: absolute;
@@ -2130,37 +2176,149 @@
   user-select: none;
 }
 
-/* ── Capa 1: Frasco (encima) ── */
+/* Frasco — 75% del tamaño anterior (450 * 0.75 ≈ 338) */
 .saluva-hero__frasco {
-  max-width: 450px;
-  width: 40vw;
+  max-width: 338px;
+  width: 30vw;
   height: auto;
   z-index: 2;
 }
 
-/* ── Capa 2: Cápsulas (detrás, dentro del frasco al inicio) ── */
+/* Cápsulas — 50% más pequeñas que el frasco */
 .saluva-hero__capsulas {
-  max-width: 450px;
-  width: 40vw;
+  max-width: 169px;
+  width: 15vw;
   height: auto;
   z-index: 1;
   will-change: transform, opacity;
   transform-style: preserve-3d;
 }
 
-/* ── Responsive ── */
+/* ── Columna derecha: Video vlog ── */
+.saluva-hero__vlog {
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.saluva-hero__vlog-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  background: #000;
+}
+
+.saluva-hero__vlog-wrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.saluva-hero__vlog-title {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.saluva-hero__vlog-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-light);
+  text-align: center;
+  font-size: 13px;
+}
+
+/* ── Responsive: Tablet ── */
 @media (max-width: 1024px) {
-  .saluva-hero__frasco,
+  .saluva-hero__grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    padding: 0 24px;
+  }
+
+  .saluva-hero__text {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .saluva-hero__animation {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+
+  .saluva-hero__vlog {
+    grid-column: 1;
+    grid-row: 2;
+    max-width: 360px;
+  }
+
+  .saluva-hero__frasco {
+    width: 35vw;
+    max-width: 280px;
+  }
+
   .saluva-hero__capsulas {
-    width: 50vw;
-    max-width: 380px;
+    width: 17.5vw;
+    max-width: 140px;
   }
 }
 
+/* ── Responsive: Móvil ── */
 @media (max-width: 749px) {
-  .saluva-hero__frasco,
+  .saluva-hero {
+    height: auto;
+    min-height: 100vh;
+    padding: 80px 0 40px;
+  }
+
+  .saluva-hero__grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    text-align: center;
+    gap: 32px;
+  }
+
+  .saluva-hero__text {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .saluva-hero__animation {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 320px;
+  }
+
+  .saluva-hero__vlog {
+    grid-column: 1;
+    grid-row: 3;
+    max-width: 100%;
+  }
+
+  .saluva-hero__frasco {
+    width: 45vw;
+    max-width: 220px;
+  }
+
   .saluva-hero__capsulas {
-    width: 65vw;
-    max-width: 300px;
+    width: 22.5vw;
+    max-width: 110px;
+  }
+
+  .saluva-hero__title {
+    font-size: clamp(24px, 6vw, 32px);
   }
 }

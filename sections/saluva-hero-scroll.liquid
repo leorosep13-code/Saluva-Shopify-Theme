@@ -1,6 +1,6 @@
 {% comment %}
   SALUVA Hero Scroll — Premium GSAP ScrollTrigger Animation
-  Assets: frasco_abierto.png (base) + capsulas.png (racimo único)
+  Layout: Texto | Animación frasco | Video vlog
   CSS → saluva-sections.css | JS → saluva-scripts.js
 {% endcomment %}
 
@@ -9,25 +9,90 @@
   id="saluva-hero"
   data-section-id="{{ section.id }}"
 >
-  {%- comment -%} Capa 1 — Frasco base {%- endcomment -%}
-  <img
-    class="saluva-hero__frasco"
-    id="saluva-hero-frasco"
-    src="{{ 'frasco_abierto.png' | asset_url }}"
-    alt="Frasco Saluva"
-    loading="eager"
-    draggable="false"
-  >
+  <div class="saluva-hero__grid">
 
-  {%- comment -%} Capa 2 — Racimo de cápsulas {%- endcomment -%}
-  <img
-    class="saluva-hero__capsulas"
-    id="saluva-hero-capsulas"
-    src="{{ 'capsulas.png' | asset_url }}"
-    alt="Cápsulas Saluva"
-    loading="eager"
-    draggable="false"
-  >
+    {%- comment -%} Columna izquierda — Texto {%- endcomment -%}
+    <div class="saluva-hero__text">
+      <h2 class="saluva-hero__title">
+        {{ section.settings.title | default: 'Transforma tu vida con Saluva' }}
+      </h2>
+      {% if section.settings.subtitle != blank %}
+        <p class="saluva-hero__subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+      {% if section.settings.cta_text != blank %}
+        <a href="{{ section.settings.cta_url | default: '#' }}" class="btn btn--primary btn--lg saluva-hero__cta">
+          {{ section.settings.cta_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    {%- comment -%} Columna central — Animación del frasco {%- endcomment -%}
+    <div class="saluva-hero__animation">
+      <img
+        class="saluva-hero__frasco"
+        id="saluva-hero-frasco"
+        src="{{ 'frasco_abierto.png' | asset_url }}"
+        alt="Frasco Saluva"
+        loading="eager"
+        draggable="false"
+      >
+      <img
+        class="saluva-hero__capsulas"
+        id="saluva-hero-capsulas"
+        src="{{ 'capsulas.png' | asset_url }}"
+        alt="Cápsulas Saluva"
+        loading="eager"
+        draggable="false"
+      >
+    </div>
+
+    {%- comment -%} Columna derecha — Video vlog {%- endcomment -%}
+    <div class="saluva-hero__vlog">
+      {% if section.settings.vlog_url != blank %}
+        <div class="saluva-hero__vlog-wrapper">
+          {%- assign vlog_url = section.settings.vlog_url -%}
+          {%- if vlog_url contains 'youtube.com/watch' -%}
+            {%- assign yt_id = vlog_url | split: 'v=' | last | split: '&' | first -%}
+            <iframe
+              src="https://www.youtube.com/embed/{{ yt_id }}?rel=0&modestbranding=1"
+              title="{{ section.settings.vlog_title | default: 'Vlog destacado' }}"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          {%- elsif vlog_url contains 'youtu.be/' -%}
+            {%- assign yt_id = vlog_url | split: 'youtu.be/' | last | split: '?' | first -%}
+            <iframe
+              src="https://www.youtube.com/embed/{{ yt_id }}?rel=0&modestbranding=1"
+              title="{{ section.settings.vlog_title | default: 'Vlog destacado' }}"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          {%- else -%}
+            <iframe
+              src="{{ vlog_url }}"
+              title="{{ section.settings.vlog_title | default: 'Vlog destacado' }}"
+              frameborder="0"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          {%- endif -%}
+        </div>
+        {% if section.settings.vlog_title != blank %}
+          <p class="saluva-hero__vlog-title">{{ section.settings.vlog_title }}</p>
+        {% endif %}
+      {% else %}
+        <div class="saluva-hero__vlog-placeholder">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <p>Agrega un vlog desde el personalizador</p>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
 </section>
 
 {% schema %}
@@ -35,7 +100,43 @@
   "name": "Hero Scroll Premium",
   "tag": "section",
   "class": "section-hero-saluva",
-  "settings": [],
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Transforma tu vida con Saluva"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Suplementos naturales diseñados para el bienestar de la mujer moderna."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texto del botón",
+      "default": "Explorar Tienda"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "URL del botón"
+    },
+    {
+      "type": "text",
+      "id": "vlog_url",
+      "label": "URL del video (YouTube)",
+      "info": "Pega la URL de YouTube de tu vlog destacado."
+    },
+    {
+      "type": "text",
+      "id": "vlog_title",
+      "label": "Título del vlog",
+      "default": "Nuestro último vlog"
+    }
+  ],
   "presets": [
     {
       "name": "Hero Scroll Premium"

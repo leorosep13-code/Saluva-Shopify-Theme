@@ -1053,9 +1053,9 @@ function initHeroScroll() {
 
   function getConfig() {
     const vw = window.innerWidth;
-    if (vw <= 749)  return { rise: -200, endScale: 1.2, rotation: 8,  scrollEnd: '120%' };
-    if (vw <= 1024) return { rise: -280, endScale: 1.35, rotation: 10, scrollEnd: '140%' };
-    return { rise: -350, endScale: 1.5, rotation: 10, scrollEnd: '150%' };
+    if (vw <= 749)  return { rise: -160, endScale: 0.6, rotation: 8,  scrollEnd: '60%' };
+    if (vw <= 1024) return { rise: -220, endScale: 0.7, rotation: 10, scrollEnd: '70%' };
+    return { rise: -280, endScale: 0.75, rotation: 10, scrollEnd: '80%' };
   }
 
   function buildAnimation() {
