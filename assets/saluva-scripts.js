@@ -1051,17 +1051,30 @@ function initHeroScroll() {
     });
   }
 
+  /* Fija --vh para móviles donde 100vh incluye la barra del navegador */
+  function setVH() {
+    document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
+  }
+
+  function isMobile() {
+    return window.innerWidth <= 749;
+  }
+
   function getConfig() {
     const vw = window.innerWidth;
-    if (vw <= 749)  return { rise: -160, endScale: 0.6, rotation: 8,  scrollEnd: '60%' };
-    if (vw <= 1024) return { rise: -220, endScale: 0.7, rotation: 10, scrollEnd: '70%' };
+    if (vw <= 749)  return { rise: -120, endScale: 0.55, rotation: 8,  scrollEnd: '50%' };
+    if (vw <= 1024) return { rise: -220, endScale: 0.7,  rotation: 10, scrollEnd: '70%' };
     return { rise: -280, endScale: 0.75, rotation: 10, scrollEnd: '80%' };
   }
 
   function buildAnimation() {
     gsap.registerPlugin(ScrollTrigger);
 
+    /* Normalizar viewport height para móvil */
+    setVH();
+
     const cfg = getConfig();
+    const mobile = isMobile();
 
     /* Estado inicial: escondidas dentro del cuello del frasco */
     gsap.set(capsulas, {
@@ -1069,18 +1082,24 @@ function initHeroScroll() {
       opacity: 0,
       y: 0,
       rotation: 0,
-      transformPerspective: 1000
+      transformPerspective: 800
     });
 
-    /* Timeline scrubbed al scroll */
+    /* Timeline scrubbed al scroll
+     * - scrub: 0.8 en móvil para suavizar el touch scroll
+     * - pinSpacing: true para que el contenido debajo no salte
+     */
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
         start: 'top top',
         end: '+=' + cfg.scrollEnd,
         pin: true,
-        scrub: true,
-        anticipatePin: 1
+        pinSpacing: true,
+        scrub: mobile ? 0.8 : true,
+        anticipatePin: 1,
+        /* Evitar que overflow:hidden de la sección interfiera con el pin */
+        pinType: 'transform'
       }
     });
 
@@ -1094,11 +1113,14 @@ function initHeroScroll() {
       ease: 'power2.out'
     });
 
-    /* Refresh en resize (debounced) */
+    /* Refresh en resize (debounced) + actualizar --vh */
     let timer;
     window.addEventListener('resize', () => {
       clearTimeout(timer);
-      timer = setTimeout(() => ScrollTrigger.refresh(), 250);
+      timer = setTimeout(() => {
+        setVH();
+        ScrollTrigger.refresh();
+      }, 250);
     });
   }
 
