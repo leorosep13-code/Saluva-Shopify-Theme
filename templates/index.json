@@ -27,7 +27,7 @@
     "hero-scroll": {
       "type": "saluva-hero-scroll",
       "settings": {
-        "bg_color": "#F0E6FA"
+        "bg_color": "#000000"
       }
     },
     "1776438283cae0ebdf": {
