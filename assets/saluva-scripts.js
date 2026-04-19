@@ -18,6 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initDigitalProductModals();
   initMegaMenuMobile();
   initHeroScroll();
+  initPdpCarousel();
+  initPdpVariants();
+  initPdpReviews();
+  initPdpShare();
 });
 
 /* ── Promo Countdown ── */
@@ -1125,4 +1129,292 @@ function initHeroScroll() {
   }
 
   ensureGSAP().then(buildAnimation);
+}
+
+/* ── PDP Carrusel de imágenes/videos ── */
+function initPdpCarousel() {
+  const track = document.getElementById('pdp-carousel-track');
+  const dots = document.querySelectorAll('.pdp__carousel-dot');
+  const thumbs = document.querySelectorAll('.pdp__thumb');
+
+  if (!track) return;
+
+  const slides = track.querySelectorAll('.pdp__carousel-slide');
+  let current = 0;
+  let startX = 0;
+  let isDragging = false;
+
+  function goTo(index) {
+    current = Math.max(0, Math.min(index, slides.length - 1));
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    thumbs.forEach((t, i) => t.classList.toggle('active', i === current));
+  }
+
+  dots.forEach(dot => dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index))));
+  thumbs.forEach(thumb => thumb.addEventListener('click', () => goTo(parseInt(thumb.dataset.index))));
+
+  /* Swipe táctil */
+  track.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  }, { passive: true });
+
+  track.addEventListener('touchend', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    const diff = e.changedTouches[0].clientX - startX;
+    if (Math.abs(diff) > 40) {
+      if (diff < 0) goTo(current + 1);
+      else goTo(current - 1);
+    }
+  }, { passive: true });
+}
+
+/* ── PDP Variantes ── */
+function initPdpVariants() {
+  const jsonEl = document.getElementById('pdp-variants-json');
+  const optionBtns = document.querySelectorAll('.pdp__option-btn');
+
+  if (!jsonEl || optionBtns.length === 0) return;
+
+  let variants;
+  try { variants = JSON.parse(jsonEl.textContent); } catch(e) { return; }
+
+  const selectedOptions = {};
+
+  /* Inicializar con la primera variante */
+  optionBtns.forEach(btn => {
+    if (btn.classList.contains('active')) {
+      selectedOptions[btn.dataset.optionIndex] = btn.dataset.value;
+    }
+  });
+
+  optionBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = btn.dataset.optionIndex;
+      const val = btn.dataset.value;
+
+      /* Actualizar botón activo */
+      btn.parentElement.querySelectorAll('.pdp__option-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      /* Actualizar label */
+      const label = document.getElementById('pdp-option-' + idx + '-selected');
+      if (label) label.textContent = val;
+
+      selectedOptions[idx] = val;
+
+      /* Buscar variante que coincida */
+      const optionValues = Object.keys(selectedOptions).sort().map(k => selectedOptions[k]);
+      const match = variants.find(v => {
+        return v.options.every((opt, i) => opt === optionValues[i]);
+      });
+
+      if (match) {
+        /* Actualizar precios */
+        const priceEl = document.getElementById('pdp-price');
+        const compareEl = document.getElementById('pdp-compare');
+        const discountEl = document.getElementById('pdp-discount');
+
+        if (priceEl) priceEl.textContent = formatMoney(match.price);
+        if (compareEl) {
+          if (match.compare_at_price && match.compare_at_price > match.price) {
+            compareEl.textContent = formatMoney(match.compare_at_price);
+            compareEl.style.display = '';
+            if (discountEl) {
+              const pct = Math.round((match.compare_at_price - match.price) / match.compare_at_price * 100);
+              discountEl.textContent = '-' + pct + '%';
+              discountEl.style.display = '';
+            }
+          } else {
+            compareEl.style.display = 'none';
+            if (discountEl) discountEl.style.display = 'none';
+          }
+        }
+
+        /* Actualizar variant IDs en ambos forms */
+        const idDesktop = document.getElementById('pdp-variant-id-desktop');
+        const idMobile = document.getElementById('pdp-variant-id-mobile');
+        if (idDesktop) idDesktop.value = match.id;
+        if (idMobile) idMobile.value = match.id;
+
+        /* Actualizar botones de agregar */
+        document.querySelectorAll('.pdp__add-btn').forEach(addBtn => {
+          if (match.available) {
+            addBtn.disabled = false;
+            addBtn.textContent = 'Agregar al Carrito';
+          } else {
+            addBtn.disabled = true;
+            addBtn.textContent = 'Agotado';
+          }
+        });
+      }
+    });
+  });
+
+  function formatMoney(cents) {
+    return '$' + (cents / 100).toLocaleString('es-CO', { minimumFractionDigits: 0 });
+  }
+}
+
+/* ── PDP Reviews (localStorage) ── */
+function initPdpReviews() {
+  const form = document.getElementById('pdp-review-form');
+  const toggleBtn = document.getElementById('pdp-review-toggle');
+  const formWrap = document.getElementById('pdp-review-form-wrap');
+  const list = document.getElementById('pdp-reviews-list');
+  const emptyMsg = document.getElementById('pdp-reviews-empty');
+  const starBtns = document.querySelectorAll('.pdp-reviews__star-btn');
+  const ratingSummary = document.getElementById('pdp-rating-summary');
+
+  if (!form || !list) return;
+
+  const productHandle = window.location.pathname.split('/').pop();
+  const STORAGE_KEY = 'saluva_reviews_' + productHandle;
+  let selectedRating = 0;
+
+  /* Cargar reviews */
+  function getReviews() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch(e) { return []; }
+  }
+
+  function saveReviews(reviews) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
+  }
+
+  function renderStars(rating, size) {
+    size = size || 14;
+    let html = '';
+    for (let i = 1; i <= 5; i++) {
+      const filled = i <= rating ? 'var(--color-accent)' : 'none';
+      html += '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="' + filled + '" stroke="var(--color-accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+    }
+    return html;
+  }
+
+  function renderReviews() {
+    const reviews = getReviews();
+    list.innerHTML = '';
+
+    if (reviews.length === 0) {
+      if (emptyMsg) emptyMsg.style.display = '';
+      return;
+    }
+
+    if (emptyMsg) emptyMsg.style.display = 'none';
+
+    reviews.forEach(r => {
+      const isOwner = r.isOwner;
+      const card = document.createElement('div');
+      card.className = 'pdp-review-card' + (isOwner ? ' pdp-review-card--owner' : '');
+      card.innerHTML =
+        '<div class="pdp-review-card__header">' +
+          '<span class="pdp-review-card__name">' + escapeHtml(r.name) + (isOwner ? '<span class="pdp-review-card__badge">Saluva</span>' : '') + '</span>' +
+          '<span class="pdp-review-card__date">' + r.date + '</span>' +
+        '</div>' +
+        '<div class="pdp-review-card__stars">' + renderStars(r.rating) + '</div>' +
+        '<p class="pdp-review-card__text">' + escapeHtml(r.comment) + '</p>';
+      list.appendChild(card);
+    });
+
+    /* Actualizar rating summary */
+    updateRatingSummary(reviews);
+  }
+
+  function updateRatingSummary(reviews) {
+    if (!ratingSummary || reviews.length === 0) return;
+
+    const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
+    const rounded = Math.round(avg * 10) / 10;
+    const starsEl = ratingSummary.querySelector('.pdp__stars');
+    const countEl = ratingSummary.querySelector('.pdp__rating-count');
+
+    if (starsEl) starsEl.setAttribute('data-rating', Math.round(avg));
+    if (countEl) countEl.textContent = rounded.toFixed(1) + ' (' + reviews.length + ')';
+
+    /* Rellenar estrellas */
+    if (starsEl) {
+      starsEl.innerHTML = renderStars(Math.round(avg), 16);
+    }
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  /* Toggle formulario */
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const visible = formWrap.style.display !== 'none';
+      formWrap.style.display = visible ? 'none' : 'block';
+      if (!visible) formWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+
+  /* Star selection */
+  starBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedRating = parseInt(btn.dataset.star);
+      starBtns.forEach((b, i) => {
+        b.classList.toggle('active', i < selectedRating);
+      });
+    });
+  });
+
+  /* Submit */
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('review-name').value.trim();
+    const comment = document.getElementById('review-comment').value.trim();
+
+    if (!name || !comment || selectedRating === 0) {
+      showToast('Completa todos los campos y selecciona una valoración', 'error');
+      return;
+    }
+
+    const reviews = getReviews();
+    reviews.unshift({
+      name: name,
+      rating: selectedRating,
+      comment: comment,
+      date: new Date().toLocaleDateString('es-CO'),
+      isOwner: false
+    });
+
+    saveReviews(reviews);
+    renderReviews();
+
+    /* Reset form */
+    form.reset();
+    selectedRating = 0;
+    starBtns.forEach(b => b.classList.remove('active'));
+    formWrap.style.display = 'none';
+    showToast('¡Gracias por tu reseña!', 'success');
+  });
+
+  renderReviews();
+}
+
+/* ── PDP Share ── */
+function initPdpShare() {
+  const btn = document.getElementById('pdp-share');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    const title = document.querySelector('.pdp__title');
+    const text = title ? title.textContent.trim() : document.title;
+
+    if (navigator.share) {
+      navigator.share({ title: text, url: window.location.href });
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        showToast('Enlace copiado', 'success');
+      });
+    }
+  });
 }

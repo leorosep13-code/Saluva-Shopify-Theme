@@ -1,176 +1,237 @@
-<style>
-  .related-product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  }
-  .related-product-card:hover img {
-    transform: scale(1.05);
-  }
-  @media (max-width: 768px) {
-    .related-products-grid {
-      grid-template-columns: repeat(2, 1fr) !important;
-      gap: 16px !important;
-    }
-  }
-</style>
+{% comment %}
+  SALUVA — Página de Producto Premium
+  Mobile-first con carrusel, reviews, rating y WhatsApp flotante
+  CSS → saluva-sections.css | JS → saluva-scripts.js
+{% endcomment %}
 
-<section class="product-page" style="padding: 40px 0 70px;">
-  <div class="container">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;">
+{%- assign current_variant = product.selected_or_first_available_variant -%}
 
-      <!-- Product Images -->
-      <div>
-        {% if product.featured_image != blank %}
-          <div style="border-radius: 20px; overflow: hidden; background: linear-gradient(135deg, var(--color-primary-10), var(--color-secondary-10));">
-            <img src="{{ product.featured_image | image_url: width: 800 }}"
-                 alt="{{ product.featured_image.alt | default: product.title }}"
-                 style="width: 100%; display: block;">
-          </div>
-        {% endif %}
-        {% if product.images.size > 1 %}
-          <div style="display: flex; gap: 12px; margin-top: 16px;">
-            {% for image in product.images offset: 1 limit: 4 %}
-              <div style="flex: 1; border-radius: 12px; overflow: hidden; border: 1px solid var(--color-border);">
-                <img src="{{ image | image_url: width: 200 }}" alt="{{ image.alt }}" style="width: 100%; display: block;">
+<section class="pdp" id="product-page">
+
+  <!-- ═══ CARRUSEL DE IMÁGENES / VIDEOS ═══ -->
+  <div class="pdp__gallery">
+    <div class="pdp__carousel" id="pdp-carousel">
+      <div class="pdp__carousel-track" id="pdp-carousel-track">
+        {% for media in product.media %}
+          <div class="pdp__carousel-slide">
+            {% if media.media_type == 'image' %}
+              <img
+                src="{{ media | image_url: width: 900 }}"
+                alt="{{ media.alt | default: product.title }}"
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                draggable="false"
+              >
+            {% elsif media.media_type == 'video' %}
+              <div class="pdp__video-wrapper">
+                {{ media | video_tag: autoplay: false, controls: true, muted: false }}
               </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </div>
-
-      <!-- Product Info -->
-      <div>
-        <p style="font-size: 12px; font-weight: 700; color: var(--color-primary); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">
-          {{ product.type }}
-        </p>
-        <h1 style="font-size: 36px; font-weight: 800; line-height: 1.2; margin-bottom: 16px;">
-          {{ product.title }}
-        </h1>
-
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-          <span style="font-size: 28px; font-weight: 800;">{{ product.price | money }}</span>
-          {% if product.compare_at_price > product.price %}
-            <span style="font-size: 18px; color: var(--color-text-light); text-decoration: line-through;">
-              {{ product.compare_at_price | money }}
-            </span>
-            {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
-            <span style="font-size: 13px; font-weight: 700; background: var(--color-secondary); color: #fff; padding: 4px 12px; border-radius: 12px;">
-              -{{ discount }}%
-            </span>
-          {% endif %}
-        </div>
-
-        <div style="font-size: 15px; color: var(--color-text-muted); line-height: 1.7; margin-bottom: 32px;">
-          {{ product.description }}
-        </div>
-
-        {% form 'product', product %}
-          {% if product.variants.size > 1 %}
-            <div style="margin-bottom: 20px;">
-              <label for="variant-select" style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 8px;">
-                Variante
-              </label>
-              <select name="id" id="variant-select" style="width: 100%; padding: 12px 16px; border: 2px solid var(--color-border); border-radius: 12px; font-family: var(--font-family); font-size: 14px;">
-                {% for variant in product.variants %}
-                  <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
-                    {{ variant.title }} — {{ variant.price | money }}
-                  </option>
-                {% endfor %}
-              </select>
-            </div>
-          {% else %}
-            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-          {% endif %}
-
-          <!-- Quantity selector -->
-          <div style="margin-bottom: 16px;">
-            <label for="product-quantity" style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 8px;">
-              Cantidad
-            </label>
-            <div style="display: flex; align-items: center; gap: 0; width: fit-content; border: 2px solid var(--color-border); border-radius: 12px; overflow: hidden;">
-              <button type="button" class="qty-btn" data-action="minus"
-                      style="width: 44px; height: 44px; background: none; border: none; font-size: 20px; font-weight: 700; cursor: pointer; color: var(--color-text); display: flex; align-items: center; justify-content: center;">−</button>
-              <input type="number" name="quantity" id="product-quantity" value="1" min="1"
-                     style="width: 50px; height: 44px; border: none; border-left: 1px solid var(--color-border); border-right: 1px solid var(--color-border); text-align: center; font-family: var(--font-family); font-size: 16px; font-weight: 700; -moz-appearance: textfield;"
-                     onwheel="this.blur()">
-              <button type="button" class="qty-btn" data-action="plus"
-                      style="width: 44px; height: 44px; background: none; border: none; font-size: 20px; font-weight: 700; cursor: pointer; color: var(--color-text); display: flex; align-items: center; justify-content: center;">+</button>
-            </div>
-          </div>
-
-          <button type="submit"
-                  class="btn btn--primary btn--lg product-add-btn"
-                  style="width: 100%; justify-content: center; padding: 16px; font-size: 16px;"
-                  {% unless product.available %}disabled{% endunless %}>
-            {% if product.available %}
-              Agregar al Carrito
-            {% else %}
-              Agotado
+            {% elsif media.media_type == 'external_video' %}
+              <div class="pdp__video-wrapper">
+                {{ media | external_video_tag }}
+              </div>
             {% endif %}
-          </button>
-        {% endform %}
-
-        <!-- Trust signals -->
-        <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-          {% assign trust_items = "🌱 100% Natural|🚚 Envío gratis en pedidos +$80K|🔒 Pago seguro|↩️ Devolución en 30 días" | split: "|" %}
-          {% for item in trust_items %}
-            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--color-text-muted);">
-              {{ item }}
-            </div>
-          {% endfor %}
-        </div>
+          </div>
+        {% endfor %}
       </div>
     </div>
+    {% if product.media.size > 1 %}
+      <div class="pdp__carousel-dots" id="pdp-carousel-dots">
+        {% for media in product.media %}
+          <button
+            class="pdp__carousel-dot{% if forloop.first %} active{% endif %}"
+            data-index="{{ forloop.index0 }}"
+            aria-label="Imagen {{ forloop.index }}"
+          ></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <!-- Thumbnails (desktop) -->
+    {% if product.media.size > 1 %}
+      <div class="pdp__thumbs">
+        {% for media in product.media %}
+          {% if media.media_type == 'image' %}
+            <button class="pdp__thumb{% if forloop.first %} active{% endif %}" data-index="{{ forloop.index0 }}">
+              <img src="{{ media | image_url: width: 120 }}" alt="{{ media.alt | default: product.title }}" loading="lazy">
+            </button>
+          {% else %}
+            <button class="pdp__thumb pdp__thumb--video{% if forloop.first %} active{% endif %}" data-index="{{ forloop.index0 }}">
+              {% if media.preview_image %}
+                <img src="{{ media.preview_image | image_url: width: 120 }}" alt="Video" loading="lazy">
+              {% endif %}
+              <svg class="pdp__thumb-play" width="20" height="20" viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21"/></svg>
+            </button>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- ═══ INFO DEL PRODUCTO ═══ -->
+  <div class="pdp__info">
+
+    <!-- Header: tipo | título + share/wishlist -->
+    <div class="pdp__header">
+      <div>
+        {% if product.type != blank %}
+          <span class="pdp__type">{{ product.type }}</span>
+        {% endif %}
+        <h1 class="pdp__title">{{ product.title }}</h1>
+      </div>
+      <div class="pdp__actions-top">
+        <button class="pdp__icon-btn" id="pdp-share" aria-label="Compartir">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Vendedor + Rating -->
+    <div class="pdp__meta">
+      <span class="pdp__vendor">{{ product.vendor }}</span>
+      <div class="pdp__rating" id="pdp-rating-summary">
+        <div class="pdp__stars" data-rating="0">
+          {% for i in (1..5) %}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          {% endfor %}
+        </div>
+        <span class="pdp__rating-count">0.0 (0)</span>
+      </div>
+    </div>
+
+    <!-- Precio -->
+    <div class="pdp__price-row">
+      <span class="pdp__price" id="pdp-price">{{ current_variant.price | money }}</span>
+      {% if current_variant.compare_at_price > current_variant.price %}
+        <span class="pdp__compare" id="pdp-compare">{{ current_variant.compare_at_price | money }}</span>
+        {% assign discount = current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price %}
+        <span class="pdp__discount" id="pdp-discount">-{{ discount }}%</span>
+      {% endif %}
+    </div>
+
+    <!-- Variantes -->
+    {% if product.variants.size > 1 %}
+      {% for option in product.options_with_values %}
+        <div class="pdp__option">
+          <label class="pdp__option-label">{{ option.name }}: <strong id="pdp-option-{{ forloop.index0 }}-selected">{{ option.selected_value }}</strong></label>
+          <div class="pdp__option-values">
+            {% for value in option.values %}
+              <button
+                class="pdp__option-btn{% if value == option.selected_value %} active{% endif %}"
+                data-option-index="{{ forloop.parentloop.index0 }}"
+                data-value="{{ value }}"
+              >{{ value }}</button>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Cantidad + Agregar (desktop) -->
+    <div class="pdp__add-row pdp__add-row--desktop">
+      {% form 'product', product, id: 'pdp-form-desktop' %}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" id="pdp-variant-id-desktop">
+        <div class="pdp__qty">
+          <button type="button" class="qty-btn pdp__qty-btn" data-action="minus" aria-label="Menos">−</button>
+          <input type="number" name="quantity" value="1" min="1" class="pdp__qty-input" onwheel="this.blur()">
+          <button type="button" class="qty-btn pdp__qty-btn" data-action="plus" aria-label="Más">+</button>
+        </div>
+        <button type="submit" class="btn btn--primary pdp__add-btn product-add-btn" {% unless current_variant.available %}disabled{% endunless %}>
+          {% if current_variant.available %}Agregar al Carrito{% else %}Agotado{% endif %}
+        </button>
+      {% endform %}
+    </div>
+
+    <!-- Trust signals -->
+    <div class="pdp__trust">
+      <div class="pdp__trust-item"><span>🌱</span> 100% Natural</div>
+      <div class="pdp__trust-item"><span>🚚</span> Envío gratis +$160K</div>
+      <div class="pdp__trust-item"><span>🔒</span> Pago seguro</div>
+      <div class="pdp__trust-item"><span>↩️</span> Devolución 30 días</div>
+    </div>
+
+    <!-- Descripción -->
+    <details class="pdp__details" open>
+      <summary class="pdp__details-summary">Descripción del producto</summary>
+      <div class="pdp__details-content">
+        {{ product.description }}
+      </div>
+    </details>
   </div>
 </section>
 
-<!-- Productos Recomendados -->
+<!-- ═══ SECCIÓN DE VALORACIONES Y COMENTARIOS ═══ -->
+<section class="pdp-reviews" id="pdp-reviews">
+  <div class="container">
+    <div class="pdp-reviews__header">
+      <h2 class="pdp-reviews__title">Valoraciones y Comentarios</h2>
+      <button class="btn btn--primary btn--md" id="pdp-review-toggle">Escribir una reseña</button>
+    </div>
+
+    <!-- Formulario de reseña -->
+    <div class="pdp-reviews__form-wrap" id="pdp-review-form-wrap" style="display:none;">
+      <form class="pdp-reviews__form" id="pdp-review-form">
+        <div class="pdp-reviews__form-row">
+          <label class="pdp-reviews__label">Tu nombre</label>
+          <input type="text" class="pdp-reviews__input" id="review-name" required placeholder="Nombre">
+        </div>
+        <div class="pdp-reviews__form-row">
+          <label class="pdp-reviews__label">Valoración</label>
+          <div class="pdp-reviews__star-input" id="review-star-input">
+            {% for i in (1..5) %}
+              <button type="button" class="pdp-reviews__star-btn" data-star="{{ i }}" aria-label="{{ i }} estrellas">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="pdp-reviews__form-row">
+          <label class="pdp-reviews__label">Comentario</label>
+          <textarea class="pdp-reviews__textarea" id="review-comment" rows="4" required placeholder="Cuéntanos tu experiencia con este producto..."></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary btn--md">Publicar reseña</button>
+      </form>
+    </div>
+
+    <!-- Lista de reseñas -->
+    <div class="pdp-reviews__list" id="pdp-reviews-list">
+      <!-- Las reseñas se renderizan por JS desde localStorage -->
+    </div>
+
+    <p class="pdp-reviews__empty" id="pdp-reviews-empty">Sé el primero en dejar una reseña de este producto.</p>
+  </div>
+</section>
+
+<!-- ═══ PRODUCTOS RECOMENDADOS ═══ -->
 {% assign current_product = product %}
 {% assign related_products_list = recommendations.products %}
-
 {% if related_products_list == blank or related_products_list.size == 0 %}
   {% assign related_products_list = collections.all.products %}
 {% endif %}
 
-<section id="related-products" style="padding: 40px 0 70px;">
+<section class="pdp-related" id="related-products">
   <div class="container">
-    <div style="text-align: center; margin-bottom: 40px;">
-      <p style="font-size: 12px; font-weight: 700; color: var(--color-primary); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">
-        Descubre más
-      </p>
-      <h2 style="font-size: 28px; font-weight: 800; line-height: 1.2;">
-        Productos que te pueden interesar
-      </h2>
+    <div class="section-header section-header--center">
+      <span class="section-header__label">Descubre más</span>
+      <h2 class="section-header__title">Productos que te pueden interesar</h2>
     </div>
-
-    <div class="related-products-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
+    <div class="pdp-related__grid">
       {% assign shown = 0 %}
       {% for p in related_products_list %}
         {% if p.id != current_product.id and shown < 4 and p.available %}
-          <a href="{{ p.url }}" class="related-product-card" style="text-decoration: none; color: inherit; display: block; border-radius: 16px; overflow: hidden; border: 1px solid var(--color-border); transition: transform 0.3s, box-shadow 0.3s;">
-            <div style="aspect-ratio: 1; overflow: hidden; background: linear-gradient(135deg, var(--color-primary-10), var(--color-secondary-10));">
+          <a href="{{ p.url }}" class="pdp-related__card">
+            <div class="pdp-related__card-img">
               {% if p.featured_image %}
-                <img src="{{ p.featured_image | image_url: width: 400 }}"
-                     alt="{{ p.featured_image.alt | default: p.title }}"
-                     loading="lazy"
-                     style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;">
+                <img src="{{ p.featured_image | image_url: width: 400 }}" alt="{{ p.featured_image.alt | default: p.title }}" loading="lazy">
               {% endif %}
             </div>
-            <div style="padding: 16px;">
+            <div class="pdp-related__card-info">
               {% if p.type != blank %}
-                <p style="font-size: 11px; font-weight: 700; color: var(--color-primary); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px;">
-                  {{ p.type }}
-                </p>
+                <span class="pdp-related__card-type">{{ p.type }}</span>
               {% endif %}
-              <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 8px; line-height: 1.3;">
-                {{ p.title }}
-              </h3>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 16px; font-weight: 800;">{{ p.price | money }}</span>
+              <h3 class="pdp-related__card-title">{{ p.title }}</h3>
+              <div class="pdp-related__card-price">
+                <span>{{ p.price | money }}</span>
                 {% if p.compare_at_price > p.price %}
-                  <span style="font-size: 13px; color: var(--color-text-light); text-decoration: line-through;">
-                    {{ p.compare_at_price | money }}
-                  </span>
+                  <span class="pdp-related__card-compare">{{ p.compare_at_price | money }}</span>
                 {% endif %}
               </div>
             </div>
@@ -182,9 +243,54 @@
   </div>
 </section>
 
+<!-- ═══ BARRA STICKY MOBILE: Cantidad + Agregar ═══ -->
+<div class="pdp__sticky-bar" id="pdp-sticky-bar">
+  {% form 'product', product, id: 'pdp-form-mobile' %}
+    <input type="hidden" name="id" value="{{ current_variant.id }}" id="pdp-variant-id-mobile">
+    <div class="pdp__qty pdp__qty--sticky">
+      <button type="button" class="qty-btn pdp__qty-btn" data-action="minus" aria-label="Menos">−</button>
+      <input type="number" name="quantity" value="1" min="1" class="pdp__qty-input" onwheel="this.blur()">
+      <button type="button" class="qty-btn pdp__qty-btn" data-action="plus" aria-label="Más">+</button>
+    </div>
+    <button type="submit" class="btn btn--primary pdp__add-btn pdp__add-btn--sticky product-add-btn" {% unless current_variant.available %}disabled{% endunless %}>
+      {% if current_variant.available %}Agregar al Carrito{% else %}Agotado{% endif %}
+    </button>
+  {% endform %}
+</div>
+
+<!-- ═══ BOTÓN FLOTANTE WHATSAPP ═══ -->
+<a
+  href="https://wa.me/{{ section.settings.whatsapp_number | remove: '+' | remove: ' ' | remove: '-' }}?text={{ section.settings.whatsapp_message | url_encode }}%20{{ product.title | url_encode }}"
+  class="pdp__whatsapp"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Contactar por WhatsApp"
+>
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- Variant data for JS -->
+<script type="application/json" id="pdp-variants-json">
+  {{ product.variants | json }}
+</script>
+
 {% schema %}
 {
   "name": "Producto Principal",
-  "settings": []
+  "settings": [
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "Número de WhatsApp",
+      "info": "Con código de país. Ej: 573001234567",
+      "default": "573001234567"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_message",
+      "label": "Mensaje predeterminado",
+      "default": "Hola, estoy interesada en"
+    }
+  ]
 }
 {% endschema %}
