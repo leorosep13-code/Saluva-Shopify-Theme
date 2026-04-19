@@ -24,6 +24,12 @@
         "hero_image": "shopify://shop_images/Gemini_Generated_Image_ttqd09ttqd09ttqd.png"
       }
     },
+    "hero-scroll": {
+      "type": "saluva-hero-scroll",
+      "settings": {
+        "bg_color": "#F0E6FA"
+      }
+    },
     "1776438283cae0ebdf": {
       "type": "_blocks",
       "blocks": {
@@ -212,6 +218,7 @@
   },
   "order": [
     "landing-hero",
+    "hero-scroll",
     "1776438283cae0ebdf",
     "stories",
     "featured-product",
