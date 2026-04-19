@@ -1159,6 +1159,15 @@ function initPdpVariants() {
 }
 
 /* ── PDP Reviews (localStorage) ── */
+/* Lightbox para imágenes de reviews */
+function openReviewLightbox(src) {
+  var overlay = document.createElement('div');
+  overlay.className = 'pdp-review-lightbox';
+  overlay.innerHTML = '<img src="' + src + '" alt="Foto de reseña">';
+  overlay.addEventListener('click', function() { overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
 function initPdpReviews() {
   const form = document.getElementById('pdp-review-form');
   const toggleBtn = document.getElementById('pdp-review-toggle');
@@ -1168,11 +1177,17 @@ function initPdpReviews() {
   const starBtns = document.querySelectorAll('.pdp-reviews__star-btn');
   const ratingSummary = document.getElementById('pdp-rating-summary');
 
+  const imageInput = document.getElementById('review-image-input');
+  const imagePreview = document.getElementById('review-image-preview');
+  const imagePreviewImg = document.getElementById('review-image-preview-img');
+  const imageRemoveBtn = document.getElementById('review-image-remove');
+
   if (!form || !list) return;
 
   const productHandle = window.location.pathname.split('/').pop();
   const STORAGE_KEY = 'saluva_reviews_' + productHandle;
   let selectedRating = 0;
+  let reviewImageData = null;
 
   /* Cargar reviews */
   function getReviews() {
@@ -1209,13 +1224,18 @@ function initPdpReviews() {
       const isOwner = r.isOwner;
       const card = document.createElement('div');
       card.className = 'pdp-review-card' + (isOwner ? ' pdp-review-card--owner' : '');
+      let imageHtml = '';
+      if (r.image) {
+        imageHtml = '<div class="pdp-review-card__image" onclick="this.querySelector(\'img\') && openReviewLightbox(this.querySelector(\'img\').src)"><img src="' + r.image + '" alt="Foto de reseña" loading="lazy"></div>';
+      }
       card.innerHTML =
         '<div class="pdp-review-card__header">' +
           '<span class="pdp-review-card__name">' + escapeHtml(r.name) + (isOwner ? '<span class="pdp-review-card__badge">Saluva</span>' : '') + '</span>' +
           '<span class="pdp-review-card__date">' + r.date + '</span>' +
         '</div>' +
         '<div class="pdp-review-card__stars">' + renderStars(r.rating) + '</div>' +
-        '<p class="pdp-review-card__text">' + escapeHtml(r.comment) + '</p>';
+        '<p class="pdp-review-card__text">' + escapeHtml(r.comment) + '</p>' +
+        imageHtml;
       list.appendChild(card);
     });
 
@@ -1265,6 +1285,35 @@ function initPdpReviews() {
     });
   });
 
+  /* Image upload handling */
+  if (imageInput) {
+    imageInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('La imagen debe ser menor a 2MB', 'error');
+        this.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        reviewImageData = e.target.result;
+        if (imagePreviewImg) imagePreviewImg.src = reviewImageData;
+        if (imagePreview) imagePreview.classList.add('has-image');
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (imageRemoveBtn) {
+    imageRemoveBtn.addEventListener('click', function() {
+      reviewImageData = null;
+      if (imageInput) imageInput.value = '';
+      if (imagePreviewImg) imagePreviewImg.src = '';
+      if (imagePreview) imagePreview.classList.remove('has-image');
+    });
+  }
+
   /* Submit */
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -1277,14 +1326,20 @@ function initPdpReviews() {
       return;
     }
 
-    const reviews = getReviews();
-    reviews.unshift({
+    const reviewData = {
       name: name,
       rating: selectedRating,
       comment: comment,
       date: new Date().toLocaleDateString('es-CO'),
       isOwner: false
-    });
+    };
+
+    if (reviewImageData) {
+      reviewData.image = reviewImageData;
+    }
+
+    const reviews = getReviews();
+    reviews.unshift(reviewData);
 
     saveReviews(reviews);
     renderReviews();
@@ -1292,7 +1347,10 @@ function initPdpReviews() {
     /* Reset form */
     form.reset();
     selectedRating = 0;
+    reviewImageData = null;
     starBtns.forEach(b => b.classList.remove('active'));
+    if (imagePreview) imagePreview.classList.remove('has-image');
+    if (imagePreviewImg) imagePreviewImg.src = '';
     formWrap.style.display = 'none';
     showToast('¡Gracias por tu reseña!', 'success');
   });

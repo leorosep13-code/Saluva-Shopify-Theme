@@ -193,6 +193,18 @@
           <label class="pdp-reviews__label">Comentario</label>
           <textarea class="pdp-reviews__textarea" id="review-comment" rows="4" required placeholder="Cuéntanos tu experiencia con este producto..."></textarea>
         </div>
+        <div class="pdp-reviews__form-row">
+          <label class="pdp-reviews__label">Foto (opcional)</label>
+          <label class="pdp-reviews__upload-label" id="review-upload-label">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Agregar imagen
+            <input type="file" accept="image/*" class="pdp-reviews__upload-input" id="review-image-input">
+          </label>
+          <div class="pdp-reviews__upload-preview" id="review-image-preview">
+            <img src="" alt="Preview" id="review-image-preview-img">
+            <button type="button" class="pdp-reviews__upload-remove" id="review-image-remove" aria-label="Quitar imagen">✕</button>
+          </div>
+        </div>
         <button type="submit" class="btn btn--primary btn--md">Publicar reseña</button>
       </form>
     </div>
