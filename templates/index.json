@@ -26,6 +26,7 @@
     },
     "hero-scroll": {
       "type": "saluva-hero-scroll",
+      "disabled": true,
       "settings": {
         "title": "Transforma tu vida con Saluva",
         "subtitle": "Suplementos naturales diseñados para el bienestar de la mujer moderna.",
