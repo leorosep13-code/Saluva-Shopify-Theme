@@ -30,7 +30,7 @@
         "ai_gen_block_c5eb1ea_Lei3kC": {
           "type": "ai_gen_block_c5eb1ea",
           "settings": {
-            "promo_text": "Envío gratis en compras superiores a $160.000 y Pagos contra Entrega",
+            "promo_text": "Envío gratis en compras superiores a $160.000",
             "show_icon": true,
             "icon_type": "tag",
             "show_separator": true,
