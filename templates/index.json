@@ -206,7 +206,7 @@
         "label": "NUESTRO BLOG",
         "title": "Blog Destacado",
         "blog": "",
-        "view_all_url": ""
+        "view_all_url": "shopify://blogs/noticias"
       }
     }
   },
