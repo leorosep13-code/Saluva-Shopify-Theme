@@ -12,7 +12,7 @@
     "landing-hero": {
       "type": "saluva-landing",
       "settings": {
-        "layout_mode": "fullscreen",
+        "layout_mode": "lateral",
         "badge_text": "BIENESTAR FEMENINO NATURAL",
         "title_line1": "Tu cuerpo merece",
         "title_highlight": "lo mejor",
