@@ -1,6 +1,844 @@
+{% doc %}
+  @prompt
+    un banner deslozable de promociones, que me deje agregar una imagen al fondo de cada promocion, el texto de la promocion debe estat en un costado , ademas debe contar con un boton pata ir al enlace
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-promo-slider-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    overflow: hidden;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding }}px 0;
+  }
+
+  .ai-promo-slider__container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-promo-slider__wrapper-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-promo-slider__track-{{ ai_gen_id }} {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+
+  .ai-promo-slider__slide-{{ ai_gen_id }} {
+    min-width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: {% if block.settings.content_position == 'left' %}flex-start{% elsif block.settings.content_position == 'right' %}flex-end{% else %}center{% endif %};
+    padding: {{ block.settings.slide_padding }}px;
+    background-color: {{ block.settings.slide_background_color }};
+    position: relative;
+    min-height: 400px;
+  }
+
+  .ai-promo-slider__slide-bg-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  .ai-promo-slider__slide-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.overlay_color }};
+    opacity: {{ block.settings.overlay_opacity }};
+    z-index: 1;
+  }
+
+  .ai-promo-slider__slide-content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    padding: 40px;
+    background-color: {{ block.settings.content_bg_color }};
+    border-radius: {{ block.settings.content_border_radius }}px;
+    text-align: {% if block.settings.text_alignment == 'center' %}center{% elsif block.settings.text_alignment == 'right' %}right{% else %}left{% endif %};
+  }
+
+  .ai-promo-slider__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 16px;
+    font-weight: 700;
+  }
+
+  .ai-promo-slider__description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.description_color }};
+    margin: 0 0 24px;
+    line-height: 1.6;
+  }
+
+  .ai-promo-slider__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: {{ block.settings.button_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-promo-slider__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_color }};
+  }
+
+  .ai-promo-slider__controls-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .ai-promo-slider__arrow-{{ ai_gen_id }} {
+    background-color: {{ block.settings.arrow_color }};
+    color: {{ block.settings.arrow_icon_color }};
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-promo-slider__arrow-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.arrow_hover_color }};
+  }
+
+  .ai-promo-slider__arrow-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ai-promo-slider__dots-{{ ai_gen_id }} {
+    display: flex;
+    gap: 8px;
+  }
+
+  .ai-promo-slider__dot-{{ ai_gen_id }} {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: {{ block.settings.dot_color }};
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 0;
+  }
+
+  .ai-promo-slider__dot-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.dot_active_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-promo-slider__slide-{{ ai_gen_id }} {
+      justify-content: center;
+      min-height: 300px;
+    }
+
+    .ai-promo-slider__slide-content-{{ ai_gen_id }} {
+      max-width: 100%;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .ai-promo-slider__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.75);
+    }
+
+    .ai-promo-slider__description-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.description_size }}px * 0.9);
+    }
+  }
+{% endstyle %}
+
+<promo-slider-{{ ai_gen_id }} class="ai-promo-slider-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-promo-slider__container-{{ ai_gen_id }}">
+    <div class="ai-promo-slider__wrapper-{{ ai_gen_id }}">
+      <div class="ai-promo-slider__track-{{ ai_gen_id }}">
+        {% for i in (1..5) %}
+          {% liquid
+            assign title_key = 'promo_' | append: i | append: '_title'
+            assign description_key = 'promo_' | append: i | append: '_description'
+            assign button_text_key = 'promo_' | append: i | append: '_button_text'
+            assign button_link_key = 'promo_' | append: i | append: '_button_link'
+            assign enabled_key = 'promo_' | append: i | append: '_enabled'
+            assign image_key = 'promo_' | append: i | append: '_image'
+
+            assign promo_title = block.settings[title_key]
+            assign promo_description = block.settings[description_key]
+            assign promo_button_text = block.settings[button_text_key]
+            assign promo_button_link = block.settings[button_link_key]
+            assign promo_enabled = block.settings[enabled_key]
+            assign promo_image = block.settings[image_key]
+          %}
+
+          {% if promo_enabled %}
+            <div class="ai-promo-slider__slide-{{ ai_gen_id }}" data-slide="{{ forloop.index0 }}">
+              {% if promo_image %}
+                <img
+                  src="{{ promo_image | image_url: width: 2000 }}"
+                  alt="{{ promo_image.alt | escape }}"
+                  loading="lazy"
+                  width="{{ promo_image.width }}"
+                  height="{{ promo_image.height }}"
+                  class="ai-promo-slider__slide-bg-{{ ai_gen_id }}"
+                >
+                <div class="ai-promo-slider__slide-overlay-{{ ai_gen_id }}"></div>
+              {% endif %}
+
+              <div class="ai-promo-slider__slide-content-{{ ai_gen_id }}">
+                {% if promo_title != blank %}
+                  <h2 class="ai-promo-slider__title-{{ ai_gen_id }}">{{ promo_title }}</h2>
+                {% endif %}
+
+                {% if promo_description != blank %}
+                  <div class="ai-promo-slider__description-{{ ai_gen_id }}">{{ promo_description }}</div>
+                {% endif %}
+
+                {% if promo_button_text != blank and promo_button_link != blank %}
+                  <a href="{{ promo_button_link }}" class="ai-promo-slider__button-{{ ai_gen_id }}">
+                    {{ promo_button_text }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if block.settings.show_controls %}
+      <div class="ai-promo-slider__controls-{{ ai_gen_id }}">
+        <button class="ai-promo-slider__arrow-{{ ai_gen_id }} ai-promo-slider__prev-{{ ai_gen_id }}" aria-label="Anterior">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="ai-promo-slider__dots-{{ ai_gen_id }}"></div>
+
+        <button class="ai-promo-slider__arrow-{{ ai_gen_id }} ai-promo-slider__next-{{ ai_gen_id }}" aria-label="Siguiente">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    {% endif %}
+  </div>
+</promo-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class PromoSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.autoplayInterval = null;
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('.ai-promo-slider__track-{{ ai_gen_id }}');
+        this.slides = this.querySelectorAll('.ai-promo-slider__slide-{{ ai_gen_id }}');
+        this.prevButton = this.querySelector('.ai-promo-slider__prev-{{ ai_gen_id }}');
+        this.nextButton = this.querySelector('.ai-promo-slider__next-{{ ai_gen_id }}');
+        this.dotsContainer = this.querySelector('.ai-promo-slider__dots-{{ ai_gen_id }}');
+
+        if (this.slides.length === 0) return;
+
+        this.createDots();
+        this.setupEventListeners();
+        this.updateSlider();
+
+        {% if block.settings.autoplay %}
+          this.startAutoplay();
+        {% endif %}
+      }
+
+      createDots() {
+        if (!this.dotsContainer) return;
+
+        this.slides.forEach((slide, index) => {
+          const dot = document.createElement('button');
+          dot.classList.add('ai-promo-slider__dot-{{ ai_gen_id }}');
+          dot.setAttribute('aria-label', 'Ir a promoción ' + (index + 1));
+          if (index === 0) dot.classList.add('active');
+          dot.addEventListener('click', () => this.goToSlide(index));
+          this.dotsContainer.appendChild(dot);
+        });
+      }
+
+      setupEventListeners() {
+        if (this.prevButton) {
+          this.prevButton.addEventListener('click', () => this.prevSlide());
+        }
+
+        if (this.nextButton) {
+          this.nextButton.addEventListener('click', () => this.nextSlide());
+        }
+
+        this.addEventListener('mouseenter', () => this.stopAutoplay());
+        this.addEventListener('mouseleave', () => {
+          {% if block.settings.autoplay %}
+            this.startAutoplay();
+          {% endif %}
+        });
+      }
+
+      updateSlider() {
+        const offset = -this.currentSlide * 100;
+        this.track.style.transform = 'translateX(' + offset + '%)';
+
+        const dots = this.querySelectorAll('.ai-promo-slider__dot-{{ ai_gen_id }}');
+        dots.forEach((dot, index) => {
+          if (index === this.currentSlide) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+
+      goToSlide(index) {
+        this.currentSlide = index;
+        this.updateSlider();
+        this.resetAutoplay();
+      }
+
+      nextSlide() {
+        this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+        this.updateSlider();
+        this.resetAutoplay();
+      }
+
+      prevSlide() {
+        this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
+        this.updateSlider();
+        this.resetAutoplay();
+      }
+
+      startAutoplay() {
+        this.stopAutoplay();
+        this.autoplayInterval = setInterval(() => {
+          this.nextSlide();
+        }, {{ block.settings.autoplay_speed | times: 1000 }});
+      }
+
+      stopAutoplay() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+          this.autoplayInterval = null;
+        }
+      }
+
+      resetAutoplay() {
+        {% if block.settings.autoplay %}
+          this.startAutoplay();
+        {% endif %}
+      }
+
+      disconnectedCallback() {
+        this.stopAutoplay();
+      }
+    }
+
+    customElements.define('promo-slider-{{ ai_gen_id }}', PromoSlider{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Banner de promociones",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Diseño"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Ancho en escritorio",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de fondo",
+      "default": "#a4c93b"
+    },
+    {
+      "type": "color",
+      "id": "slide_background_color",
+      "label": "Color de fondo de diapositiva",
+      "default": "#a4c93b"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Espaciado vertical",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "slide_padding",
+      "label": "Espaciado de diapositiva",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Radio de borde",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Superposición de imagen"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Color de superposición",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Opacidad de superposición",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.4
+    },
+    {
+      "type": "header",
+      "content": "Contenido"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Posición del contenido",
+      "options": [
+        {
+          "value": "left",
+          "label": "Izquierda"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "right",
+          "label": "Derecha"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Alineación del texto",
+      "options": [
+        {
+          "value": "left",
+          "label": "Izquierda"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "right",
+          "label": "Derecha"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "content_bg_color",
+      "label": "Color de fondo del contenido",
+      "default": "rgba(255, 255, 255, 0.95)"
+    },
+    {
+      "type": "range",
+      "id": "content_border_radius",
+      "label": "Radio de borde del contenido",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Texto"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Tamaño de título",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color de título",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Tamaño de descripción",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Color de descripción",
+      "default": "#6b6b6b"
+    },
+    {
+      "type": "header",
+      "content": "Botón"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Color de fondo",
+      "default": "#a4c93b"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Color de fondo al pasar",
+      "default": "#8fb02f"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Color de texto",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Tamaño de fuente",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Radio de borde",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Controles"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "Mostrar controles",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Color de flechas",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "arrow_hover_color",
+      "label": "Color de flechas al pasar",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "arrow_icon_color",
+      "label": "Color de icono de flecha",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Color de puntos",
+      "default": "#cccccc"
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Color de punto activo",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Reproducción automática"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Activar reproducción automática",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Velocidad",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Promoción 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "promo_1_enabled",
+      "label": "Activar promoción 1",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_1_image",
+      "label": "Imagen de fondo"
+    },
+    {
+      "type": "text",
+      "id": "promo_1_title",
+      "label": "Título",
+      "default": "¡Oferta especial!"
+    },
+    {
+      "type": "textarea",
+      "id": "promo_1_description",
+      "label": "Descripción",
+      "default": "Obtén hasta 30% de descuento en productos seleccionados"
+    },
+    {
+      "type": "text",
+      "id": "promo_1_button_text",
+      "label": "Texto del botón",
+      "default": "Comprar ahora"
+    },
+    {
+      "type": "url",
+      "id": "promo_1_button_link",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "header",
+      "content": "Promoción 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "promo_2_enabled",
+      "label": "Activar promoción 2",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_2_image",
+      "label": "Imagen de fondo"
+    },
+    {
+      "type": "text",
+      "id": "promo_2_title",
+      "label": "Título",
+      "default": "Envío gratis"
+    },
+    {
+      "type": "textarea",
+      "id": "promo_2_description",
+      "label": "Descripción",
+      "default": "En compras superiores a $100.000 COP"
+    },
+    {
+      "type": "text",
+      "id": "promo_2_button_text",
+      "label": "Texto del botón",
+      "default": "Ver más"
+    },
+    {
+      "type": "url",
+      "id": "promo_2_button_link",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "header",
+      "content": "Promoción 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "promo_3_enabled",
+      "label": "Activar promoción 3",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_3_image",
+      "label": "Imagen de fondo"
+    },
+    {
+      "type": "text",
+      "id": "promo_3_title",
+      "label": "Título",
+      "default": "Nueva colección"
+    },
+    {
+      "type": "textarea",
+      "id": "promo_3_description",
+      "label": "Descripción",
+      "default": "Descubre nuestros productos más recientes"
+    },
+    {
+      "type": "text",
+      "id": "promo_3_button_text",
+      "label": "Texto del botón",
+      "default": "Explorar"
+    },
+    {
+      "type": "url",
+      "id": "promo_3_button_link",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "header",
+      "content": "Promoción 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "promo_4_enabled",
+      "label": "Activar promoción 4",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_4_image",
+      "label": "Imagen de fondo"
+    },
+    {
+      "type": "text",
+      "id": "promo_4_title",
+      "label": "Título"
+    },
+    {
+      "type": "textarea",
+      "id": "promo_4_description",
+      "label": "Descripción"
+    },
+    {
+      "type": "text",
+      "id": "promo_4_button_text",
+      "label": "Texto del botón"
+    },
+    {
+      "type": "url",
+      "id": "promo_4_button_link",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "header",
+      "content": "Promoción 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "promo_5_enabled",
+      "label": "Activar promoción 5",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_5_image",
+      "label": "Imagen de fondo"
+    },
+    {
+      "type": "text",
+      "id": "promo_5_title",
+      "label": "Título"
+    },
+    {
+      "type": "textarea",
+      "id": "promo_5_description",
+      "label": "Descripción"
+    },
+    {
+      "type": "text",
+      "id": "promo_5_button_text",
+      "label": "Texto del botón"
+    },
+    {
+      "type": "url",
+      "id": "promo_5_button_link",
+      "label": "Enlace del botón"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner de promociones"
+    }
+  ]
+}
 {% endschema %}
