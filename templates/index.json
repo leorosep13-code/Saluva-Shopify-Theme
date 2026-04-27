@@ -66,11 +66,36 @@
             "promo_5_link": ""
           },
           "blocks": {}
+        },
+        "ai_gen_block_c5eb1ea_gVfb6X": {
+          "type": "ai_gen_block_c5eb1ea",
+          "name": "Banner promocional",
+          "settings": {
+            "promo_text": "Recibe un Guia desinflamación GRATIS",
+            "show_icon": true,
+            "icon_type": "gift",
+            "show_separator": true,
+            "background_color": "#a7c748",
+            "text_color": "#ffffff",
+            "icon_color": "#ffffff",
+            "separator_color": "#ffffff",
+            "font_size": 16,
+            "font_weight": "500",
+            "icon_size": 20,
+            "separator_size": 6,
+            "padding_vertical": 12,
+            "item_spacing": 40,
+            "icon_text_gap": 8,
+            "animation_speed": 20,
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
         }
       },
       "block_order": [
         "ai_gen_block_c5eb1ea_ecTLmT",
-        "ai_gen_block_7077edc_rJi7k9"
+        "ai_gen_block_7077edc_rJi7k9",
+        "ai_gen_block_c5eb1ea_gVfb6X"
       ],
       "settings": {}
     },
