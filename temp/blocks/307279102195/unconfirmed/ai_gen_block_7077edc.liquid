@@ -1,6 +1,651 @@
+{% doc %}
+  @prompt
+    un banner deslozable de promociones, que me deje agregar una imagen al fondo de cada promocion, el texto de la promocion debe estat en un costado , ademas debe contar con un boton pata ir al enlace, que el cuadro de texto/boton sea mas traslucido, mejor sin texto solo un pequeño boton para ver la promocion a un costado, porfavor coloca el boton en la esquina inferior izquierda , que sea visible, la imagen debe ser el fondo del banner por lo tanto debe verse clara y sin margen
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-promo-slider-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .ai-promo-slider__wrapper-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-promo-slider__track-{{ ai_gen_id }} {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+
+  .ai-promo-slider__slide-{{ ai_gen_id }} {
+    min-width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: {{ block.settings.slide_padding }}px;
+    background-color: {{ block.settings.slide_background_color }};
+    position: relative;
+    min-height: {{ block.settings.slide_height }}px;
+  }
+
+  .ai-promo-slider__slide-bg-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  .ai-promo-slider__slide-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.overlay_color }};
+    opacity: {{ block.settings.overlay_opacity }};
+    z-index: 1;
+  }
+
+  .ai-promo-slider__button-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: {{ block.settings.button_padding }}px;
+    background-color: rgba({{ block.settings.button_color | color_extract: 'red' }}, {{ block.settings.button_color | color_extract: 'green' }}, {{ block.settings.button_color | color_extract: 'blue' }}, {{ block.settings.button_opacity }});
+    backdrop-filter: blur({{ block.settings.button_blur }}px);
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  .ai-promo-slider__button-{{ ai_gen_id }}:hover {
+    background-color: rgba({{ block.settings.button_hover_color | color_extract: 'red' }}, {{ block.settings.button_hover_color | color_extract: 'green' }}, {{ block.settings.button_hover_color | color_extract: 'blue' }}, {{ block.settings.button_hover_opacity }});
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .ai-promo-slider__controls-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .ai-promo-slider__arrow-{{ ai_gen_id }} {
+    background-color: {{ block.settings.arrow_color }};
+    color: {{ block.settings.arrow_icon_color }};
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-promo-slider__arrow-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.arrow_hover_color }};
+  }
+
+  .ai-promo-slider__arrow-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ai-promo-slider__dots-{{ ai_gen_id }} {
+    display: flex;
+    gap: 8px;
+  }
+
+  .ai-promo-slider__dot-{{ ai_gen_id }} {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: {{ block.settings.dot_color }};
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 0;
+  }
+
+  .ai-promo-slider__dot-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.dot_active_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-promo-slider__slide-{{ ai_gen_id }} {
+      min-height: {{ block.settings.slide_height | times: 0.7 }}px;
+    }
+
+    .ai-promo-slider__button-{{ ai_gen_id }} {
+      padding: calc({{ block.settings.button_padding }}px * 0.8);
+      font-size: calc({{ block.settings.button_font_size }}px * 0.9);
+    }
+  }
+{% endstyle %}
+
+<promo-slider-{{ ai_gen_id }} class="ai-promo-slider-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-promo-slider__wrapper-{{ ai_gen_id }}">
+    <div class="ai-promo-slider__track-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign button_text_key = 'promo_' | append: i | append: '_button_text'
+          assign button_link_key = 'promo_' | append: i | append: '_button_link'
+          assign enabled_key = 'promo_' | append: i | append: '_enabled'
+          assign image_key = 'promo_' | append: i | append: '_image'
+
+          assign promo_button_text = block.settings[button_text_key]
+          assign promo_button_link = block.settings[button_link_key]
+          assign promo_enabled = block.settings[enabled_key]
+          assign promo_image = block.settings[image_key]
+        %}
+
+        {% if promo_enabled %}
+          <div class="ai-promo-slider__slide-{{ ai_gen_id }}" data-slide="{{ forloop.index0 }}">
+            {% if promo_image %}
+              <img
+                src="{{ promo_image | image_url: width: 2000 }}"
+                alt="{{ promo_image.alt | escape }}"
+                loading="lazy"
+                width="{{ promo_image.width }}"
+                height="{{ promo_image.height }}"
+                class="ai-promo-slider__slide-bg-{{ ai_gen_id }}"
+              >
+              <div class="ai-promo-slider__slide-overlay-{{ ai_gen_id }}"></div>
+            {% endif %}
+
+            {% if promo_button_text != blank and promo_button_link != blank %}
+              <a href="{{ promo_button_link }}" class="ai-promo-slider__button-{{ ai_gen_id }}">
+                {{ promo_button_text }}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if block.settings.show_controls %}
+    <div class="ai-promo-slider__controls-{{ ai_gen_id }}">
+      <button class="ai-promo-slider__arrow-{{ ai_gen_id }} ai-promo-slider__prev-{{ ai_gen_id }}" aria-label="Anterior">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="ai-promo-slider__dots-{{ ai_gen_id }}"></div>
+
+      <button class="ai-promo-slider__arrow-{{ ai_gen_id }} ai-promo-slider__next-{{ ai_gen_id }}" aria-label="Siguiente">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  {% endif %}
+</promo-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class PromoSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.autoplayInterval = null;
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('.ai-promo-slider__track-{{ ai_gen_id }}');
+        this.slides = this.querySelectorAll('.ai-promo-slider__slide-{{ ai_gen_id }}');
+        this.prevButton = this.querySelector('.ai-promo-slider__prev-{{ ai_gen_id }}');
+        this.nextButton = this.querySelector('.ai-promo-slider__next-{{ ai_gen_id }}');
+        this.dotsContainer = this.querySelector('.ai-promo-slider__dots-{{ ai_gen_id }}');
+
+        if (this.slides.length === 0) return;
+
+        this.createDots();
+        this.setupEventListeners();
+        this.updateSlider();
+
+        {% if block.settings.autoplay %}
+          this.startAutoplay();
+        {% endif %}
+      }
+
+      createDots() {
+        if (!this.dotsContainer) return;
+
+        this.slides.forEach((slide, index) => {
+          const dot = document.createElement('button');
+          dot.classList.add('ai-promo-slider__dot-{{ ai_gen_id }}');
+          dot.setAttribute('aria-label', 'Ir a promoción ' + (index + 1));
+          if (index === 0) dot.classList.add('active');
+          dot.addEventListener('click', () => this.goToSlide(index));
+          this.dotsContainer.appendChild(dot);
+        });
+      }
+
+      setupEventListeners() {
+        if (this.prevButton) {
+          this.prevButton.addEventListener('click', () => this.prevSlide());
+        }
+
+        if (this.nextButton) {
+          this.nextButton.addEventListener('click', () => this.nextSlide());
+        }
+
+        this.addEventListener('mouseenter', () => this.stopAutoplay());
+        this.addEventListener('mouseleave', () => {
+          {% if block.settings.autoplay %}
+            this.startAutoplay();
+          {% endif %}
+        });
+      }
+
+      updateSlider() {
+        const offset = -this.currentSlide * 100;
+        this.track.style.transform = 'translateX(' + offset + '%)';
+
+        const dots = this.querySelectorAll('.ai-promo-slider__dot-{{ ai_gen_id }}');
+        dots.forEach((dot, index) => {
+          if (index === this.currentSlide) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+
+      goToSlide(index) {
+        this.currentSlide = index;
+        this.updateSlider();
+        this.resetAutoplay();
+      }
+
+      nextSlide() {
+        this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+        this.updateSlider();
+        this.resetAutoplay();
+      }
+
+      prevSlide() {
+        this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
+        this.updateSlider();
+        this.resetAutoplay();
+      }
+
+      startAutoplay() {
+        this.stopAutoplay();
+        this.autoplayInterval = setInterval(() => {
+          this.nextSlide();
+        }, {{ block.settings.autoplay_speed | times: 1000 }});
+      }
+
+      stopAutoplay() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+          this.autoplayInterval = null;
+        }
+      }
+
+      resetAutoplay() {
+        {% if block.settings.autoplay %}
+          this.startAutoplay();
+        {% endif %}
+      }
+
+      disconnectedCallback() {
+        this.stopAutoplay();
+      }
+    }
+
+    customElements.define('promo-slider-{{ ai_gen_id }}', PromoSlider{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Banner de promociones",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Diseño"
+    },
+    {
+      "type": "range",
+      "id": "slide_height",
+      "label": "Altura del banner",
+      "min": 300,
+      "max": 700,
+      "step": 50,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "slide_background_color",
+      "label": "Color de fondo",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "range",
+      "id": "slide_padding",
+      "label": "Espaciado interno",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Superposición de imagen"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Color de superposición",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Opacidad de superposición",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.2
+    },
+    {
+      "type": "header",
+      "content": "Botón"
+    },
+    {
+      "type": "range",
+      "id": "button_padding",
+      "label": "Espaciado del botón",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Color de fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_opacity",
+      "label": "Opacidad del botón",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.9
+    },
+    {
+      "type": "range",
+      "id": "button_blur",
+      "label": "Desenfoque del botón",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Color de fondo al pasar",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_hover_opacity",
+      "label": "Opacidad al pasar",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Color de texto",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Tamaño de fuente",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Radio de borde",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Controles"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "Mostrar controles",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Color de flechas",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "arrow_hover_color",
+      "label": "Color de flechas al pasar",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "arrow_icon_color",
+      "label": "Color de icono de flecha",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Color de puntos",
+      "default": "#cccccc"
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Color de punto activo",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Reproducción automática"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Activar reproducción automática",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Velocidad",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Promoción 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "promo_1_enabled",
+      "label": "Activar promoción 1",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_1_image",
+      "label": "Imagen de fondo"
+    },
+    {
+      "type": "text",
+      "id": "promo_1_button_text",
+      "label": "Texto del botón",
+      "default": "Ver promoción"
+    },
+    {
+      "type": "url",
+      "id": "promo_1_button_link",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "header",
+      "content": "Promoción 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "promo_2_enabled",
+      "label": "Activar promoción 2",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_2_image",
+      "label": "Imagen de fondo"
+    },
+    {
+      "type": "text",
+      "id": "promo_2_button_text",
+      "label": "Texto del botón",
+      "default": "Ver promoción"
+    },
+    {
+      "type": "url",
+      "id": "promo_2_button_link",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "header",
+      "content": "Promoción 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "promo_3_enabled",
+      "label": "Activar promoción 3",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_3_image",
+      "label": "Imagen de fondo"
+    },
+    {
+      "type": "text",
+      "id": "promo_3_button_text",
+      "label": "Texto del botón",
+      "default": "Ver promoción"
+    },
+    {
+      "type": "url",
+      "id": "promo_3_button_link",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "header",
+      "content": "Promoción 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "promo_4_enabled",
+      "label": "Activar promoción 4",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_4_image",
+      "label": "Imagen de fondo"
+    },
+    {
+      "type": "text",
+      "id": "promo_4_button_text",
+      "label": "Texto del botón"
+    },
+    {
+      "type": "url",
+      "id": "promo_4_button_link",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "header",
+      "content": "Promoción 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "promo_5_enabled",
+      "label": "Activar promoción 5",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_5_image",
+      "label": "Imagen de fondo"
+    },
+    {
+      "type": "text",
+      "id": "promo_5_button_text",
+      "label": "Texto del botón"
+    },
+    {
+      "type": "url",
+      "id": "promo_5_button_link",
+      "label": "Enlace del botón"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner de promociones"
+    }
+  ]
+}
 {% endschema %}
