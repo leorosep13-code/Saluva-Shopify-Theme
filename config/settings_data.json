@@ -25,9 +25,9 @@
       "promo-bar": {
         "type": "promo-bar",
         "settings": {
-          "text": "VENTA ESPECIAL — HASTA 20% OFF",
-          "icon": "✨",
-          "end_date": "2026-04-30"
+          "text": "PROMO ESPECIAL MADRES— HASTA 30% OFF",
+          "icon": "💝",
+          "end_date": "2026-05-11"
         }
       },
       "header": {
