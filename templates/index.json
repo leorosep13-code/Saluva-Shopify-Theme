@@ -247,11 +247,22 @@
     },
     "blog": {
       "type": "saluva-blog",
+      "disabled": true,
       "settings": {
         "label": "NUESTRO BLOG",
         "title": "Blog Destacado",
         "blog": "desde-adentro",
         "view_all_url": "shopify://pages/blogs"
+      }
+    },
+    "saluva_blog_jTzxcV": {
+      "type": "saluva-blog",
+      "name": "Blog Destacado Saluva",
+      "settings": {
+        "label": "NUESTRO BLOG",
+        "title": "Blog Destacado",
+        "blog": "desde-adentro",
+        "view_all_url": "shopify://blogs/desde-adentro"
       }
     }
   },
@@ -266,6 +277,7 @@
     "bestsellers",
     "aprende",
     "quiz",
-    "blog"
+    "blog",
+    "saluva_blog_jTzxcV"
   ]
 }
