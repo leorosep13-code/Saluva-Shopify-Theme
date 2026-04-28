@@ -11,10 +11,45 @@
   "sections": {
     "main": {
       "type": "main-404",
+      "disabled": true,
+      "custom_css": [],
+      "settings": {}
+    },
+    "1777394690b4adc9f6": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_05aa713_bdDydV": {
+          "type": "ai_gen_block_05aa713",
+          "settings": {
+            "main_article": "desde-adentro/por-que-te-sientes-cansada-todo-el-tiempo-y-como-solucionarlo",
+            "show_excerpt": true,
+            "sidebar_title": "También te puede interesar",
+            "recommended_article_1": "",
+            "recommended_article_2": "",
+            "recommended_article_3": "",
+            "desktop_width_percent": 100,
+            "section_padding": 50,
+            "image_border_radius": 8,
+            "recommended_image_radius": 4,
+            "title_size": 40,
+            "text_size": 16,
+            "background_color": "#ffffff",
+            "title_color": "#1a1a1a",
+            "text_color": "#1a1a1a",
+            "meta_color": "#6b6b6b",
+            "divider_color": "#e5e5e5"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_05aa713_bdDydV"
+      ],
       "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "1777394690b4adc9f6"
   ]
 }
