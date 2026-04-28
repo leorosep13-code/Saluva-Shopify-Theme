@@ -334,6 +334,11 @@ img { max-width: 100%; height: auto; display: block; object-fit: contain; }
   justify-content: center;
 }
 
+/* En el carrito ya hay un botón PAGAR en el formulario — ocultar el flotante en todas las resoluciones */
+body.template-cart .floating-checkout {
+  display: none !important;
+}
+
 /* Quantity input - hide spinners */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
@@ -562,6 +567,11 @@ input[type="number"]::-webkit-outer-spin-button {
   /* En página de producto: el PAGAR queda encima de la sticky bar de add-to-cart */
   body.template-product .floating-checkout {
     bottom: 76px;
+  }
+
+  /* En el carrito ya hay un botón PAGAR dentro del formulario; ocultamos el flotante */
+  body.template-cart .floating-checkout {
+    display: none !important;
   }
 
   .scroll-top-btn { bottom: 16px; right: 16px; }
