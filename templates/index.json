@@ -244,26 +244,6 @@
         "title": "Descubre Tu Rutina Ideal",
         "description": "Responde unas preguntas rapidas y te recomendaremos los productos perfectos para ti."
       }
-    },
-    "blog": {
-      "type": "saluva-blog",
-      "disabled": true,
-      "settings": {
-        "label": "NUESTRO BLOG",
-        "title": "Blog Destacado",
-        "blog": "desde-adentro",
-        "view_all_url": "shopify://pages/blogs"
-      }
-    },
-    "saluva_blog_jTzxcV": {
-      "type": "saluva-blog",
-      "name": "Blog Destacado Saluva",
-      "settings": {
-        "label": "NUESTRO BLOG",
-        "title": "Blog Destacado",
-        "blog": "desde-adentro",
-        "view_all_url": "shopify://blogs/desde-adentro"
-      }
     }
   },
   "order": [
@@ -276,8 +256,6 @@
     "sale-banner",
     "bestsellers",
     "aprende",
-    "quiz",
-    "blog",
-    "saluva_blog_jTzxcV"
+    "quiz"
   ]
 }
