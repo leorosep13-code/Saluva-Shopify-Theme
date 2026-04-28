@@ -1,0 +1,67 @@
+{% paginate blog.articles by 12 %}
+<section class="blog-page">
+  <div class="blog-page__hero">
+    <div class="container">
+      <nav class="blog-page__breadcrumbs" aria-label="Navegacion">
+        <a href="/">Inicio</a>
+        <span>/</span>
+        <span>{{ blog.title }}</span>
+      </nav>
+      <h1 class="blog-page__title">{{ blog.title }}</h1>
+      <p class="blog-page__subtitle">Articulos, guias y consejos para tu bienestar</p>
+    </div>
+  </div>
+
+  <div class="container">
+    {% if blog.articles.size > 0 %}
+      <div class="blog-grid">
+        {% for article in blog.articles %}
+          <article class="blog-card anim-zoom" data-delay="{{ forloop.index0 | times: 80 }}">
+            <a href="{{ article.url }}" class="blog-card__media">
+              {% if article.image != blank %}
+                <img src="{{ article.image | image_url: width: 600 }}"
+                     alt="{{ article.image.alt | default: article.title }}"
+                     class="blog-card__img"
+                     loading="lazy">
+              {% else %}
+                <div class="blog-card__placeholder"><span>📝</span></div>
+              {% endif %}
+            </a>
+            <div class="blog-card__content">
+              <div class="blog-card__meta">
+                <span class="blog-card__author">{{ article.author }}</span>
+                <span class="blog-card__date">{{ article.published_at | date: '%d %b %Y' }}</span>
+              </div>
+              <h2 class="blog-card__title">
+                <a href="{{ article.url }}">{{ article.title }}</a>
+              </h2>
+              {% if article.excerpt_or_content != blank %}
+                <p class="blog-card__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 22 }}</p>
+              {% endif %}
+              <a href="{{ article.url }}" class="blog-card__link">
+                Leer mas
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+
+      {% if paginate.pages > 1 %}
+        <nav class="blog-pagination" aria-label="Paginacion">
+          {{ paginate | default_pagination }}
+        </nav>
+      {% endif %}
+    {% else %}
+      <p class="blog-page__empty">Aun no hay articulos publicados en este blog.</p>
+    {% endif %}
+  </div>
+</section>
+{% endpaginate %}
+
+{% schema %}
+{
+  "name": "Blog Principal",
+  "settings": []
+}
+{% endschema %}

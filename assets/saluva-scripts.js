@@ -1015,14 +1015,17 @@ function showToast(message, type) {
   }, 3000);
 }
 
-/* ── Hero Parallax ── */
+/* ── Hero Parallax (desktop only — móvil estático para evitar bandas negras) ── */
 window.addEventListener('scroll', () => {
+  if (window.innerWidth <= 768) return;
   const hero = document.querySelector('.landing-hero--fullscreen');
   if (hero) {
     const bgImg = hero.querySelector('.landing-hero__bg-image');
     if (bgImg) {
       const scroll = window.scrollY;
-      bgImg.style.transform = 'translateY(' + (scroll * 0.3) + 'px)';
+      const heroHeight = hero.offsetHeight;
+      const offset = Math.min(scroll * 0.25, heroHeight * 0.1);
+      bgImg.style.transform = 'translateY(' + offset + 'px)';
     }
   }
 });
