@@ -1,6 +1,548 @@
+{% doc %}
+  @prompt
+    crear una seccion de visualizacion para mi articulo , este bloque sera con un diseño estilo editurial y tendra al costado un espacio para recomendar otros blogs ademas yo debo poder escoger que articulo colocar segun los que tengo redactados en el administrador de articulos de shopify
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-article-editorial-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: {{ block.settings.section_padding }}px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-article-editorial__container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-article-editorial__main-{{ ai_gen_id }} {
+    min-width: 0;
+  }
+
+  .ai-article-editorial__featured-image-{{ ai_gen_id }} {
+    width: 100%;
+    margin-bottom: 30px;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-article-editorial__featured-image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-article-editorial__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-article-editorial__image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-article-editorial__meta-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: {{ block.settings.meta_color }};
+  }
+
+  .ai-article-editorial__author-{{ ai_gen_id }} {
+    font-weight: 600;
+  }
+
+  .ai-article-editorial__date-{{ ai_gen_id }} {
+    opacity: 0.8;
+  }
+
+  .ai-article-editorial__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    line-height: 1.2;
+    margin: 0 0 20px;
+    color: {{ block.settings.title_color }};
+    font-weight: 700;
+  }
+
+  .ai-article-editorial__excerpt-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.6;
+    color: {{ block.settings.text_color }};
+    margin-bottom: 25px;
+  }
+
+  .ai-article-editorial__content-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.8;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-article-editorial__content-{{ ai_gen_id }} p {
+    margin-bottom: 20px;
+  }
+
+  .ai-article-editorial__content-{{ ai_gen_id }} h2,
+  .ai-article-editorial__content-{{ ai_gen_id }} h3 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: {{ block.settings.title_color }};
+  }
+
+  .ai-article-editorial__sidebar-{{ ai_gen_id }} {
+    position: sticky;
+    top: 20px;
+    align-self: start;
+  }
+
+  .ai-article-editorial__sidebar-title-{{ ai_gen_id }} {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 20px;
+    color: {{ block.settings.title_color }};
+  }
+
+  .ai-article-editorial__recommended-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ai-article-editorial__recommended-item-{{ ai_gen_id }} {
+    display: flex;
+    gap: 15px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid {{ block.settings.divider_color }};
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-article-editorial__recommended-item-{{ ai_gen_id }}:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .ai-article-editorial__recommended-item-{{ ai_gen_id }}:hover {
+    opacity: 0.7;
+  }
+
+  .ai-article-editorial__recommended-image-{{ ai_gen_id }} {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: {{ block.settings.recommended_image_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-article-editorial__recommended-image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-article-editorial__recommended-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-article-editorial__recommended-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-article-editorial__recommended-info-{{ ai_gen_id }} {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ai-article-editorial__recommended-title-{{ ai_gen_id }} {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 5px;
+    color: {{ block.settings.title_color }};
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ai-article-editorial__recommended-date-{{ ai_gen_id }} {
+    font-size: 12px;
+    color: {{ block.settings.meta_color }};
+    opacity: 0.8;
+  }
+
+  .ai-article-editorial__empty-state-{{ ai_gen_id }} {
+    padding: 40px 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    color: #666;
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-article-editorial__container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .ai-article-editorial__sidebar-{{ ai_gen_id }} {
+      position: static;
+    }
+
+    .ai-article-editorial__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.8);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-article-editorial-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding | times: 0.6 }}px 15px;
+    }
+
+    .ai-article-editorial__container-{{ ai_gen_id }} {
+      gap: 30px;
+    }
+
+    .ai-article-editorial__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.7);
+    }
+
+    .ai-article-editorial__content-{{ ai_gen_id }},
+    .ai-article-editorial__excerpt-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.text_size }}px * 0.9);
+    }
+  }
+{% endstyle %}
+
+<article-editorial-{{ ai_gen_id }}
+  class="ai-article-editorial-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-article-editorial__container-{{ ai_gen_id }}">
+    <div class="ai-article-editorial__main-{{ ai_gen_id }}">
+      {% if block.settings.main_article != blank %}
+        {% assign article = block.settings.main_article %}
+        
+        {% if article.image %}
+          <div class="ai-article-editorial__featured-image-{{ ai_gen_id }}">
+            <img
+              src="{{ article.image | image_url: width: 1200 }}"
+              alt="{{ article.image.alt | escape }}"
+              loading="lazy"
+              width="{{ article.image.width }}"
+              height="{{ article.image.height }}"
+            >
+          </div>
+        {% else %}
+          <div class="ai-article-editorial__image-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+
+        <div class="ai-article-editorial__meta-{{ ai_gen_id }}">
+          {% if article.author != blank %}
+            <span class="ai-article-editorial__author-{{ ai_gen_id }}">{{ article.author }}</span>
+          {% endif %}
+          <span class="ai-article-editorial__date-{{ ai_gen_id }}">{{ article.published_at | date: '%d %B %Y' }}</span>
+        </div>
+
+        <h1 class="ai-article-editorial__title-{{ ai_gen_id }}">{{ article.title }}</h1>
+
+        {% if block.settings.show_excerpt and article.excerpt != blank %}
+          <div class="ai-article-editorial__excerpt-{{ ai_gen_id }}">
+            {{ article.excerpt }}
+          </div>
+        {% endif %}
+
+        <div class="ai-article-editorial__content-{{ ai_gen_id }}">
+          {{ article.content }}
+        </div>
+      {% else %}
+        <div class="ai-article-editorial__empty-state-{{ ai_gen_id }}">
+          Selecciona un artículo principal para mostrar en esta sección
+        </div>
+      {% endif %}
+    </div>
+
+    <aside class="ai-article-editorial__sidebar-{{ ai_gen_id }}">
+      <h2 class="ai-article-editorial__sidebar-title-{{ ai_gen_id }}">{{ block.settings.sidebar_title }}</h2>
+      
+      <div class="ai-article-editorial__recommended-{{ ai_gen_id }}">
+        {% if block.settings.recommended_article_1 != blank %}
+          {% assign rec_article = block.settings.recommended_article_1 %}
+          <a href="{{ rec_article.url }}" class="ai-article-editorial__recommended-item-{{ ai_gen_id }}">
+            <div class="ai-article-editorial__recommended-image-{{ ai_gen_id }}">
+              {% if rec_article.image %}
+                <img
+                  src="{{ rec_article.image | image_url: width: 160 }}"
+                  alt="{{ rec_article.image.alt | escape }}"
+                  loading="lazy"
+                  width="80"
+                  height="80"
+                >
+              {% else %}
+                <div class="ai-article-editorial__recommended-image-placeholder-{{ ai_gen_id }}">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="ai-article-editorial__recommended-info-{{ ai_gen_id }}">
+              <h3 class="ai-article-editorial__recommended-title-{{ ai_gen_id }}">{{ rec_article.title }}</h3>
+              <div class="ai-article-editorial__recommended-date-{{ ai_gen_id }}">{{ rec_article.published_at | date: '%d %b %Y' }}</div>
+            </div>
+          </a>
+        {% endif %}
+
+        {% if block.settings.recommended_article_2 != blank %}
+          {% assign rec_article = block.settings.recommended_article_2 %}
+          <a href="{{ rec_article.url }}" class="ai-article-editorial__recommended-item-{{ ai_gen_id }}">
+            <div class="ai-article-editorial__recommended-image-{{ ai_gen_id }}">
+              {% if rec_article.image %}
+                <img
+                  src="{{ rec_article.image | image_url: width: 160 }}"
+                  alt="{{ rec_article.image.alt | escape }}"
+                  loading="lazy"
+                  width="80"
+                  height="80"
+                >
+              {% else %}
+                <div class="ai-article-editorial__recommended-image-placeholder-{{ ai_gen_id }}">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="ai-article-editorial__recommended-info-{{ ai_gen_id }}">
+              <h3 class="ai-article-editorial__recommended-title-{{ ai_gen_id }}">{{ rec_article.title }}</h3>
+              <div class="ai-article-editorial__recommended-date-{{ ai_gen_id }}">{{ rec_article.published_at | date: '%d %b %Y' }}</div>
+            </div>
+          </a>
+        {% endif %}
+
+        {% if block.settings.recommended_article_3 != blank %}
+          {% assign rec_article = block.settings.recommended_article_3 %}
+          <a href="{{ rec_article.url }}" class="ai-article-editorial__recommended-item-{{ ai_gen_id }}">
+            <div class="ai-article-editorial__recommended-image-{{ ai_gen_id }}">
+              {% if rec_article.image %}
+                <img
+                  src="{{ rec_article.image | image_url: width: 160 }}"
+                  alt="{{ rec_article.image.alt | escape }}"
+                  loading="lazy"
+                  width="80"
+                  height="80"
+                >
+              {% else %}
+                <div class="ai-article-editorial__recommended-image-placeholder-{{ ai_gen_id }}">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="ai-article-editorial__recommended-info-{{ ai_gen_id }}">
+              <h3 class="ai-article-editorial__recommended-title-{{ ai_gen_id }}">{{ rec_article.title }}</h3>
+              <div class="ai-article-editorial__recommended-date-{{ ai_gen_id }}">{{ rec_article.published_at | date: '%d %b %Y' }}</div>
+            </div>
+          </a>
+        {% endif %}
+
+        {% if block.settings.recommended_article_1 == blank and block.settings.recommended_article_2 == blank and block.settings.recommended_article_3 == blank %}
+          <div class="ai-article-editorial__empty-state-{{ ai_gen_id }}">
+            Selecciona artículos recomendados para mostrar aquí
+          </div>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+</article-editorial-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ArticleEditorial{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.style.display = 'block';
+      }
+    }
+
+    customElements.define('article-editorial-{{ ai_gen_id }}', ArticleEditorial{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Artículo editorial",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Artículo principal"
+    },
+    {
+      "type": "article",
+      "id": "main_article",
+      "label": "Artículo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Mostrar extracto",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Artículos recomendados"
+    },
+    {
+      "type": "text",
+      "id": "sidebar_title",
+      "label": "Título de la barra lateral",
+      "default": "También te puede interesar"
+    },
+    {
+      "type": "article",
+      "id": "recommended_article_1",
+      "label": "Artículo recomendado 1"
+    },
+    {
+      "type": "article",
+      "id": "recommended_article_2",
+      "label": "Artículo recomendado 2"
+    },
+    {
+      "type": "article",
+      "id": "recommended_article_3",
+      "label": "Artículo recomendado 3"
+    },
+    {
+      "type": "header",
+      "content": "Diseño"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Ancho en escritorio",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Espaciado vertical",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Radio de borde de imagen principal",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "recommended_image_radius",
+      "label": "Radio de borde de imágenes recomendadas",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Tipografía"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Tamaño del título",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Tamaño del texto",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Títulos",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Texto",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "meta_color",
+      "label": "Metadatos",
+      "default": "#6b6b6b"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divisor",
+      "default": "#e5e5e5"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Artículo editorial"
+    }
+  ]
+}
 {% endschema %}
