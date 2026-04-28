@@ -968,7 +968,8 @@ function updateCartCount() {
 function updateFloatingCheckout(count) {
   const btn = document.getElementById('floating-checkout');
   const countEl = document.getElementById('floating-checkout-count');
-  if (!btn) return;
+  const stickyPay = document.getElementById('pdp-sticky-pay');
+  const stickyPayCount = document.getElementById('pdp-sticky-pay-count');
 
   if (count === undefined) {
     fetch('/cart.js')
@@ -979,10 +980,17 @@ function updateFloatingCheckout(count) {
     return;
   }
 
+  /* PAGAR integrado en la barra del PDP (móvil) */
+  if (stickyPay) {
+    if (stickyPayCount) stickyPayCount.textContent = count;
+    stickyPay.classList.toggle('visible', count > 0);
+  }
+
+  /* Botón flotante global (resto de páginas) */
+  if (!btn) return;
   if (countEl) countEl.textContent = count;
   if (count > 0) {
     btn.style.display = 'flex';
-    // Double rAF ensures display:flex is painted before adding transition class
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         btn.classList.add('visible');
