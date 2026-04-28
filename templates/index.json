@@ -251,7 +251,7 @@
         "label": "NUESTRO BLOG",
         "title": "Blog Destacado",
         "blog": "desde-adentro",
-        "view_all_url": ""
+        "view_all_url": "shopify://blogs/desde-adentro"
       }
     }
   },
