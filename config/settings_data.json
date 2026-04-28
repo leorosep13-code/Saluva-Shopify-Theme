@@ -32,6 +32,31 @@
       },
       "header": {
         "type": "header",
+        "blocks": {
+          "nav_link_7VTixt": {
+            "type": "nav_link",
+            "settings": {
+              "label": "Catalogo",
+              "url": "",
+              "is_anchor": true,
+              "anchor_id": "landing",
+              "has_megamenu": true,
+              "mega_col1_title": "POR CATEGORIA",
+              "mega_col1_links": "Vitaminas|Minerales|Superfoods|Proteinas|Collageno",
+              "mega_col2_title": "POR BENEFICIO",
+              "mega_col2_links": "Energia|Belleza|Inmunidad|Digestion|Relajacion",
+              "mega_img_1_title": "Novedades",
+              "mega_img_1_url": "",
+              "mega_img_2_title": "Mas Vendidos",
+              "mega_img_2_url": "",
+              "mega_img_3_title": "Ofertas",
+              "mega_img_3_url": ""
+            }
+          }
+        },
+        "block_order": [
+          "nav_link_7VTixt"
+        ],
         "settings": {}
       },
       "footer": {
@@ -41,6 +66,13 @@
         }
       }
     },
-    "content_for_index": []
+    "content_for_index": [],
+    "blocks": {
+      "13768625480086291342": {
+        "type": "shopify://apps/forms/blocks/forms/8744a304-fcb1-4347-b211-bb6b4759a76a",
+        "disabled": true,
+        "settings": {}
+      }
+    }
   }
 }
