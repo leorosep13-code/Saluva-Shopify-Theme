@@ -223,8 +223,8 @@
       "settings": {
         "label": "MÁS VENDIDOS",
         "title": "Lo Que Más Aman Nuestras Clientas",
-        "collection": "mas-vendidos",
-        "view_all_url": "shopify://collections/mas-vendidos"
+        "collection": "bestsellers",
+        "view_all_url": ""
       }
     },
     "aprende": {

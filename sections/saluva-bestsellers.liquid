@@ -8,12 +8,13 @@
         </div>
         <h2 class="section-header__title">{{ section.settings.title }}</h2>
       </div>
-      <a href="{{ section.settings.view_all_url }}" class="btn btn--outline">
+      {% assign bs_collection = collections[section.settings.collection] %}
+      {% assign view_all_href = section.settings.view_all_url | default: bs_collection.url | default: '/collections/all' %}
+      <a href="{{ view_all_href }}" class="btn btn--outline">
         Ver Todos →
       </a>
     </div>
 
-    {% assign bs_collection = collections[section.settings.collection] %}
     <div class="bestsellers-grid anim-stagger">
       {% for product in bs_collection.products limit: 4 %}
         <div class="bestsellers-grid__item">
