@@ -2157,8 +2157,21 @@
     display: none;
   }
   .header__nav-item--mega.mobile-open .mega-menu { display: block; }
-  .mega-menu__inner { flex-direction: column; padding: 16px 0; }
-  .mega-menu__featured { overflow-x: auto; }
+  .mega-menu__inner { flex-direction: column; padding: 16px 0; gap: 16px; flex-wrap: nowrap; }
+  .mega-menu__columns { flex-wrap: wrap; gap: 16px; }
+  .mega-menu__featured {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: visible;
+    justify-content: stretch;
+  }
+  .mega-menu__featured-card { width: 100%; max-width: 100%; gap: 6px; }
+  .mega-menu__featured-img-wrap { width: 100%; max-width: 100%; height: auto; aspect-ratio: 1/1; }
+  .mega-menu__featured-title { font-size: 11px; }
+  .mega-menu__featured-placeholder { font-size: 28px; }
   .header__hamburger { display: flex; }
 }
 
