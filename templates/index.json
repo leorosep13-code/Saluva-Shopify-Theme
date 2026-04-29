@@ -55,8 +55,8 @@
         "ai_gen_block_7077edc_rJi7k9": {
           "type": "ai_gen_block_7077edc",
           "settings": {
-            "promo_1_image_desktop": "shopify://shop_images/banners_pc_saluva.png",
-            "promo_1_image_mobile": "shopify://shop_images/ChatGPT_Image_27_abr_2026_15_49_55.png",
+            "promo_1_image_desktop": "shopify://shop_images/ChatGPT_Image_29_abr_2026_10_39_46.png",
+            "promo_1_image_mobile": "shopify://shop_images/ChatGPT_Image_29_abr_2026_11_24_23.png",
             "promo_1_link": "https://test-suplementos-saluva.lovable.app",
             "promo_2_image_desktop": "shopify://shop_images/ChatGPT_Image_27_abr_2026_16_01_40.png",
             "promo_2_image_mobile": "shopify://shop_images/ChatGPT_Image_27_abr_2026_16_05_19.png",
@@ -168,7 +168,7 @@
         "image_TaCUND": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/colageno_promocional_1.png",
+            "image": "shopify://shop_images/ChatGPT_Image_29_abr_2026_11_58_44.png",
             "alt": "Producto Saluva"
           }
         },
