@@ -165,12 +165,6 @@
     "featured-product": {
       "type": "saluva-featured-product",
       "blocks": {
-        "image_ghfUyC": {
-          "type": "image",
-          "settings": {
-            "alt": "Producto Saluva"
-          }
-        },
         "image_TaCUND": {
           "type": "image",
           "settings": {
@@ -187,7 +181,6 @@
         }
       },
       "block_order": [
-        "image_ghfUyC",
         "image_TaCUND",
         "image_RkHjhX"
       ],
