@@ -19,7 +19,13 @@
         <a href="/collections/all" class="header__nav-link">Tienda Online</a>
       </div>
       <div class="header__nav-item">
-        <a href="/#aprende" class="header__nav-link nav-anchor" data-section="aprende">Aprende a Cuidarte</a>
+        <a href="{{ section.settings.catalogo_url | default: '/pages/catalogo' }}" class="header__nav-link">Catálogo</a>
+      </div>
+      <div class="header__nav-item">
+        <a href="/pages/productos-digitales" class="header__nav-link">Productos Digitales</a>
+      </div>
+      <div class="header__nav-item">
+        <a href="/pages/aprende-a-cuidarte" class="header__nav-link">Aprende a Cuidarte</a>
       </div>
 
       {% for block in section.blocks %}
@@ -163,6 +169,16 @@
       "type": "image_picker",
       "id": "logo",
       "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Enlace Catálogo"
+    },
+    {
+      "type": "url",
+      "id": "catalogo_url",
+      "label": "URL del catálogo",
+      "info": "Página, colección o PDF al que se enlaza desde 'Catálogo' en el menú."
     }
   ],
   "blocks": [

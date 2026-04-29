@@ -1,0 +1,283 @@
+<section class="digitales-section">
+  <div class="digitales-hero">
+    <div class="container">
+      <span class="digitales-hero__label">{{ section.settings.label }}</span>
+      <h1 class="digitales-hero__title">{{ section.settings.title }}</h1>
+      <p class="digitales-hero__desc">{{ section.settings.description }}</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Filtros -->
+    <div class="digitales-filters" id="digitales-filters">
+      <button class="digitales-filter active" data-filter="all">Todos</button>
+      <button class="digitales-filter" data-filter="ebook">Ebooks</button>
+      <button class="digitales-filter" data-filter="plantilla">Plantillas</button>
+      <button class="digitales-filter" data-filter="curso">Cursos</button>
+      <button class="digitales-filter" data-filter="video">Videos</button>
+      <button class="digitales-filter" data-filter="free">Gratis</button>
+    </div>
+
+    <!-- Grid de productos digitales -->
+    <div class="digitales-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'digital_product' %}
+          {% assign is_free = false %}
+          {% if block.settings.price == 0 or block.settings.is_free %}
+            {% assign is_free = true %}
+          {% endif %}
+
+          <article class="digitales-card anim-bounce-up"
+                   data-type="{{ block.settings.content_type }}"
+                   data-free="{{ is_free }}"
+                   data-delay="{{ forloop.index0 | times: 80 }}"
+                   {{ block.shopify_attributes }}>
+            <div class="digitales-card__media">
+              {% if block.settings.image != blank %}
+                <img src="{{ block.settings.image | image_url: width: 600 }}"
+                     alt="{{ block.settings.title }}"
+                     class="digitales-card__img"
+                     loading="lazy">
+              {% else %}
+                <div class="digitales-card__placeholder"
+                     style="background: linear-gradient(135deg, {{ block.settings.color_start }}33, {{ block.settings.color_end }}22);">
+                  <span>{{ block.settings.emoji }}</span>
+                </div>
+              {% endif %}
+
+              <!-- Badge gratis / pago -->
+              <span class="digitales-card__badge digitales-card__badge--{% if is_free %}free{% else %}paid{% endif %}">
+                {% if is_free %}GRATIS{% else %}PAGO{% endif %}
+              </span>
+
+              <!-- Provider chip (Hotmart / Saluva / Externo) -->
+              {% if block.settings.provider != 'shopify' %}
+                <span class="digitales-card__provider">
+                  {% case block.settings.provider %}
+                    {% when 'hotmart' %}
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 11L2 8v9l10 5 10-5V8l-10 5z"/></svg> Hotmart
+                    {% when 'gumroad' %}
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14a4 4 0 1 1 4-4"/></svg> Gumroad
+                    {% when 'externo' %}
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Externo
+                  {% endcase %}
+                </span>
+              {% endif %}
+
+              <!-- Tipo icono -->
+              <span class="digitales-card__type-icon">
+                {% case block.settings.content_type %}
+                  {% when 'ebook' %}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                  {% when 'plantilla' %}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                  {% when 'curso' %}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                  {% when 'video' %}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                {% endcase %}
+              </span>
+            </div>
+
+            <div class="digitales-card__body">
+              <span class="digitales-card__type-label">{{ block.settings.type_label }}</span>
+              <h3 class="digitales-card__title">{{ block.settings.title }}</h3>
+              <p class="digitales-card__desc">{{ block.settings.description }}</p>
+
+              <div class="digitales-card__footer">
+                <span class="digitales-card__price {% if is_free %}digitales-card__price--free{% endif %}">
+                  {% if is_free %}
+                    Gratis
+                  {% else %}
+                    {{ block.settings.price | times: 100 | money }}
+                  {% endif %}
+                </span>
+                <a href="{{ block.settings.url | default: '#' }}"
+                   class="digitales-card__cta {% if is_free %}digitales-card__cta--free{% endif %}"
+                   {% if block.settings.open_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                  {% if is_free %}Descargar{% else %}Comprar{% endif %}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if section.blocks.size == 0 %}
+      <p class="digitales-empty">Aún no hay productos digitales. Agrega bloques desde el editor.</p>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var filters = document.querySelectorAll('#digitales-filters .digitales-filter');
+    var cards = document.querySelectorAll('.digitales-grid .digitales-card');
+    filters.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var filter = btn.dataset.filter;
+        filters.forEach(function(f) { f.classList.remove('active'); });
+        btn.classList.add('active');
+        cards.forEach(function(card) {
+          if (filter === 'all') {
+            card.style.display = '';
+          } else if (filter === 'free') {
+            card.style.display = (card.dataset.free === 'true') ? '' : 'none';
+          } else {
+            card.style.display = (card.dataset.type === filter) ? '' : 'none';
+          }
+        });
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Productos Digitales",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta superior",
+      "default": "DESCARGABLES"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Productos Digitales"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción",
+      "default": "Ebooks, plantillas, cursos y recursos descargables. Algunos gratuitos, otros premium para llevar tu bienestar al siguiente nivel."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "digital_product",
+      "name": "Producto Digital",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Contenido"
+        },
+        { "type": "text", "id": "title", "label": "Título", "default": "Mi Producto Digital" },
+        { "type": "text", "id": "type_label", "label": "Tipo / detalle", "default": "PDF · 45 páginas" },
+        { "type": "textarea", "id": "description", "label": "Descripción corta", "default": "Una breve descripción del producto digital." },
+        {
+          "type": "select",
+          "id": "content_type",
+          "label": "Categoría",
+          "options": [
+            { "value": "ebook", "label": "Ebook" },
+            { "value": "plantilla", "label": "Plantilla" },
+            { "value": "curso", "label": "Curso" },
+            { "value": "video", "label": "Video / Masterclass" }
+          ],
+          "default": "ebook"
+        },
+        {
+          "type": "header",
+          "content": "Precio y plataforma"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_free",
+          "label": "Marcar como GRATIS",
+          "info": "Si activas esto, el producto se muestra como gratuito sin importar el precio.",
+          "default": false
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Precio (en pesos)",
+          "info": "Si vale 0 o marcas Gratis arriba, se mostrará como Gratis.",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "provider",
+          "label": "Plataforma de venta",
+          "options": [
+            { "value": "shopify", "label": "Shopify (sin badge)" },
+            { "value": "hotmart", "label": "Hotmart" },
+            { "value": "gumroad", "label": "Gumroad" },
+            { "value": "externo", "label": "Otro / Externo" }
+          ],
+          "default": "shopify"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "URL de compra/descarga",
+          "info": "Pega aquí el link de Hotmart, Gumroad, o cualquier URL de descarga directa."
+        },
+        {
+          "type": "checkbox",
+          "id": "open_new_tab",
+          "label": "Abrir en nueva pestaña",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Imagen"
+        },
+        { "type": "image_picker", "id": "image", "label": "Imagen del producto" },
+        { "type": "text", "id": "emoji", "label": "Emoji (si no hay imagen)", "default": "📖" },
+        { "type": "color", "id": "color_start", "label": "Color fondo inicio", "default": "#d2a4f3" },
+        { "type": "color", "id": "color_end", "label": "Color fondo fin", "default": "#a4c93b" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Productos Digitales Saluva",
+      "blocks": [
+        {
+          "type": "digital_product",
+          "settings": {
+            "title": "Guía de Bienestar Femenino",
+            "type_label": "PDF · 45 páginas",
+            "description": "Todo lo que necesitas saber sobre suplementación consciente.",
+            "content_type": "ebook",
+            "is_free": true,
+            "provider": "shopify",
+            "emoji": "📖"
+          }
+        },
+        {
+          "type": "digital_product",
+          "settings": {
+            "title": "Masterclass Equilibrio Hormonal",
+            "type_label": "Video · 90 min",
+            "description": "Aprende a balancear tus hormonas naturalmente.",
+            "content_type": "video",
+            "is_free": false,
+            "price": 49900,
+            "provider": "hotmart",
+            "emoji": "🎬"
+          }
+        },
+        {
+          "type": "digital_product",
+          "settings": {
+            "title": "Planificador de Bienestar",
+            "type_label": "PDF interactivo",
+            "description": "Organiza tu rutina mes a mes.",
+            "content_type": "plantilla",
+            "is_free": false,
+            "price": 19900,
+            "provider": "gumroad",
+            "emoji": "📅"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

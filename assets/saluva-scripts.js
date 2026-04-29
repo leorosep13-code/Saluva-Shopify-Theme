@@ -730,7 +730,13 @@ function initSearchOverlay() {
 
             resultsContainer.innerHTML = products.map(p => {
               const img = p.image ? '<img src="' + p.image + '" alt="' + p.title + '" class="search-overlay__result-img" loading="lazy">' : '<div class="search-overlay__result-img"></div>';
-              const price = p.price ? ('$' + (parseFloat(p.price) / 100).toLocaleString()) : '';
+              let price = '';
+              if (p.price) {
+                const num = parseFloat(String(p.price).replace(/[^0-9.,-]/g, '').replace(',', '.'));
+                if (!isNaN(num)) {
+                  price = '$' + Math.round(num).toLocaleString('es-CO');
+                }
+              }
               return '<a href="' + p.url + '" class="search-overlay__result-item">' + img + '<div class="search-overlay__result-info"><div class="search-overlay__result-title">' + p.title + '</div><div class="search-overlay__result-price">' + price + '</div></div></a>';
             }).join('');
             resultsContainer.style.display = 'block';

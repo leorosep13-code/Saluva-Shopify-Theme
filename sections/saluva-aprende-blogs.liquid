@@ -1,0 +1,141 @@
+<section class="aprende-section">
+  <div class="aprende-hero">
+    <div class="aprende-hero__inner container">
+      <span class="aprende-hero__label">{{ section.settings.label }}</span>
+      <h1 class="aprende-hero__title">{{ section.settings.title }}</h1>
+      <p class="aprende-hero__desc">{{ section.settings.description }}</p>
+    </div>
+  </div>
+
+  <div class="container">
+    {% assign blog_handle = section.settings.blog | default: 'news' %}
+    {% assign target_blog = blogs[blog_handle] %}
+
+    {% if target_blog and target_blog.articles_count > 0 %}
+      <div class="aprende-grid">
+        {% for article in target_blog.articles limit: section.settings.limit %}
+          {% assign card_class = '' %}
+          {% if section.settings.feature_first and forloop.first %}
+            {% assign card_class = 'aprende-card--featured' %}
+          {% endif %}
+
+          <a href="{{ article.url }}"
+             class="aprende-card anim-bounce-up {{ card_class }}"
+             data-delay="{{ forloop.index0 | times: 90 }}">
+            <div class="aprende-card__media">
+              {% if article.image %}
+                <img src="{{ article.image | image_url: width: 800 }}"
+                     alt="{{ article.title | escape }}"
+                     class="aprende-card__img"
+                     loading="lazy">
+              {% else %}
+                <div class="aprende-card__media-fallback">📖</div>
+              {% endif %}
+              <div class="aprende-card__overlay"></div>
+              {% if article.tags.size > 0 %}
+                <span class="aprende-card__tag">{{ article.tags.first }}</span>
+              {% endif %}
+            </div>
+
+            <div class="aprende-card__body">
+              <div class="aprende-card__meta">
+                <span>{{ article.published_at | date: '%d %b %Y' }}</span>
+                {% if article.author %}<span>·</span><strong>{{ article.author }}</strong>{% endif %}
+              </div>
+              <h3 class="aprende-card__title">{{ article.title }}</h3>
+              {% if article.excerpt_or_content %}
+                <p class="aprende-card__excerpt">{{ article.excerpt_or_content | strip_html | truncate: 130 }}</p>
+              {% endif %}
+              <span class="aprende-card__readmore">
+                Leer más
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </span>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="aprende-empty">Aún no hay artículos publicados. Crea tu primer blog desde Shopify Admin → Blog.</p>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  (function() {
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.aprende-card.anim-bounce-up').forEach(function(el) {
+        el.classList.add('is-visible');
+      });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var el = entry.target;
+          var delay = parseInt(el.dataset.delay || '0', 10);
+          setTimeout(function() { el.classList.add('is-visible'); }, delay);
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.aprende-section .aprende-card.anim-bounce-up').forEach(function(el) {
+      io.observe(el);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Aprende a Cuidarte",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta superior",
+      "default": "BLOG SALUVA"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Aprende a Cuidarte"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción",
+      "default": "Consejos, guías y artículos sobre bienestar femenino, suplementación consciente y autocuidado."
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog a mostrar",
+      "info": "Selecciona el blog del que quieres mostrar los artículos."
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Número máximo de artículos",
+      "min": 3,
+      "max": 24,
+      "step": 1,
+      "default": 9
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_first",
+      "label": "Destacar primer artículo (más grande)",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Aprende a Cuidarte"
+    }
+  ]
+}
+{% endschema %}

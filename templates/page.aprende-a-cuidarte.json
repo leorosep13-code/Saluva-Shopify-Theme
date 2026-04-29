@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "saluva-aprende-blogs",
+      "settings": {
+        "label": "BLOG SALUVA",
+        "title": "Aprende a Cuidarte",
+        "description": "Consejos, guías y artículos sobre bienestar femenino, suplementación consciente y autocuidado.",
+        "blog": "news",
+        "limit": 9,
+        "feature_first": true
+      }
+    }
+  },
+  "order": ["main"]
+}
