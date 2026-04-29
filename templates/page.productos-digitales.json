@@ -15,15 +15,16 @@
         "ebook_guia": {
           "type": "digital_product",
           "settings": {
-            "title": "Guía de Bienestar Femenino",
-            "type_label": "PDF · 45 páginas",
+            "title": "Guía de Inteligente de suplementos",
+            "type_label": "PDF · 10 páginas",
             "description": "Todo lo que necesitas saber sobre suplementación consciente.",
             "content_type": "ebook",
             "is_free": true,
             "price": 0,
             "provider": "shopify",
-            "url": "",
+            "url": "https://drive.google.com/file/d/1BRMQ8B_lx_7QmOtyWDkE1pZX6OBIji2i/view?usp=sharing",
             "open_new_tab": true,
+            "image": "shopify://shop_images/Gemini_Generated_Image_u2rl4eu2rl4eu2rl.png",
             "emoji": "📖",
             "color_start": "#d2a4f3",
             "color_end": "#a4c93b"
