@@ -1,12 +1,16 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "saluva-productos-digitales",
-      "settings": {
-        "label": "DESCARGABLES",
-        "title": "Productos Digitales",
-        "description": "Ebooks, plantillas, cursos y recursos descargables. Algunos gratuitos, otros premium para llevar tu bienestar al siguiente nivel."
-      },
       "blocks": {
         "ebook_guia": {
           "type": "digital_product",
@@ -18,7 +22,11 @@
             "is_free": true,
             "price": 0,
             "provider": "shopify",
-            "emoji": "📖"
+            "url": "",
+            "open_new_tab": true,
+            "emoji": "📖",
+            "color_start": "#d2a4f3",
+            "color_end": "#a4c93b"
           }
         },
         "video_masterclass": {
@@ -30,8 +38,12 @@
             "content_type": "video",
             "is_free": false,
             "price": 49900,
-            "provider": "hotmart",
-            "emoji": "🎬"
+            "provider": "shopify",
+            "url": "",
+            "open_new_tab": true,
+            "emoji": "🎬",
+            "color_start": "#d2a4f3",
+            "color_end": "#a4c93b"
           }
         },
         "plantilla_planner": {
@@ -44,12 +56,27 @@
             "is_free": false,
             "price": 19900,
             "provider": "gumroad",
-            "emoji": "📅"
+            "url": "",
+            "open_new_tab": true,
+            "emoji": "📅",
+            "color_start": "#d2a4f3",
+            "color_end": "#a4c93b"
           }
         }
       },
-      "block_order": ["ebook_guia", "video_masterclass", "plantilla_planner"]
+      "block_order": [
+        "ebook_guia",
+        "video_masterclass",
+        "plantilla_planner"
+      ],
+      "settings": {
+        "label": "DESCARGABLES",
+        "title": "Productos Digitales",
+        "description": "Ebooks, plantillas, cursos y recursos descargables. Algunos gratuitos, otros premium para llevar tu bienestar al siguiente nivel."
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
