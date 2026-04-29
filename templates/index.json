@@ -244,6 +244,16 @@
         "title": "Descubre Tu Rutina Ideal",
         "description": "Responde unas preguntas rapidas y te recomendaremos los productos perfectos para ti."
       }
+    },
+    "saluva_blog_NgkUM6": {
+      "type": "saluva-blog",
+      "name": "Blog Destacado Saluva",
+      "settings": {
+        "label": "NUESTRO BLOG",
+        "title": "Blog Destacado",
+        "blog": "desde-adentro",
+        "view_all_url": "shopify://blogs/desde-adentro/por-que-te-sientes-cansada-todo-el-tiempo-y-como-solucionarlo"
+      }
     }
   },
   "order": [
@@ -256,6 +266,7 @@
     "sale-banner",
     "bestsellers",
     "aprende",
-    "quiz"
+    "quiz",
+    "saluva_blog_NgkUM6"
   ]
 }
