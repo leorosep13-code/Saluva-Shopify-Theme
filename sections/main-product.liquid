@@ -87,14 +87,11 @@
     <!-- Vendedor + Rating -->
     <div class="pdp__meta">
       <span class="pdp__vendor">{{ product.vendor }}</span>
-      <div class="pdp__rating" id="pdp-rating-summary">
-        <div class="pdp__stars" data-rating="0">
-          {% for i in (1..5) %}
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          {% endfor %}
-        </div>
-        <span class="pdp__rating-count">0.0 (0)</span>
-      </div>
+      <a href="#pdp-reviews" class="pdp__rating">
+        <div class="jdgm-widget jdgm-preview-badge"
+             data-id="{{ product.id }}"
+             data-template="product"></div>
+      </a>
     </div>
 
     <!-- Precio -->
@@ -164,57 +161,31 @@
   </div>
 </section>
 
-<!-- ═══ SECCIÓN DE VALORACIONES Y COMENTARIOS ═══ -->
+<!-- ═══ SECCIÓN DE VALORACIONES Y COMENTARIOS (Judge.me) ═══ -->
 <section class="pdp-reviews" id="pdp-reviews">
   <div class="container">
-    <div class="pdp-reviews__header">
-      <h2 class="pdp-reviews__title">Valoraciones y Comentarios</h2>
-      <button class="btn btn--primary btn--md" id="pdp-review-toggle">Escribir una reseña</button>
+    <!-- Start of Judge.me code -->
+    {% assign has_legacy = false %}
+    {% if product.metafields.judgeme.widget.size > 20 %}{% assign has_legacy = true %}{% endif %}
+    <div style='clear:both'></div>
+    <div id='judgeme_product_reviews'
+         class='jdgm-widget jdgm-review-widget'
+         data-product-title='{{ product.title | escape }}'
+         data-id='{{ product.id }}'
+         data-product-id='{{ product.id }}'
+         data-widget='review'
+         data-auto-install='false'
+         data-shop-reviews-count='{{ shop.metafields.judgeme.shop_reviews_count | default: 0 | escape }}'
+         data-entry-point='review_widget.js'
+         data-entry-key='review-widget/main.js'>
+      {% if has_legacy %}
+        <div class='jdgm-legacy-widget-content' style='display: none;'>{{ product.metafields.judgeme.widget }}</div>
+      {% endif %}
     </div>
-
-    <!-- Formulario de reseña -->
-    <div class="pdp-reviews__form-wrap" id="pdp-review-form-wrap" style="display:none;">
-      <form class="pdp-reviews__form" id="pdp-review-form">
-        <div class="pdp-reviews__form-row">
-          <label class="pdp-reviews__label">Tu nombre</label>
-          <input type="text" class="pdp-reviews__input" id="review-name" required placeholder="Nombre">
-        </div>
-        <div class="pdp-reviews__form-row">
-          <label class="pdp-reviews__label">Valoración</label>
-          <div class="pdp-reviews__star-input" id="review-star-input">
-            {% for i in (1..5) %}
-              <button type="button" class="pdp-reviews__star-btn" data-star="{{ i }}" aria-label="{{ i }} estrellas">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              </button>
-            {% endfor %}
-          </div>
-        </div>
-        <div class="pdp-reviews__form-row">
-          <label class="pdp-reviews__label">Comentario</label>
-          <textarea class="pdp-reviews__textarea" id="review-comment" rows="4" required placeholder="Cuéntanos tu experiencia con este producto..."></textarea>
-        </div>
-        <div class="pdp-reviews__form-row">
-          <label class="pdp-reviews__label">Foto (opcional)</label>
-          <label class="pdp-reviews__upload-label" id="review-upload-label">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            Agregar imagen
-            <input type="file" accept="image/*" class="pdp-reviews__upload-input" id="review-image-input">
-          </label>
-          <div class="pdp-reviews__upload-preview" id="review-image-preview">
-            <img src="" alt="Preview" id="review-image-preview-img">
-            <button type="button" class="pdp-reviews__upload-remove" id="review-image-remove" aria-label="Quitar imagen">✕</button>
-          </div>
-        </div>
-        <button type="submit" class="btn btn--primary btn--md">Publicar reseña</button>
-      </form>
-    </div>
-
-    <!-- Lista de reseñas -->
-    <div class="pdp-reviews__list" id="pdp-reviews-list">
-      <!-- Las reseñas se renderizan por JS desde localStorage -->
-    </div>
-
-    <p class="pdp-reviews__empty" id="pdp-reviews-empty">Sé el primero en dejar una reseña de este producto.</p>
+    {% if product.metafields.judgeme.review_widget_data %}
+      <script>jdgm.data ||= {}; jdgm.data.reviewWidget ||= {}; jdgm.data.reviewWidget[{{ product.id }}] = {{ product.metafields.judgeme.review_widget_data }}</script>
+    {% endif %}
+    <!-- End of Judge.me code -->
   </div>
 </section>
 
