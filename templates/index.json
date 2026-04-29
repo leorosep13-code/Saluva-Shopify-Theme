@@ -165,6 +165,12 @@
     "featured-product": {
       "type": "saluva-featured-product",
       "blocks": {
+        "image_ghfUyC": {
+          "type": "image",
+          "settings": {
+            "alt": "Producto Saluva"
+          }
+        },
         "image_TaCUND": {
           "type": "image",
           "settings": {
@@ -181,6 +187,7 @@
         }
       },
       "block_order": [
+        "image_ghfUyC",
         "image_TaCUND",
         "image_RkHjhX"
       ],
@@ -190,7 +197,7 @@
         "title": "El suplemento que tu cuerpo necesita",
         "description": "<p>Nuestro producto estrella combina los mejores ingredientes naturales para tu bienestar diario. Formulado con colageno, vitaminas y minerales esenciales.</p>",
         "cta_text": "COMPRAR AHORA",
-        "cta_url": "shopify://products/colageno-hidrolizado-frutos-rojos",
+        "cta_url": "shopify://products/colageno-puro-x-300-gr",
         "bg_color": "#f0f7e0"
       }
     },
