@@ -15,11 +15,13 @@
         "label": "BLOG SALUVA",
         "title": "Aprende a Cuidarte",
         "description": "Consejos, guías y artículos sobre bienestar femenino, suplementación consciente y autocuidado.",
-        "blog": "news",
+        "blog": "desde-adentro",
         "limit": 9,
-        "feature_first": true
+        "feature_first": false
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

@@ -40,7 +40,7 @@
             "price": 49900,
             "provider": "shopify",
             "url": "",
-            "open_new_tab": true,
+            "open_new_tab": false,
             "emoji": "🎬",
             "color_start": "#d2a4f3",
             "color_end": "#a4c93b"
