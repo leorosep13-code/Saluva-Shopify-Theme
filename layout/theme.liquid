@@ -10,7 +10,9 @@
     <meta property="og:image" content="{{ settings.og_image | image_url: width: 1200 }}">
   {% endif %}
   {% if settings.favicon %}
-    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32 }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ settings.favicon | image_url: width: 32 }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ settings.favicon | image_url: width: 16 }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ settings.favicon | image_url: width: 180 }}">
   {% endif %}
 
   {%- comment -%} Inyectar CSS variables desde settings del customizer {%- endcomment -%}

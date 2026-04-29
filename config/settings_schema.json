@@ -1,1 +1,115 @@
-[]
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Saluva Theme",
+    "theme_author": "Saluva",
+    "theme_version": "1.0.0"
+  },
+  {
+    "name": "Identidad de la marca",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon (icono de la pestaña del navegador)",
+        "info": "Imagen cuadrada (32x32 o 512x512 recomendado). PNG con fondo transparente."
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo principal",
+        "info": "Logo que aparece en el encabezado del sitio."
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "label": "Ancho del logo (px)",
+        "min": 80,
+        "max": 260,
+        "step": 5,
+        "default": 120
+      },
+      {
+        "type": "image_picker",
+        "id": "og_image",
+        "label": "Imagen para redes sociales (Open Graph)",
+        "info": "Recomendado 1200x630."
+      }
+    ]
+  },
+  {
+    "name": "Colores",
+    "settings": [
+      { "type": "color", "id": "color_primary", "label": "Primario", "default": "#a4c93b" },
+      { "type": "color", "id": "color_secondary", "label": "Secundario", "default": "#d2a4f3" },
+      { "type": "color", "id": "color_background", "label": "Fondo", "default": "#ffffff" },
+      { "type": "color", "id": "color_text", "label": "Texto principal", "default": "#1a1a1a" },
+      { "type": "color", "id": "color_text_muted", "label": "Texto secundario", "default": "#6b6b6b" },
+      { "type": "color", "id": "color_accent", "label": "Acento", "default": "#f59e0b" }
+    ]
+  },
+  {
+    "name": "Tipografía",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Fuente de títulos",
+        "default": "helvetica_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Fuente de cuerpo",
+        "default": "helvetica_n4"
+      },
+      {
+        "type": "range",
+        "id": "font_size_base",
+        "label": "Tamaño base de texto (px)",
+        "min": 14,
+        "max": 20,
+        "step": 1,
+        "default": 16
+      }
+    ]
+  },
+  {
+    "name": "Carrito",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Tipo de carrito",
+        "options": [
+          { "value": "page", "label": "Página" },
+          { "value": "drawer", "label": "Drawer lateral" }
+        ],
+        "default": "page"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_note_enable",
+        "label": "Permitir notas en el carrito",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Newsletter",
+    "settings": [
+      {
+        "type": "text",
+        "id": "newsletter_title",
+        "label": "Título",
+        "default": "Únete a nuestra comunidad"
+      },
+      {
+        "type": "textarea",
+        "id": "newsletter_description",
+        "label": "Descripción",
+        "default": "Recibe tips de bienestar, ofertas exclusivas y novedades directamente en tu correo."
+      }
+    ]
+  }
+]
