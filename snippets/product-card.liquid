@@ -59,9 +59,19 @@
 
   <div class="product-card__info">
     <div class="product-card__rating">
-      <div class="jdgm-widget jdgm-preview-badge"
-           data-id="{{ product.id }}"
-           data-template="index"></div>
+      <!-- Start of Judge.me code -->
+      <div class='jdgm-widget jdgm-preview-badge'
+           data-id='{{ product.id }}'
+           data-product-id='{{ product.id }}'
+           data-template='product'
+           data-auto-install='false'
+           data-entry-point='preview_badge.js'
+           data-entry-key='preview-badge/main.js'>
+        {% if product.metafields.judgeme.badge != blank %}
+          <div class='jdgm-prev-badge__legacy-content' style='display: none;'>{{ product.metafields.judgeme.badge }}</div>
+        {% endif %}
+      </div>
+      <!-- End of Judge.me code -->
     </div>
 
     <p class="product-card__type">{{ product.type }}</p>
