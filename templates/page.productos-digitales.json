@@ -22,7 +22,7 @@
             "is_free": true,
             "price": 0,
             "provider": "shopify",
-            "url": "https://drive.google.com/file/d/1BRMQ8B_lx_7QmOtyWDkE1pZX6OBIji2i/view?usp=sharing",
+            "url": "shopify://collections/productos-digitales",
             "open_new_tab": true,
             "image": "shopify://shop_images/Gemini_Generated_Image_u2rl4eu2rl4eu2rl.png",
             "emoji": "📖",
