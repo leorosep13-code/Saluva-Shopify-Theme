@@ -892,16 +892,7 @@ document.addEventListener('submit', (e) => {
 
   fetch('/cart/add.js', { method: 'POST', body: formData })
     .then(r => r.json())
-    .then((line) => {
-      if (line && (line.id || line.variant_id)) {
-        const qty = line.quantity || parseInt(formData.get('quantity'), 10) || 1;
-        const unit = (line.final_price != null ? line.final_price : line.price) / 100;
-        pushDL('add_to_cart', {
-          currency: _shopCurrency(),
-          value: unit * qty,
-          items: [lineToGA4Item(line, qty)]
-        });
-      }
+    .then(() => {
       btn.textContent = '✓ Agregado';
       updateCartCount();
       updateFloatingCheckout();
@@ -938,15 +929,7 @@ document.addEventListener('click', (e) => {
       body: JSON.stringify({ id: parseInt(variantId), quantity: 1 })
     })
       .then(r => r.json())
-      .then((line) => {
-        if (line && (line.id || line.variant_id)) {
-          const unit = (line.final_price != null ? line.final_price : line.price) / 100;
-          pushDL('add_to_cart', {
-            currency: _shopCurrency(),
-            value: unit,
-            items: [lineToGA4Item(line, 1)]
-          });
-        }
+      .then(() => {
         updateCartCount();
         openCartDrawer();
         btn.innerHTML = '✓';
@@ -974,16 +957,7 @@ document.addEventListener('click', (e) => {
     body: formData,
   })
     .then(res => res.json())
-    .then((line) => {
-      if (line && (line.id || line.variant_id)) {
-        const qty = line.quantity || parseInt(formData.get('quantity'), 10) || 1;
-        const unit = (line.final_price != null ? line.final_price : line.price) / 100;
-        pushDL('add_to_cart', {
-          currency: _shopCurrency(),
-          value: unit * qty,
-          items: [lineToGA4Item(line, qty)]
-        });
-      }
+    .then(() => {
       btn.textContent = '✓ Agregado';
       btn.style.background = 'var(--color-primary)';
       btn.style.color = '#fff';
@@ -1242,40 +1216,8 @@ function initPdpShare() {
 }
 
 /* ═══════════════════════════════════════════
-   GA4 / dataLayer helpers (Enhanced Ecommerce)
-   ═══════════════════════════════════════════ */
-window.dataLayer = window.dataLayer || [];
-
-function pushDL(eventName, ecommerce) {
-  window.dataLayer.push({ ecommerce: null });
-  window.dataLayer.push({ event: eventName, ecommerce: ecommerce });
-}
-
-function _shopCurrency() {
-  return (window.Shopify && Shopify.currency && Shopify.currency.active) || 'COP';
-}
-
-function lineToGA4Item(line, qtyOverride) {
-  return {
-    item_id: line.sku || String(line.variant_id || line.id),
-    item_name: line.product_title || line.title,
-    item_brand: line.vendor || undefined,
-    item_category: line.product_type || undefined,
-    item_variant: (line.variant_title && line.variant_title !== 'Default Title') ? line.variant_title : undefined,
-    price: (line.final_price != null ? line.final_price : line.price) / 100,
-    quantity: qtyOverride != null ? qtyOverride : (line.quantity || 1)
-  };
-}
-
-function cartToGA4Items(cart) {
-  return (cart.items || []).map(item => lineToGA4Item(item));
-}
-
-/* ═══════════════════════════════════════════
    CART DRAWER — slide-in lateral derecho
    ═══════════════════════════════════════════ */
-let _lastCart = null;
-
 function formatMoney(cents) {
   if (window.Shopify && Shopify.formatMoney) {
     try { return Shopify.formatMoney(cents, "${{amount}}"); } catch (e) {}
@@ -1316,17 +1258,13 @@ function loadCartDrawer() {
 
   fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
     .then(r => r.json())
-    .then(cart => {
-      renderCartDrawer(cart);
-      fireViewCart();
-    })
+    .then(cart => renderCartDrawer(cart))
     .catch(() => {
       body.innerHTML = '<div class="cart-drawer__empty">No se pudo cargar el carrito.</div>';
     });
 }
 
 function renderCartDrawer(cart) {
-  _lastCart = cart;
   const body = document.getElementById('cart-drawer-body');
   const footer = document.getElementById('cart-drawer-footer');
   const subtotalEl = document.getElementById('cart-drawer-subtotal');
@@ -1375,15 +1313,6 @@ function renderCartDrawer(cart) {
   if (footer) footer.hidden = false;
 }
 
-function fireViewCart() {
-  if (!_lastCart || !_lastCart.items || _lastCart.items.length === 0) return;
-  pushDL('view_cart', {
-    currency: _lastCart.currency || _shopCurrency(),
-    value: (_lastCart.items_subtotal_price || _lastCart.total_price) / 100,
-    items: cartToGA4Items(_lastCart)
-  });
-}
-
 function changeCartLine(lineNumber, quantity) {
   return fetch('/cart/change.js', {
     method: 'POST',
@@ -1425,43 +1354,13 @@ function initCartDrawer() {
     if (qtyBtn) {
       const action = qtyBtn.dataset.action;
       const newQty = action === 'plus' ? currentQty + 1 : Math.max(0, currentQty - 1);
-      // Si el "−" lleva la cantidad a 0, equivale a remove_from_cart
-      if (newQty === 0 && _lastCart && _lastCart.items[line - 1]) {
-        const removedLine = _lastCart.items[line - 1];
-        pushDL('remove_from_cart', {
-          currency: _lastCart.currency || _shopCurrency(),
-          value: ((removedLine.final_price != null ? removedLine.final_price : removedLine.price) * currentQty) / 100,
-          items: [lineToGA4Item(removedLine, currentQty)]
-        });
-      }
       qtyBtn.disabled = true;
       changeCartLine(line, newQty).catch(() => { qtyBtn.disabled = false; });
     } else if (removeBtn) {
-      if (_lastCart && _lastCart.items[line - 1]) {
-        const removedLine = _lastCart.items[line - 1];
-        pushDL('remove_from_cart', {
-          currency: _lastCart.currency || _shopCurrency(),
-          value: ((removedLine.final_price != null ? removedLine.final_price : removedLine.price) * currentQty) / 100,
-          items: [lineToGA4Item(removedLine, currentQty)]
-        });
-      }
       removeBtn.disabled = true;
       changeCartLine(line, 0).catch(() => { removeBtn.disabled = false; });
     }
   });
-
-  // begin_checkout al hacer click en PAGAR
-  const payBtn = document.getElementById('cart-drawer-pay');
-  if (payBtn) {
-    payBtn.addEventListener('click', () => {
-      if (!_lastCart || !_lastCart.items || _lastCart.items.length === 0) return;
-      pushDL('begin_checkout', {
-        currency: _lastCart.currency || _shopCurrency(),
-        value: (_lastCart.items_subtotal_price || _lastCart.total_price) / 100,
-        items: cartToGA4Items(_lastCart)
-      });
-    });
-  }
 
   // Abrir drawer al click en el ícono de carrito del header
   document.querySelectorAll('a.header__cart, a[href="/cart"].floating-checkout').forEach(link => {
