@@ -284,6 +284,28 @@
   {{ product.variants | json }}
 </script>
 
+<!-- GA4 view_item -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ ecommerce: null });
+  window.dataLayer.push({
+    event: 'view_item',
+    ecommerce: {
+      currency: {{ shop.currency | json }},
+      value: {{ current_variant.price | divided_by: 100.0 }},
+      items: [{
+        item_id: {{ current_variant.sku | default: current_variant.id | json }},
+        item_name: {{ product.title | json }},
+        item_brand: {{ product.vendor | json }},
+        item_category: {{ product.type | json }},
+        item_variant: {{ current_variant.title | json }},
+        price: {{ current_variant.price | divided_by: 100.0 }},
+        quantity: 1
+      }]
+    }
+  });
+</script>
+
 {% schema %}
 {
   "name": "Producto Principal",
