@@ -23,15 +23,18 @@
       {% for block in section.blocks %}
         {% if block.type == 'nav_link' %}
           <div class="header__nav-item {% if block.settings.has_megamenu %}header__nav-item--mega{% endif %}">
-            <a href="{{ block.settings.url }}"
-               class="header__nav-link {% if block.settings.is_anchor %}nav-anchor{% endif %}"
-               {% if block.settings.is_anchor %}data-section="{{ block.settings.anchor_id }}"{% endif %}
-               {% if block.settings.has_megamenu %}aria-haspopup="true" aria-expanded="false"{% endif %}>
-              {{ block.settings.label }}
-              {% if block.settings.has_megamenu %}
+            {%- if block.settings.has_megamenu -%}
+              <a href="#" class="header__nav-link" aria-haspopup="true" aria-expanded="false">
+                {{ block.settings.label }}
                 <svg class="header__nav-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-              {% endif %}
-            </a>
+              </a>
+            {%- else -%}
+              <a href="{{ block.settings.url }}"
+                 class="header__nav-link {% if block.settings.is_anchor %}nav-anchor{% endif %}"
+                 {% if block.settings.is_anchor %}data-section="{{ block.settings.anchor_id }}"{% endif %}>
+                {{ block.settings.label }}
+              </a>
+            {%- endif -%}
 
             {% if block.settings.has_megamenu %}
               <div class="mega-menu" id="mega-menu">

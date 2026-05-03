@@ -617,16 +617,38 @@ function initMobileMenu() {
   });
 }
 
-/* ── Mega Menu Mobile Toggle ── */
+/* ── Mega Menu Toggle (desktop + mobile) ── */
 function initMegaMenuMobile() {
-  if (window.innerWidth > 768) return;
-  document.querySelectorAll('.header__nav-item--mega > .header__nav-link').forEach(link => {
+  const items = document.querySelectorAll('.header__nav-item--mega');
+  if (!items.length) return;
+
+  const closeAll = () => {
+    items.forEach(item => {
+      item.classList.remove('open');
+      const l = item.querySelector('.header__nav-link');
+      if (l) l.setAttribute('aria-expanded', 'false');
+    });
+  };
+
+  items.forEach(item => {
+    const link = item.querySelector('.header__nav-link');
+    if (!link) return;
     link.addEventListener('click', (e) => {
-      if (window.innerWidth <= 768) {
-        e.preventDefault();
-        link.parentElement.classList.toggle('mobile-open');
+      e.preventDefault();
+      const wasOpen = item.classList.contains('open');
+      closeAll();
+      if (!wasOpen) {
+        item.classList.add('open');
+        link.setAttribute('aria-expanded', 'true');
       }
     });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.header__nav-item--mega')) closeAll();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
   });
 }
 

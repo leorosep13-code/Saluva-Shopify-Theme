@@ -136,11 +136,13 @@
   box-sizing: border-box;
 }
 .header__nav-item--mega:hover .mega-menu,
+.header__nav-item--mega.open .mega-menu,
 .mega-menu:hover {
   opacity: 1;
   visibility: visible;
   pointer-events: all;
 }
+.header__nav-item--mega.open .header__nav-chevron { transform: rotate(180deg); }
 .mega-menu__inner {
   display: flex;
   gap: 32px;
@@ -2156,7 +2158,7 @@
     pointer-events: all;
     display: none;
   }
-  .header__nav-item--mega.mobile-open .mega-menu { display: block; }
+  .header__nav-item--mega.open .mega-menu { display: block; }
   .mega-menu__inner { flex-direction: column; padding: 16px 0; gap: 16px; flex-wrap: nowrap; }
   .mega-menu__columns { flex-wrap: wrap; gap: 16px; }
   .mega-menu__featured {
