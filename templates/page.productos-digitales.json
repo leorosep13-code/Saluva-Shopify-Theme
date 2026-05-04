@@ -30,6 +30,24 @@
             "color_end": "#a4c93b"
           }
         },
+        "digital_product_qyWzMt": {
+          "type": "digital_product",
+          "settings": {
+            "title": "21 días para desinflamar tu cuerpo y recuperar tu energia",
+            "type_label": "PDF · 33 páginas + Calendario",
+            "description": "En 3 semanas aprenderás a desinflamar tu cuerpo paso a paso , sintiéndote mas liviano y con mas energía.",
+            "content_type": "ebook",
+            "is_free": false,
+            "price": 19885,
+            "provider": "shopify",
+            "url": "shopify://products/21-dias-para-desinflamar-tu-cuerpo-y-recuperar-tu-energia",
+            "open_new_tab": true,
+            "image": "shopify://shop_images/ChatGPTImage4may2026_09_31_51a.m..png",
+            "emoji": "📖",
+            "color_start": "#d2a4f3",
+            "color_end": "#a4c93b"
+          }
+        },
         "video_masterclass": {
           "type": "digital_product",
           "settings": {
@@ -67,6 +85,7 @@
       },
       "block_order": [
         "ebook_guia",
+        "digital_product_qyWzMt",
         "video_masterclass",
         "plantilla_planner"
       ],
