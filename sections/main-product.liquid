@@ -153,23 +153,23 @@
       {% endform %}
     </div>
 
-    <!-- Trust signals -->
-    <div class="pdp__trust">
-      <div class="pdp__trust-item"><span>🌱</span> 100% Natural</div>
-      <div class="pdp__trust-item"><span>🚚</span> Envío gratis +$160K</div>
-      <div class="pdp__trust-item"><span>🔒</span> Pago seguro</div>
-      <div class="pdp__trust-item"><span>↩️</span> Devolución 30 días</div>
-    </div>
+    {%- comment -%} ═══ BENEFICIOS (4 imágenes en fila, debajo del precio) ═══ {%- endcomment -%}
+    {%- render 'product-benefits', product: product -%}
 
-    <!-- Descripción -->
-    <details class="pdp__details" open>
-      <summary class="pdp__details-summary">Descripción del producto</summary>
-      <div class="pdp__details-content">
+    <!-- Descripción siempre visible -->
+    <div class="pdp__description">
+      <h3 class="pdp__section-title pdp__section-title--sm">Descripción</h3>
+      <div class="pdp__description-content rte">
         {{ product.description }}
       </div>
-    </details>
+    </div>
   </div>
 </section>
+
+{%- comment -%} ═══ SECCIONES SALUVA POST-PDP ═══ {%- endcomment -%}
+{%- render 'product-contains', product: product -%}
+{%- render 'product-how-to', product: product -%}
+{%- render 'product-reels', product: product -%}
 
 <!-- ═══ SECCIÓN DE VALORACIONES Y COMENTARIOS (Judge.me) ═══ -->
 <section class="pdp-reviews" id="pdp-reviews">
@@ -261,7 +261,7 @@
       </button>
     </div>
   {% endform %}
-  <a href="/cart" class="pdp__sticky-pay" id="pdp-sticky-pay" aria-label="Pagar ahora">
+  <a href="/checkout" class="pdp__sticky-pay" id="pdp-sticky-pay" aria-label="Pagar ahora">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
     <span>PAGAR</span>
     <span class="pdp__sticky-pay-count" id="pdp-sticky-pay-count">0</span>

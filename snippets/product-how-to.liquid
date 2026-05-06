@@ -1,0 +1,39 @@
+{% comment %}
+  SALUVA — Bloque "¿Cómo tomarla?" (texto con ilustración).
+  Lee metafield del producto:
+    - saluva.how_to_use  (multi_line_text_field o rich_text_field)
+  Si está vacío, muestra texto-placeholder.
+{% endcomment %}
+
+{%- assign mf = product.metafields.saluva -%}
+{%- assign body = mf.how_to_use -%}
+
+<section class="saluva-how-to">
+  <div class="container">
+    <div class="saluva-how-to__inner">
+      <div class="saluva-how-to__art" aria-hidden="true">
+        <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M70 30h60v40H70z"/>
+          <path d="M85 70v90a15 15 0 0030 0V70"/>
+          <path d="M85 110h30"/>
+          <circle cx="100" cy="135" r="4" fill="currentColor"/>
+          <circle cx="92" cy="150" r="3" fill="currentColor"/>
+          <circle cx="108" cy="148" r="3" fill="currentColor"/>
+          <path d="M55 50c-5 8-5 18 0 25M145 50c5 8 5 18 0 25"/>
+        </svg>
+      </div>
+      <div class="saluva-how-to__copy">
+        <span class="saluva-block-header__chip">Modo de uso</span>
+        <h2 class="saluva-block-header__title saluva-block-header__title--left">¿Cómo tomarla?</h2>
+        <div class="saluva-how-to__body rte">
+          {% if body != blank %}
+            {{ body }}
+          {% else %}
+            <p>Toma <strong>1 dosis al día</strong> con un vaso de agua, preferiblemente en ayunas o según indicación profesional.</p>
+            <p>Mantén el frasco en lugar fresco y seco. No exceder la dosis recomendada.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,125 @@
+{% comment %}
+  SALUVA — Bloque "Aprende un poco más" (carrusel horizontal de reels verticales).
+  Lee metafield del producto:
+    - saluva.reels_urls  (multi_line_text_field — una URL por línea)
+      Soporta:
+        * Instagram Reels:  https://www.instagram.com/reel/<ID>/...
+        * TikTok:           https://www.tiktok.com/@<user>/video/<ID>
+        * YouTube Shorts:   https://www.youtube.com/shorts/<ID>
+        * Vimeo:            https://vimeo.com/<ID>
+  Si no hay metafield, muestra 3 tarjetas placeholder.
+{% endcomment %}
+
+{%- assign mf = product.metafields.saluva -%}
+{%- assign raw_urls = mf.reels_urls | default: '' -%}
+{%- assign url_lines = raw_urls | newline_to_br | split: '<br />' -%}
+
+<section class="saluva-reels">
+  <div class="container">
+    <div class="saluva-block-header">
+      <span class="saluva-block-header__chip">Aprende</span>
+      <h2 class="saluva-block-header__title">Aprende un poco más</h2>
+      <p class="saluva-block-header__sub">Mini-clips de nuestra comunidad</p>
+    </div>
+
+    <div class="saluva-reels__carousel-wrap">
+      <button class="saluva-reels__nav saluva-reels__nav--prev" type="button" aria-label="Anterior">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+
+      <div class="saluva-reels__track" id="saluva-reels-track">
+        {% assign printed = 0 %}
+        {% for raw in url_lines %}
+          {%- assign url = raw | strip | replace: '<br />', '' -%}
+          {%- if url == blank -%}{%- continue -%}{%- endif -%}
+
+          {%- assign embed = '' -%}
+          {%- assign kind = '' -%}
+
+          {%- if url contains 'instagram.com' -%}
+            {%- assign kind = 'instagram' -%}
+            {%- assign tail = url | split: '/reel/' | last | default: '' -%}
+            {%- if tail == blank -%}
+              {%- assign tail = url | split: '/p/' | last | default: '' -%}
+            {%- endif -%}
+            {%- assign reel_id = tail | split: '/' | first | split: '?' | first -%}
+            {%- if reel_id != blank -%}
+              {%- assign embed = 'https://www.instagram.com/reel/' | append: reel_id | append: '/embed/' -%}
+            {%- endif -%}
+
+          {%- elsif url contains 'tiktok.com' -%}
+            {%- assign kind = 'tiktok' -%}
+            {%- assign tail = url | split: '/video/' | last | default: '' -%}
+            {%- assign vid = tail | split: '/' | first | split: '?' | first -%}
+            {%- if vid != blank -%}
+              {%- assign embed = 'https://www.tiktok.com/embed/v2/' | append: vid -%}
+            {%- endif -%}
+
+          {%- elsif url contains 'youtube.com/shorts' or url contains 'youtu.be' or url contains 'youtube.com/watch' -%}
+            {%- assign kind = 'youtube' -%}
+            {%- if url contains '/shorts/' -%}
+              {%- assign tail = url | split: '/shorts/' | last -%}
+              {%- assign vid = tail | split: '/' | first | split: '?' | first -%}
+            {%- elsif url contains 'youtu.be/' -%}
+              {%- assign tail = url | split: 'youtu.be/' | last -%}
+              {%- assign vid = tail | split: '?' | first -%}
+            {%- else -%}
+              {%- assign tail = url | split: 'v=' | last -%}
+              {%- assign vid = tail | split: '&' | first -%}
+            {%- endif -%}
+            {%- if vid != blank -%}
+              {%- assign embed = 'https://www.youtube.com/embed/' | append: vid | append: '?rel=0&playsinline=1' -%}
+            {%- endif -%}
+
+          {%- elsif url contains 'vimeo.com' -%}
+            {%- assign kind = 'vimeo' -%}
+            {%- assign vid = url | split: 'vimeo.com/' | last | split: '/' | first | split: '?' | first -%}
+            {%- if vid != blank -%}
+              {%- assign embed = 'https://player.vimeo.com/video/' | append: vid -%}
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- if embed != blank -%}
+            <div class="saluva-reels__card" data-source="{{ kind }}">
+              <div class="saluva-reels__frame">
+                <iframe
+                  src="{{ embed }}"
+                  loading="lazy"
+                  allow="autoplay; encrypted-media; picture-in-picture; clipboard-write"
+                  allowfullscreen
+                  scrolling="no"
+                  frameborder="0"
+                  title="Reel {{ kind }}"></iframe>
+              </div>
+              <a class="saluva-reels__card-link" href="{{ url }}" target="_blank" rel="noopener noreferrer">
+                Ver original ↗
+              </a>
+            </div>
+            {%- assign printed = printed | plus: 1 -%}
+          {%- endif -%}
+        {% endfor %}
+
+        {%- comment -%} Placeholders si el producto aún no tiene reels {%- endcomment -%}
+        {% if printed == 0 %}
+          {% for i in (1..3) %}
+            <div class="saluva-reels__card saluva-reels__card--placeholder">
+              <div class="saluva-reels__frame">
+                <div class="saluva-reels__placeholder">
+                  <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="20" y="10" width="40" height="60" rx="6"/>
+                    <polygon points="35 30 35 50 52 40" fill="currentColor"/>
+                  </svg>
+                  <span>Próximamente</span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <button class="saluva-reels__nav saluva-reels__nav--next" type="button" aria-label="Siguiente">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
