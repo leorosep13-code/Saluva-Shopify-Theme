@@ -4211,39 +4211,57 @@ body.cart-drawer-open { overflow: hidden; }
 }
 .pdp__section-title--sm { font-size: 16px; text-transform: uppercase; letter-spacing: 1.5px; }
 
-/* ── Beneficios ── */
+/* ── Pequeña descripción debajo del precio (product.description) ── */
+.pdp__short-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-text-muted);
+  margin: 4px 0 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+.pdp__short-desc p { margin-bottom: 8px; }
+.pdp__short-desc p:last-child { margin-bottom: 0; }
+.pdp__short-desc strong { color: var(--color-text); }
+
+/* ── Beneficios (sección full-width 2x2, mismo patrón que Contiene) ── */
 .saluva-benefits {
-  margin: 24px 0 28px;
-  padding: 20px;
-  border-radius: var(--radius-md);
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--color-primary) 8%, transparent),
-    color-mix(in srgb, var(--color-accent) 8%, transparent));
+  padding: 60px 0;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--color-primary) 6%, transparent),
+    transparent);
 }
 .saluva-benefits__grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  max-width: 720px;
+  margin: 0 auto;
 }
-.saluva-benefits__item {
+.saluva-benefits__cell {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 8px;
+  gap: 12px;
 }
 .saluva-benefits__img-wrap {
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   color: var(--color-primary);
-  padding: 14%;
+  padding: 18%;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.saluva-benefits__img-wrap:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
 }
 .saluva-benefits__img-wrap img {
   width: 100%;
@@ -4251,21 +4269,21 @@ body.cart-drawer-open { overflow: hidden; }
   object-fit: cover;
   border-radius: inherit;
   padding: 0;
-  margin: -14%;
+  margin: -18%;
 }
 .saluva-benefits__img-wrap svg { width: 100%; height: 100%; }
 .saluva-benefits__label {
   font-family: 'League Spartan', var(--font-family);
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 700;
-  line-height: 1.2;
   letter-spacing: 0.3px;
   color: var(--color-text);
 }
 
-@media (max-width: 480px) {
-  .saluva-benefits__grid { gap: 8px; }
-  .saluva-benefits__label { font-size: 11px; }
+@media (max-width: 600px) {
+  .saluva-benefits { padding: 40px 0; }
+  .saluva-benefits__grid { gap: 12px; }
+  .saluva-benefits__label { font-size: 14px; }
 }
 
 /* ── ¿Qué contiene? (cuadrícula 2x2) ── */

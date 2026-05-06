@@ -120,6 +120,13 @@
       </div>
     {% endif %}
 
+    {%- comment -%} Pequeña descripción debajo del precio (texto del producto en Shopify Admin) {%- endcomment -%}
+    {% if product.description != blank %}
+      <div class="pdp__short-desc rte">
+        {{ product.description }}
+      </div>
+    {% endif %}
+
     <!-- Variantes -->
     {% if product.variants.size > 1 %}
       {% for option in product.options_with_values %}
@@ -153,12 +160,11 @@
       {% endform %}
     </div>
 
-    {%- comment -%} ═══ BENEFICIOS (4 imágenes en fila, debajo del precio) ═══ {%- endcomment -%}
-    {%- render 'product-benefits', product: product -%}
   </div>
 </section>
 
 {%- comment -%} ═══ SECCIONES SALUVA POST-PDP ═══ {%- endcomment -%}
+{%- render 'product-benefits', product: product -%}
 {%- render 'product-contains', product: product -%}
 {%- render 'product-how-to', product: product -%}
 {%- render 'product-reels', product: product -%}

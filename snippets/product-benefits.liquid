@@ -1,57 +1,64 @@
 {% comment %}
-  SALUVA — Bloque "Beneficios" (4 imágenes en fila bajo el precio).
+  SALUVA — Bloque "Beneficios" (sección full-width, cuadrícula 2x2 de imágenes).
   Lee metafields de tipo LISTA del producto:
     - saluva.benefits_images  (List of files → image)
     - saluva.benefits_labels  (List of single-line text)
   Empareja por índice (imagen[i] ↔ etiqueta[i]).
-  Si no hay metafields, muestra 4 ilustraciones-placeholder con SVG.
+  Si no hay metafields, muestra placeholders ilustrativos.
 {% endcomment %}
 
 {%- assign mf = product.metafields.saluva -%}
 {%- assign images = mf.benefits_images.value -%}
 {%- assign labels = mf.benefits_labels.value -%}
 
-<div class="saluva-benefits">
-  <h3 class="pdp__section-title">Beneficios</h3>
-  <div class="saluva-benefits__grid">
-    {% for i in (0..3) %}
-      {%- assign image = images[i] -%}
-      {%- assign label = labels[i] -%}
+<section class="saluva-benefits">
+  <div class="container">
+    <div class="saluva-block-header">
+      <span class="saluva-block-header__chip">Beneficios</span>
+      <h2 class="saluva-block-header__title">¿Por qué elegirla?</h2>
+      <p class="saluva-block-header__sub">Lo que tu cuerpo va a sentir</p>
+    </div>
 
-      <div class="saluva-benefits__item">
-        <div class="saluva-benefits__img-wrap">
-          {% if image != blank %}
-            <img src="{{ image | image_url: width: 320 }}"
-                 alt="{{ label | default: 'Beneficio' }}"
-                 loading="lazy">
-          {% else %}
-            {%- case i -%}
-              {%- when 0 -%}
-                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M32 8c-8 8-12 14-12 22a12 12 0 0024 0c0-8-4-14-12-22z"/>
-                  <path d="M32 30v18"/>
-                </svg>
-              {%- when 1 -%}
-                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M14 36c0-10 8-18 18-18s18 8 18 18-8 18-18 18-18-8-18-18z"/>
-                  <path d="M22 36l8 8 14-14"/>
-                </svg>
-              {%- when 2 -%}
-                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <circle cx="32" cy="32" r="20"/>
-                  <path d="M22 32l8 8 14-14"/>
-                </svg>
-              {%- when 3 -%}
-                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M32 12l5 12 13 1-10 9 3 13-11-7-11 7 3-13-10-9 13-1z"/>
-                </svg>
-            {%- endcase -%}
-          {% endif %}
+    <div class="saluva-benefits__grid">
+      {% for i in (0..3) %}
+        {%- assign image = images[i] -%}
+        {%- assign label = labels[i] -%}
+
+        <div class="saluva-benefits__cell">
+          <div class="saluva-benefits__img-wrap">
+            {% if image != blank %}
+              <img src="{{ image | image_url: width: 600 }}"
+                   alt="{{ label | default: 'Beneficio' }}"
+                   loading="lazy">
+            {% else %}
+              {%- case i -%}
+                {%- when 0 -%}
+                  <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M50 18c-12 12-18 22-18 33a18 18 0 0036 0c0-11-6-21-18-33z"/>
+                    <path d="M50 50v25"/>
+                  </svg>
+                {%- when 1 -%}
+                  <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="50" cy="50" r="30"/>
+                    <path d="M35 50l10 10 22-22"/>
+                  </svg>
+                {%- when 2 -%}
+                  <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M50 18l8 18 20 2-15 14 5 19-18-10-18 10 5-19-15-14 20-2z"/>
+                  </svg>
+                {%- when 3 -%}
+                  <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M50 22c-15 0-26 11-26 26 0 14 10 22 18 28 4 3 12 3 16 0 8-6 18-14 18-28 0-15-11-26-26-26z"/>
+                    <path d="M50 36v22M40 47h20"/>
+                  </svg>
+              {%- endcase -%}
+            {% endif %}
+          </div>
+          <span class="saluva-benefits__label">
+            {{ label | default: 'Beneficio destacado' }}
+          </span>
         </div>
-        <span class="saluva-benefits__label">
-          {{ label | default: 'Beneficio destacado' }}
-        </span>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
   </div>
-</div>
+</section>
