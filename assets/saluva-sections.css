@@ -4472,6 +4472,7 @@ body.cart-drawer-open { overflow: hidden; }
   gap: 12px;
   color: rgba(255,255,255,0.7);
   background: linear-gradient(135deg, #2a2a2a, #444);
+  z-index: 1;
 }
 .saluva-reels__placeholder svg { width: 56px; height: 56px; }
 .saluva-reels__placeholder span {
@@ -4479,6 +4480,32 @@ body.cart-drawer-open { overflow: hidden; }
   letter-spacing: 1.5px;
   text-transform: uppercase;
   font-weight: 700;
+}
+.saluva-reels__placeholder--loading svg {
+  animation: saluvaReelsPulse 1.4s ease-in-out infinite;
+}
+@keyframes saluvaReelsPulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* ── TikTok oEmbed: el script embed.js inyecta un iframe que debe llenar el frame ── */
+.saluva-reels__tt-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+.saluva-reels__tt-wrap blockquote.tiktok-embed,
+.saluva-reels__tt-wrap iframe {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
 }
 
 .saluva-reels__nav {

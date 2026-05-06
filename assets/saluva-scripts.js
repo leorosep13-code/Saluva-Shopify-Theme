@@ -40,6 +40,64 @@ function initSaluvaReelsCarousel() {
 
   if (prev) prev.addEventListener('click', () => scrollByCard(-1));
   if (next) next.addEventListener('click', () => scrollByCard(1));
+
+  hydrateTikTokReels(track);
+}
+
+/* Resolver TikToks (URLs cortas y largas) via oEmbed oficial.
+   El endpoint sigue redirecciones internamente y devuelve un blockquote +
+   referencia al script embed.js que reemplaza el blockquote por iframe. */
+function hydrateTikTokReels(scope) {
+  const cards = scope.querySelectorAll('.saluva-reels__card[data-source="tiktok"][data-tiktok-url]');
+  if (!cards.length) return;
+
+  let embedScriptInjected = false;
+  const injectEmbedScript = () => {
+    if (embedScriptInjected) return;
+    if (document.querySelector('script[src*="tiktok.com/embed.js"]')) {
+      embedScriptInjected = true;
+      return;
+    }
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.tiktok.com/embed.js';
+    document.body.appendChild(s);
+    embedScriptInjected = true;
+  };
+
+  cards.forEach(async (card) => {
+    const url = card.dataset.tiktokUrl;
+    const frame = card.querySelector('.saluva-reels__frame');
+    const loading = card.querySelector('[data-tiktok-loading]');
+    if (!url || !frame) return;
+
+    try {
+      const oembedUrl = 'https://www.tiktok.com/oembed?url=' + encodeURIComponent(url);
+      const res = await fetch(oembedUrl);
+      if (!res.ok) throw new Error('oEmbed HTTP ' + res.status);
+      const data = await res.json();
+      if (!data.html) throw new Error('oEmbed sin html');
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'saluva-reels__tt-wrap';
+      wrapper.innerHTML = data.html;
+
+      const inlineScript = wrapper.querySelector('script');
+      if (inlineScript) inlineScript.remove();
+
+      if (loading) loading.remove();
+      frame.appendChild(wrapper);
+      injectEmbedScript();
+
+      if (window.tiktokEmbedLoad) window.tiktokEmbedLoad();
+    } catch (err) {
+      console.warn('[saluva-reels] No se pudo cargar TikTok', url, err);
+      if (loading) {
+        const span = loading.querySelector('span');
+        if (span) span.textContent = 'No se pudo cargar';
+      }
+    }
+  });
 }
 
 /* ── Sticky Header ── */

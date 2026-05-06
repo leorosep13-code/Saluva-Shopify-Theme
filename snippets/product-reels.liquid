@@ -54,11 +54,8 @@
 
           {%- elsif url contains 'tiktok.com' -%}
             {%- assign kind = 'tiktok' -%}
-            {%- assign tail = url | split: '/video/' | last | default: '' -%}
-            {%- assign vid = tail | split: '/' | first | split: '?' | first -%}
-            {%- if vid != blank -%}
-              {%- assign embed = 'https://www.tiktok.com/embed/v2/' | append: vid -%}
-            {%- endif -%}
+            {%- comment -%} Marca especial: TikTok se resuelve via oEmbed en JS para soportar URLs cortas (vt.tiktok.com/...) y largas. {%- endcomment -%}
+            {%- assign embed = 'tiktok-oembed' -%}
 
           {%- elsif url contains 'youtube.com/shorts' or url contains 'youtu.be' or url contains 'youtube.com/watch' -%}
             {%- assign kind = 'youtube' -%}
@@ -85,16 +82,26 @@
           {%- endif -%}
 
           {%- if embed != blank -%}
-            <div class="saluva-reels__card" data-source="{{ kind }}">
+            <div class="saluva-reels__card" data-source="{{ kind }}"{% if embed == 'tiktok-oembed' %} data-tiktok-url="{{ url | escape }}"{% endif %}>
               <div class="saluva-reels__frame">
-                <iframe
-                  src="{{ embed }}"
-                  loading="lazy"
-                  allow="autoplay; encrypted-media; picture-in-picture; clipboard-write"
-                  allowfullscreen
-                  scrolling="no"
-                  frameborder="0"
-                  title="Reel {{ kind }}"></iframe>
+                {%- if embed == 'tiktok-oembed' -%}
+                  <div class="saluva-reels__placeholder saluva-reels__placeholder--loading" data-tiktok-loading>
+                    <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect x="20" y="10" width="40" height="60" rx="6"/>
+                      <polygon points="35 30 35 50 52 40" fill="currentColor"/>
+                    </svg>
+                    <span>Cargando TikTok...</span>
+                  </div>
+                {%- else -%}
+                  <iframe
+                    src="{{ embed }}"
+                    loading="lazy"
+                    allow="autoplay; encrypted-media; picture-in-picture; clipboard-write"
+                    allowfullscreen
+                    scrolling="no"
+                    frameborder="0"
+                    title="Reel {{ kind }}"></iframe>
+                {%- endif -%}
               </div>
               <a class="saluva-reels__card-link" href="{{ url }}" target="_blank" rel="noopener noreferrer">
                 Ver original ↗
