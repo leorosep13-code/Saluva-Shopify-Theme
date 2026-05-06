@@ -18,6 +18,13 @@
 " -%}
 {%- assign url_lines = raw_urls | split: newline_char -%}
 
+{%- comment -%} DIAGNÓSTICO TEMPORAL: lista todas las keys presentes en el producto bajo cada namespace conocido. {%- endcomment -%}
+<!-- saluva-mf-debug START -->
+<!-- product_id={{ product.id }} -->
+<!-- saluva keys: {% for kv in mf_s %}{{ kv[0] }}={{ kv[1] | size }}; {% endfor %} -->
+<!-- custom keys: {% for kv in mf_c %}{{ kv[0] }}={{ kv[1] | size }}; {% endfor %} -->
+<!-- saluva-mf-debug END -->
+
 
 <section class="saluva-reels">
   <div class="container">
