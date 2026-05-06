@@ -49,6 +49,7 @@ function initSaluvaReelsCarousel() {
    referencia al script embed.js que reemplaza el blockquote por iframe. */
 function hydrateTikTokReels(scope) {
   const cards = scope.querySelectorAll('.saluva-reels__card[data-source="tiktok"][data-tiktok-url]');
+  console.log('[saluva-reels] TikTok cards encontrados:', cards.length);
   if (!cards.length) return;
 
   let embedScriptInjected = false;

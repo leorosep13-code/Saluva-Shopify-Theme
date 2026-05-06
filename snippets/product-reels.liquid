@@ -16,6 +16,17 @@
 " -%}
 {%- assign url_lines = raw_urls | split: newline_char -%}
 
+{%- comment -%} Diagnóstico (visible solo en el código fuente) {%- endcomment -%}
+{%- if raw_urls != blank -%}
+  <!-- saluva-reels-debug: OK chars={{ raw_urls | size }} lines={{ url_lines | size }} -->
+{%- else -%}
+  {%- if mf.reels_urls -%}
+    <!-- saluva-reels-debug: METAFIELD_PRESENTE_PERO_VALUE_VACIO -->
+  {%- else -%}
+    <!-- saluva-reels-debug: SIN_METAFIELD (verificá namespace=saluva key=reels_urls en este producto) -->
+  {%- endif -%}
+{%- endif -%}
+
 
 <section class="saluva-reels">
   <div class="container">
