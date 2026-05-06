@@ -13,6 +13,15 @@
 {%- assign images = mf_s.contains_images.value | default: mf_c.contains_images.value -%}
 {%- assign labels = mf_s.contains_labels.value | default: mf_c.contains_labels.value -%}
 
+{%- comment -%} DIAGNÓSTICO TEMPORAL: ver keys reales y tipo del primer item de imágenes. {%- endcomment -%}
+<!-- saluva-contains-debug START -->
+<!-- product_id={{ product.id }} -->
+<!-- saluva keys: {% for kv in mf_s %}{{ kv[0] }}={{ kv[1] | size }}; {% endfor %} -->
+<!-- custom keys: {% for kv in mf_c %}{{ kv[0] }}={{ kv[1] | size }}; {% endfor %} -->
+<!-- images.size={{ images.size }} labels.size={{ labels.size }} -->
+<!-- images[0] json: {{ images[0] | json }} -->
+<!-- saluva-contains-debug END -->
+
 <section class="saluva-contains">
   <div class="container">
     <div class="saluva-block-header">
@@ -28,8 +37,16 @@
 
         <div class="saluva-contains__cell">
           <div class="saluva-contains__img-wrap">
-            {% if image != blank %}
-              <img src="{{ image | image_url: width: 600 }}"
+            {%- comment -%} Resuelve URL: MediaImage (image_url filter) o GenericFile (.url) {%- endcomment -%}
+            {%- assign img_src = '' -%}
+            {%- if image != blank -%}
+              {%- assign img_src = image | image_url: width: 600 -%}
+              {%- if img_src == blank and image.url -%}
+                {%- assign img_src = image.url -%}
+              {%- endif -%}
+            {%- endif -%}
+            {% if img_src != blank %}
+              <img src="{{ img_src }}"
                    alt="{{ label | default: 'Ingrediente' }}"
                    loading="lazy">
             {% else %}
