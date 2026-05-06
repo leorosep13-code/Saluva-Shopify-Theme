@@ -7,9 +7,11 @@
   Si no hay metafields, muestra placeholders ilustrativos.
 {% endcomment %}
 
-{%- assign mf = product.metafields.saluva -%}
-{%- assign images = mf.benefits_images.value -%}
-{%- assign labels = mf.benefits_labels.value -%}
+{%- comment -%} Acepta tanto namespace 'saluva' como 'custom' (default de Shopify Admin) {%- endcomment -%}
+{%- assign mf_s = product.metafields.saluva -%}
+{%- assign mf_c = product.metafields.custom -%}
+{%- assign images = mf_s.benefits_images.value | default: mf_c.benefits_images.value -%}
+{%- assign labels = mf_s.benefits_labels.value | default: mf_c.benefits_labels.value -%}
 
 <section class="saluva-benefits">
   <div class="container">

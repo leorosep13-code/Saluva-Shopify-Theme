@@ -10,22 +10,13 @@
   Si no hay metafield, muestra 3 tarjetas placeholder.
 {% endcomment %}
 
-{%- assign mf = product.metafields.saluva -%}
-{%- assign raw_urls = mf.reels_urls.value | default: mf.reels_urls | default: '' -%}
+{%- comment -%} Acepta tanto namespace 'saluva' como 'custom' (default de Shopify Admin) {%- endcomment -%}
+{%- assign mf_s = product.metafields.saluva -%}
+{%- assign mf_c = product.metafields.custom -%}
+{%- assign raw_urls = mf_s.reels_urls.value | default: mf_s.reels_urls | default: mf_c.reels_urls.value | default: mf_c.reels_urls | default: '' -%}
 {%- assign newline_char = "
 " -%}
 {%- assign url_lines = raw_urls | split: newline_char -%}
-
-{%- comment -%} Diagnóstico (visible solo en el código fuente) {%- endcomment -%}
-{%- if raw_urls != blank -%}
-  <!-- saluva-reels-debug: OK chars={{ raw_urls | size }} lines={{ url_lines | size }} -->
-{%- else -%}
-  {%- if mf.reels_urls -%}
-    <!-- saluva-reels-debug: METAFIELD_PRESENTE_PERO_VALUE_VACIO -->
-  {%- else -%}
-    <!-- saluva-reels-debug: SIN_METAFIELD (verificá namespace=saluva key=reels_urls en este producto) -->
-  {%- endif -%}
-{%- endif -%}
 
 
 <section class="saluva-reels">

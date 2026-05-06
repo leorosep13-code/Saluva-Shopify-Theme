@@ -5,8 +5,10 @@
   Si está vacío, muestra texto-placeholder.
 {% endcomment %}
 
-{%- assign mf = product.metafields.saluva -%}
-{%- assign body = mf.how_to_use -%}
+{%- comment -%} Acepta tanto namespace 'saluva' como 'custom' (default de Shopify Admin) {%- endcomment -%}
+{%- assign mf_s = product.metafields.saluva -%}
+{%- assign mf_c = product.metafields.custom -%}
+{%- assign body = mf_s.how_to_use.value | default: mf_s.how_to_use | default: mf_c.how_to_use.value | default: mf_c.how_to_use -%}
 
 <section class="saluva-how-to">
   <div class="container">

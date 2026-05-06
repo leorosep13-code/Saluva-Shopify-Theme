@@ -7,9 +7,11 @@
   Si no hay metafields, muestra placeholders ilustrativos.
 {% endcomment %}
 
-{%- assign mf = product.metafields.saluva -%}
-{%- assign images = mf.contains_images.value -%}
-{%- assign labels = mf.contains_labels.value -%}
+{%- comment -%} Acepta tanto namespace 'saluva' como 'custom' (default de Shopify Admin) {%- endcomment -%}
+{%- assign mf_s = product.metafields.saluva -%}
+{%- assign mf_c = product.metafields.custom -%}
+{%- assign images = mf_s.contains_images.value | default: mf_c.contains_images.value -%}
+{%- assign labels = mf_s.contains_labels.value | default: mf_c.contains_labels.value -%}
 
 <section class="saluva-contains">
   <div class="container">
