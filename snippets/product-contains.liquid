@@ -1,14 +1,15 @@
 {% comment %}
   SALUVA — Bloque "¿Qué contiene?" (cuadrícula 2x2 de imágenes).
-  Lee metafields del producto:
-    - saluva.contains_1_image, saluva.contains_1_label
-    - saluva.contains_2_image, saluva.contains_2_label
-    - saluva.contains_3_image, saluva.contains_3_label
-    - saluva.contains_4_image, saluva.contains_4_label
+  Lee metafields de tipo LISTA del producto:
+    - saluva.contains_images  (List of files → image)
+    - saluva.contains_labels  (List of single-line text)
+  Empareja por índice (imagen[i] ↔ etiqueta[i]).
   Si no hay metafields, muestra placeholders ilustrativos.
 {% endcomment %}
 
 {%- assign mf = product.metafields.saluva -%}
+{%- assign images = mf.contains_images.value -%}
+{%- assign labels = mf.contains_labels.value -%}
 
 <section class="saluva-contains">
   <div class="container">
@@ -19,11 +20,9 @@
     </div>
 
     <div class="saluva-contains__grid">
-      {% for i in (1..4) %}
-        {%- assign img_key = 'contains_' | append: i | append: '_image' -%}
-        {%- assign lbl_key = 'contains_' | append: i | append: '_label' -%}
-        {%- assign image = mf[img_key] -%}
-        {%- assign label = mf[lbl_key] -%}
+      {% for i in (0..3) %}
+        {%- assign image = images[i] -%}
+        {%- assign label = labels[i] -%}
 
         <div class="saluva-contains__cell">
           <div class="saluva-contains__img-wrap">
@@ -33,22 +32,22 @@
                    loading="lazy">
             {% else %}
               {%- case i -%}
-                {%- when 1 -%}
+                {%- when 0 -%}
                   <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M50 20c-15 5-25 18-25 35a25 25 0 0050 0c0-17-10-30-25-35z"/>
                     <path d="M50 30v40M40 45h20M40 60h20"/>
                   </svg>
-                {%- when 2 -%}
+                {%- when 1 -%}
                   <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <circle cx="50" cy="50" r="28"/>
                     <path d="M50 28c-10 6-15 14-15 22 0 9 7 15 15 15s15-6 15-15c0-8-5-16-15-22z"/>
                   </svg>
-                {%- when 3 -%}
+                {%- when 2 -%}
                   <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M30 70c0-20 10-40 20-40s20 20 20 40"/>
                     <path d="M50 30v40M30 70h40"/>
                   </svg>
-                {%- when 4 -%}
+                {%- when 3 -%}
                   <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M25 50c0-14 11-25 25-25s25 11 25 25-11 25-25 25-25-11-25-25z"/>
                     <path d="M40 50c0-6 4-10 10-10s10 4 10 10-4 10-10 10-10-4-10-10z"/>
