@@ -20,10 +20,10 @@
 <!-- custom keys: {% for kv in mf_c %}{{ kv[0] }}={{ kv[1] | size }}; {% endfor %} -->
 <!-- images.size={{ images.size }} labels.size={{ labels.size }} -->
 <!-- mf_s.benefits_images.type={{ mf_s.benefits_images.type }} -->
-<!-- mf_c.benefits_images.type={{ mf_c.benefits_images.type }} -->
-<!-- images[0] direct="{{ images[0] }}" -->
-<!-- images[1] direct="{{ images[1] }}" -->
-<!-- labels[0] direct="{{ labels[0] }}" -->
+<!-- images.size={{ images.size }} -->
+{%- for f in images -%}
+<!-- item{{ forloop.index0 }}: id={{ f.id }} | src={{ f.src }} | url={{ f.url }} | alt={{ f.alt }} | preview_src={{ f.preview_image.src }} | file_url={{ f | file_url }} | image_url={{ f | image_url: width: 600 }} -->
+{%- endfor -%}
 <!-- saluva-benefits-debug END -->
 
 <section class="saluva-benefits">
@@ -41,13 +41,14 @@
 
         <div class="saluva-benefits__cell">
           <div class="saluva-benefits__img-wrap">
-            {%- comment -%} Resuelve URL: MediaImage (image_url filter) o GenericFile (.url) {%- endcomment -%}
+            {%- comment -%} Resuelve URL probando: image_url, preview_image, file_url, .url, .src {%- endcomment -%}
             {%- assign img_src = '' -%}
             {%- if image != blank -%}
               {%- assign img_src = image | image_url: width: 600 -%}
-              {%- if img_src == blank and image.url -%}
-                {%- assign img_src = image.url -%}
-              {%- endif -%}
+              {%- if img_src == blank -%}{%- assign img_src = image.preview_image | image_url: width: 600 -%}{%- endif -%}
+              {%- if img_src == blank -%}{%- assign img_src = image | file_url -%}{%- endif -%}
+              {%- if img_src == blank -%}{%- assign img_src = image.url -%}{%- endif -%}
+              {%- if img_src == blank -%}{%- assign img_src = image.src -%}{%- endif -%}
             {%- endif -%}
             {% if img_src != blank %}
               <img src="{{ img_src }}"
