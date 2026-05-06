@@ -19,16 +19,7 @@
   gap: 16px;
   flex-wrap: wrap;
 }
-.promo-bar__countdown { display: flex; gap: 6px; }
-.promo-bar__unit {
-  background: rgba(0,0,0,0.2);
-  border-radius: 6px;
-  padding: 3px 8px;
-  font-size: 12px;
-  min-width: 32px;
-  text-align: center;
-}
-.promo-bar__unit small { font-size: 9px; opacity: 0.7; }
+.promo-bar__text { display: inline-flex; align-items: center; gap: 6px; }
 
 /* ── Header ── */
 .header {
@@ -2531,68 +2522,6 @@
   font-size: 15px;
 }
 
-/* Trust signals */
-.pdp__trust {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 24px;
-  padding: 16px;
-  border-radius: var(--radius-md);
-  background: var(--color-bg-soft);
-}
-
-.pdp__trust-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-text-muted);
-}
-
-/* Descripción colapsable */
-.pdp__details {
-  border-top: 1px solid var(--color-border);
-  padding-top: 20px;
-}
-
-.pdp__details-summary {
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--color-text);
-}
-
-.pdp__details-summary::-webkit-details-marker { display: none; }
-
-.pdp__details-summary::after {
-  content: '+';
-  font-size: 20px;
-  font-weight: 400;
-  color: var(--color-text-muted);
-  transition: transform 0.2s;
-}
-
-.pdp__details[open] .pdp__details-summary::after {
-  content: '−';
-}
-
-.pdp__details-content {
-  font-size: 14px;
-  color: var(--color-text-muted);
-  line-height: 1.7;
-  margin-top: 16px;
-}
-
-.pdp__details-content p { margin-bottom: 12px; }
-.pdp__details-content ul,
-.pdp__details-content ol { padding-left: 20px; margin-bottom: 12px; }
-
 /* ── Sticky bar (mobile) ── */
 .pdp__sticky-bar {
   display: none;
@@ -3137,12 +3066,6 @@
   .pdp__whatsapp svg {
     width: 24px;
     height: 24px;
-  }
-
-  /* Trust: 1 columna en móvil */
-  .pdp__trust {
-    grid-template-columns: 1fr;
-    margin-bottom: 20px;
   }
 
   /* Reviews */
@@ -4160,3 +4083,428 @@
 
 /* Bloquear scroll del body cuando el drawer está abierto */
 body.cart-drawer-open { overflow: hidden; }
+
+/* ── Aviso de envío del carrito (drawer + página) ── */
+.cart-shipping-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  margin: 16px 16px 0;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent, var(--color-primary)));
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--color-primary) 35%, transparent);
+}
+.cart-shipping-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 110% -20%, rgba(255,255,255,0.25), transparent 55%);
+  pointer-events: none;
+}
+.cart-shipping-banner__icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.cart-shipping-banner__icon svg { width: 26px; height: 26px; animation: cartShipTruck 3.5s ease-in-out infinite; }
+@keyframes cartShipTruck {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+.cart-shipping-banner__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.25;
+  z-index: 1;
+}
+.cart-shipping-banner__title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+.cart-shipping-banner__message {
+  font-family: 'League Spartan', var(--font-family);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+.cart-shipping-banner__sub {
+  font-size: 12px;
+  opacity: 0.9;
+  margin-top: 2px;
+}
+
+/* En la página /cart se ve más amplio */
+.cart-page .cart-shipping-banner {
+  margin: 0 0 24px;
+  padding: 18px 22px;
+}
+.cart-page .cart-shipping-banner__icon { width: 52px; height: 52px; }
+.cart-page .cart-shipping-banner__icon svg { width: 30px; height: 30px; }
+.cart-page .cart-shipping-banner__message { font-size: 18px; }
+
+@media (max-width: 480px) {
+  .cart-shipping-banner { padding: 12px 14px; gap: 10px; margin: 12px 12px 0; }
+  .cart-shipping-banner__icon { width: 38px; height: 38px; border-radius: 10px; }
+  .cart-shipping-banner__icon svg { width: 22px; height: 22px; }
+  .cart-shipping-banner__message { font-size: 14px; }
+  .cart-shipping-banner__sub { font-size: 11px; }
+}
+
+/* ═══════════════════════════════════════════
+   SALUVA — Secciones del PDP (Beneficios, Contiene, Cómo tomar, Reels)
+   ═══════════════════════════════════════════ */
+
+/* Headers de bloques reutilizables */
+.saluva-block-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.saluva-block-header__chip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.saluva-block-header__title {
+  font-family: 'League Spartan', var(--font-family);
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  color: var(--color-text);
+}
+.saluva-block-header__title--left { text-align: left; }
+.saluva-block-header__sub {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.pdp__section-title {
+  font-family: 'League Spartan', var(--font-family);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 4px 0 14px;
+  color: var(--color-text);
+}
+.pdp__section-title--sm { font-size: 16px; text-transform: uppercase; letter-spacing: 1.5px; }
+
+/* Descripción siempre visible (reemplaza al details/summary) */
+.pdp__description {
+  border-top: 1px solid var(--color-border);
+  padding-top: 20px;
+  margin-top: 8px;
+}
+.pdp__description-content {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+.pdp__description-content p { margin-bottom: 12px; }
+.pdp__description-content ul,
+.pdp__description-content ol { padding-left: 20px; margin-bottom: 12px; }
+
+/* ── Beneficios ── */
+.saluva-benefits {
+  margin: 24px 0 28px;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--color-primary) 8%, transparent),
+    color-mix(in srgb, var(--color-accent) 8%, transparent));
+}
+.saluva-benefits__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.saluva-benefits__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+.saluva-benefits__img-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  color: var(--color-primary);
+  padding: 14%;
+}
+.saluva-benefits__img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  padding: 0;
+  margin: -14%;
+}
+.saluva-benefits__img-wrap svg { width: 100%; height: 100%; }
+.saluva-benefits__label {
+  font-family: 'League Spartan', var(--font-family);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.3px;
+  color: var(--color-text);
+}
+
+@media (max-width: 480px) {
+  .saluva-benefits__grid { gap: 8px; }
+  .saluva-benefits__label { font-size: 11px; }
+}
+
+/* ── ¿Qué contiene? (cuadrícula 2x2) ── */
+.saluva-contains {
+  padding: 60px 0;
+  background: var(--color-bg);
+}
+.saluva-contains__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.saluva-contains__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+.saluva-contains__img-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-soft, #f7f3ee);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--color-primary);
+  padding: 18%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.saluva-contains__img-wrap:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+.saluva-contains__img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  padding: 0;
+  margin: -18%;
+}
+.saluva-contains__img-wrap svg { width: 100%; height: 100%; }
+.saluva-contains__label {
+  font-family: 'League Spartan', var(--font-family);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--color-text);
+}
+
+@media (max-width: 600px) {
+  .saluva-contains { padding: 40px 0; }
+  .saluva-contains__grid { gap: 12px; }
+  .saluva-contains__label { font-size: 14px; }
+}
+
+/* ── ¿Cómo tomarla? ── */
+.saluva-how-to {
+  padding: 60px 0;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--color-secondary) 6%, transparent),
+    transparent);
+}
+.saluva-how-to__inner {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) 1fr;
+  gap: 40px;
+  align-items: center;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.saluva-how-to__art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  background: #fff;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  padding: 18%;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+}
+.saluva-how-to__art svg { width: 100%; height: 100%; }
+.saluva-how-to__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.saluva-how-to__body {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-text);
+}
+.saluva-how-to__body p { margin-bottom: 12px; }
+.saluva-how-to__body strong { color: var(--color-primary); }
+
+@media (max-width: 700px) {
+  .saluva-how-to { padding: 40px 0; }
+  .saluva-how-to__inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    text-align: center;
+  }
+  .saluva-how-to__art { width: 140px; margin: 0 auto; }
+  .saluva-block-header__title--left { text-align: center; }
+}
+
+/* ── Aprende un poco más (carrusel reels) ── */
+.saluva-reels {
+  padding: 60px 0 70px;
+  background: var(--color-bg-soft, #f7f3ee);
+}
+.saluva-reels__carousel-wrap {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 8px;
+}
+.saluva-reels__track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  padding: 8px 4px 16px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.saluva-reels__track::-webkit-scrollbar { height: 6px; }
+.saluva-reels__track::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-primary) 40%, transparent);
+  border-radius: 999px;
+}
+.saluva-reels__card {
+  flex: 0 0 calc(33.333% - 11px);
+  min-width: 240px;
+  max-width: 320px;
+  scroll-snap-align: start;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #000;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  transition: transform 0.25s ease;
+}
+.saluva-reels__card:hover { transform: translateY(-3px); }
+.saluva-reels__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  background: #000;
+}
+.saluva-reels__frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.saluva-reels__card-link {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 10px 8px;
+  color: #fff;
+  background: rgba(0,0,0,0.85);
+  text-decoration: none;
+  letter-spacing: 0.3px;
+}
+.saluva-reels__card-link:hover { background: var(--color-primary); }
+
+.saluva-reels__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: rgba(255,255,255,0.7);
+  background: linear-gradient(135deg, #2a2a2a, #444);
+}
+.saluva-reels__placeholder svg { width: 56px; height: 56px; }
+.saluva-reels__placeholder span {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.saluva-reels__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  z-index: 2;
+  transition: transform 0.2s, background 0.2s;
+}
+.saluva-reels__nav:hover { background: var(--color-primary); color: #fff; transform: translateY(-50%) scale(1.05); }
+.saluva-reels__nav--prev { left: -10px; }
+.saluva-reels__nav--next { right: -10px; }
+
+@media (max-width: 700px) {
+  .saluva-reels { padding: 40px 0 50px; }
+  .saluva-reels__card { flex-basis: calc(50% - 8px); min-width: 200px; }
+  .saluva-reels__nav { display: none; }
+}
+@media (max-width: 480px) {
+  .saluva-reels__card { flex-basis: 70%; min-width: 220px; }
+}

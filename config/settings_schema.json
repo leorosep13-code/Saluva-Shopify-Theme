@@ -111,5 +111,38 @@
         "default": "Recibe tips de bienestar, ofertas exclusivas y novedades directamente en tu correo."
       }
     ]
+  },
+  {
+    "name": "Carrito",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Aviso de envío"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_shipping_enabled",
+        "label": "Mostrar aviso de envío en el carrito",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "cart_shipping_title",
+        "label": "Título del aviso",
+        "default": "Envío rápido y seguro"
+      },
+      {
+        "type": "text",
+        "id": "cart_shipping_message",
+        "label": "Mensaje principal",
+        "default": "Recibe tu pedido en 4 a 6 días hábiles"
+      },
+      {
+        "type": "text",
+        "id": "cart_shipping_subtext",
+        "label": "Texto secundario",
+        "default": "Empacado con cuidado · Seguimiento en tiempo real"
+      }
+    ]
   }
 ]

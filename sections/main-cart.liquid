@@ -7,7 +7,9 @@
 </style>
 <section class="cart-page" style="padding: 40px 0 70px;">
   <div class="container" style="max-width: 800px;">
-    <h1 style="font-size: 36px; font-weight: 800; margin-bottom: 32px;">Tu Carrito</h1>
+    <h1 style="font-size: 36px; font-weight: 800; margin-bottom: 20px;">Tu Carrito</h1>
+
+    {% render 'cart-shipping-banner' %}
 
     {% if cart.item_count > 0 %}
       <form action="/cart" method="post">
