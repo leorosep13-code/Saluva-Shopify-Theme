@@ -4211,21 +4211,6 @@ body.cart-drawer-open { overflow: hidden; }
 }
 .pdp__section-title--sm { font-size: 16px; text-transform: uppercase; letter-spacing: 1.5px; }
 
-/* Descripción siempre visible (reemplaza al details/summary) */
-.pdp__description {
-  border-top: 1px solid var(--color-border);
-  padding-top: 20px;
-  margin-top: 8px;
-}
-.pdp__description-content {
-  font-size: 14px;
-  color: var(--color-text-muted);
-  line-height: 1.7;
-}
-.pdp__description-content p { margin-bottom: 12px; }
-.pdp__description-content ul,
-.pdp__description-content ol { padding-left: 20px; margin-bottom: 12px; }
-
 /* ── Beneficios ── */
 .saluva-benefits {
   margin: 24px 0 28px;
