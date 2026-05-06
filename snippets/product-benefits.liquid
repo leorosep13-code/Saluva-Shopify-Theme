@@ -19,9 +19,11 @@
 <!-- saluva keys: {% for kv in mf_s %}{{ kv[0] }}={{ kv[1] | size }}; {% endfor %} -->
 <!-- custom keys: {% for kv in mf_c %}{{ kv[0] }}={{ kv[1] | size }}; {% endfor %} -->
 <!-- images.size={{ images.size }} labels.size={{ labels.size }} -->
-<!-- images[0] id={{ images[0].id }} url={{ images[0].url }} alt={{ images[0].alt }} -->
-<!-- images[0] image_url={{ images[0] | image_url: width: 600 }} -->
-<!-- images[0] media_type={{ images[0].media_type }} preview={{ images[0].preview_image.src }} -->
+<!-- mf_s.benefits_images.type={{ mf_s.benefits_images.type }} -->
+<!-- mf_c.benefits_images.type={{ mf_c.benefits_images.type }} -->
+<!-- images[0] direct="{{ images[0] }}" -->
+<!-- images[1] direct="{{ images[1] }}" -->
+<!-- labels[0] direct="{{ labels[0] }}" -->
 <!-- saluva-benefits-debug END -->
 
 <section class="saluva-benefits">
