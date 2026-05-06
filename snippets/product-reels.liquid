@@ -11,8 +11,13 @@
 {% endcomment %}
 
 {%- assign mf = product.metafields.saluva -%}
-{%- assign raw_urls = mf.reels_urls | default: '' -%}
-{%- assign url_lines = raw_urls | newline_to_br | split: '<br />' -%}
+{%- assign raw_urls = mf.reels_urls.value | default: mf.reels_urls | default: '' -%}
+{%- assign newline_char = "
+" -%}
+{%- assign url_lines = raw_urls | split: newline_char -%}
+
+<!-- saluva-reels-debug: present={{ mf.reels_urls != blank }} chars={{ raw_urls | size }} lines={{ url_lines | size }} -->
+
 
 <section class="saluva-reels">
   <div class="container">
@@ -30,7 +35,7 @@
       <div class="saluva-reels__track" id="saluva-reels-track">
         {% assign printed = 0 %}
         {% for raw in url_lines %}
-          {%- assign url = raw | strip | replace: '<br />', '' -%}
+          {%- assign url = raw | strip -%}
           {%- if url == blank -%}{%- continue -%}{%- endif -%}
 
           {%- assign embed = '' -%}
