@@ -207,17 +207,6 @@
         "products_limit": 8
       }
     },
-    "sale-banner": {
-      "type": "saluva-sale-banner",
-      "settings": {
-        "label": "OFERTA ESPECIAL",
-        "title": "20% Off Venta de Fin de Semana",
-        "description": "Aprovecha nuestros descuentos en productos seleccionados. Oferta por tiempo limitado.",
-        "end_date": "2026-04-30",
-        "cta_text": "COMPRAR OFERTA",
-        "cta_url": "shopify://products/lemme-burn"
-      }
-    },
     "bestsellers": {
       "type": "saluva-bestsellers",
       "settings": {
@@ -263,7 +252,6 @@
     "featured-product",
     "trust-badges",
     "tienda",
-    "sale-banner",
     "bestsellers",
     "aprende",
     "quiz",
