@@ -3,7 +3,6 @@
    ═══════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initPromoCountdown();
   initStickyHeader();
   initSmoothScroll();
   initStories();
@@ -20,40 +19,27 @@ document.addEventListener('DOMContentLoaded', () => {
   initPdpCarousel();
   initPdpVariants();
   initPdpShare();
+  initSaluvaReelsCarousel();
 });
 
-/* ── Promo Countdown ── */
-function initPromoCountdown() {
-  const bar = document.getElementById('promo-bar');
-  if (!bar) return;
+/* ── Carrusel "Aprende un poco más" (reels) ── */
+function initSaluvaReelsCarousel() {
+  const wrap = document.querySelector('.saluva-reels__carousel-wrap');
+  if (!wrap) return;
 
-  const endDate = bar.dataset.endDate;
-  if (!endDate) return;
+  const track = wrap.querySelector('.saluva-reels__track');
+  const prev = wrap.querySelector('.saluva-reels__nav--prev');
+  const next = wrap.querySelector('.saluva-reels__nav--next');
+  if (!track) return;
 
-  const target = new Date(endDate).getTime();
+  const scrollByCard = (dir) => {
+    const card = track.querySelector('.saluva-reels__card');
+    const step = card ? card.getBoundingClientRect().width + 16 : 280;
+    track.scrollBy({ left: dir * step, behavior: 'smooth' });
+  };
 
-  function update() {
-    const now = Date.now();
-    const diff = Math.max(0, target - now);
-
-    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-    const dEl = document.getElementById('countdown-days');
-    const hEl = document.getElementById('countdown-hours');
-    const mEl = document.getElementById('countdown-mins');
-    const sEl = document.getElementById('countdown-secs');
-
-    if (dEl) dEl.innerHTML = String(d).padStart(2, '0') + '<small>d</small>';
-    if (hEl) hEl.innerHTML = String(h).padStart(2, '0') + '<small>h</small>';
-    if (mEl) mEl.innerHTML = String(m).padStart(2, '0') + '<small>m</small>';
-    if (sEl) sEl.innerHTML = String(s).padStart(2, '0') + '<small>s</small>';
-  }
-
-  update();
-  setInterval(update, 1000);
+  if (prev) prev.addEventListener('click', () => scrollByCard(-1));
+  if (next) next.addEventListener('click', () => scrollByCard(1));
 }
 
 /* ── Sticky Header ── */
