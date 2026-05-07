@@ -56,7 +56,7 @@
           "type": "ai_gen_block_7077edc",
           "settings": {
             "promo_1_image_desktop": "shopify://shop_images/promocion_combo_mayo.png",
-            "promo_1_image_mobile": "shopify://shop_images/ChatGPT_Image_29_abr_2026_11_24_23.png",
+            "promo_1_image_mobile": "shopify://shop_images/promo_combo_mayo.png",
             "promo_1_link": "shopify://products/combo-truly-creatina",
             "promo_2_image_desktop": "shopify://shop_images/descuento_d_as_de_las_madres.png",
             "promo_2_image_mobile": "shopify://shop_images/descuento_madres_30_off.png",
@@ -188,8 +188,8 @@
       "settings": {
         "label": "DESTACADO",
         "title": "El COLAGENO que tu cuerpo necesita",
-        "description": "<p>Nuestro producto estrella combina ingredientes naturales para tu bienestar integral. Formulado con colágeno premium, vitaminas y minerales que fortalecen piel, cabello y articulaciones. Respaldado por registro INVIMA, garantiza los más altos estándares de calidad y seguridad.</p>",
-        "cta_text": "ADQUIRIR OFERTA",
+        "description": "<p>Nuestro producto estrella combina ingredientes naturales para tu bienestar integral. Formulado con péptidos de colágeno tipo  I y II que fortalecen piel, cabello y articulaciones. Respaldado por registro INVIMA, garantiza los más altos estándares de calidad y seguridad.</p>",
+        "cta_text": "VER OFERTA",
         "cta_url": "shopify://products/colageno-puro-x-300-gr",
         "bg_color": "#f0f7e0"
       }
