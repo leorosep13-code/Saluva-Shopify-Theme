@@ -55,14 +55,14 @@
         "ai_gen_block_7077edc_rJi7k9": {
           "type": "ai_gen_block_7077edc",
           "settings": {
-            "promo_1_image_desktop": "shopify://shop_images/ChatGPT_Image_29_abr_2026_10_39_46.png",
+            "promo_1_image_desktop": "shopify://shop_images/promocion_combo_mayo.png",
             "promo_1_image_mobile": "shopify://shop_images/ChatGPT_Image_29_abr_2026_11_24_23.png",
             "promo_1_link": "shopify://products/combo-truly-creatina",
-            "promo_2_image_desktop": "shopify://shop_images/ChatGPT_Image_27_abr_2026_16_01_40.png",
-            "promo_2_image_mobile": "shopify://shop_images/ChatGPT_Image_27_abr_2026_16_05_19.png",
+            "promo_2_image_desktop": "shopify://shop_images/descuento_d_as_de_las_madres.png",
+            "promo_2_image_mobile": "shopify://shop_images/descuento_madres_30_off.png",
             "promo_2_link": "shopify://collections/suplementos",
-            "promo_3_image_desktop": "shopify://shop_images/ChatGPT_Image_27_abr_2026_16_24_23.png",
-            "promo_3_image_mobile": "shopify://shop_images/ChatGPT_Image_27_abr_2026_16_30_46.png",
+            "promo_3_image_desktop": "shopify://shop_images/guia_21_dias_por_compra.png",
+            "promo_3_image_mobile": "shopify://shop_images/guia_21_dias_gratis.png",
             "promo_3_link": "",
             "promo_4_link": "",
             "promo_5_link": ""
@@ -165,24 +165,24 @@
     "featured-product": {
       "type": "saluva-featured-product",
       "blocks": {
-        "image_TaCUND": {
+        "image_4GYgbn": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_29_abr_2026_11_58_44.png",
+            "image": "shopify://shop_images/tabla_nutricional_colageno_hidrolizado.png",
             "alt": "Producto Saluva"
           }
         },
-        "image_RkHjhX": {
+        "image_TaCUND": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/ChatGPTImage29abr2026_11_36_10.png",
+            "image": "shopify://shop_images/colageno_hidrolizado_puro.png",
             "alt": "Producto Saluva"
           }
         }
       },
       "block_order": [
-        "image_TaCUND",
-        "image_RkHjhX"
+        "image_4GYgbn",
+        "image_TaCUND"
       ],
       "custom_css": [],
       "settings": {
