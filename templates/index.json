@@ -187,9 +187,9 @@
       "custom_css": [],
       "settings": {
         "label": "DESTACADO",
-        "title": "El suplemento que tu cuerpo necesita",
-        "description": "<p>Nuestro producto estrella combina los mejores ingredientes naturales para tu bienestar diario. Formulado con colageno, vitaminas y minerales esenciales.</p>",
-        "cta_text": "COMPRAR AHORA",
+        "title": "El COLAGENO que tu cuerpo necesita",
+        "description": "<p>Nuestro producto estrella combina ingredientes naturales para tu bienestar integral. Formulado con colágeno premium, vitaminas y minerales que fortalecen piel, cabello y articulaciones. Respaldado por registro INVIMA, garantiza los más altos estándares de calidad y seguridad.</p>",
+        "cta_text": "ADQUIRIR OFERTA",
         "cta_url": "shopify://products/colageno-puro-x-300-gr",
         "bg_color": "#f0f7e0"
       }
