@@ -1,0 +1,109 @@
+{%- comment -%}
+  "¿Por qué elegirnos?" — 4 tarjetas con imagen + etiqueta.
+  Fondo con efecto aurora boreal (.aurora-bg).
+{%- endcomment -%}
+
+<section id="why-us" class="why-us aurora-bg">
+  <div class="container">
+    <div class="section-header section-header--center anim-flip">
+      {%- if section.settings.label != blank -%}
+        <span class="section-header__label">{{ section.settings.label }}</span>
+      {%- endif -%}
+      <h2 class="section-header__title">{{ section.settings.title }}</h2>
+      {%- if section.settings.description != blank -%}
+        <p class="section-header__desc">{{ section.settings.description }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="why-us__grid anim-stagger">
+      {%- for block in section.blocks -%}
+        <div class="why-us__card" {{ block.shopify_attributes }}>
+          <div class="why-us__card-media">
+            {%- if block.settings.image != blank -%}
+              <img src="{{ block.settings.image | image_url: width: 600 }}"
+                   alt="{{ block.settings.image.alt | default: block.settings.label }}"
+                   class="why-us__card-img"
+                   loading="lazy">
+            {%- else -%}
+              <div class="why-us__card-placeholder">{{ block.settings.icon_fallback | default: '✨' }}</div>
+            {%- endif -%}
+          </div>
+          <div class="why-us__card-body">
+            <h3 class="why-us__card-label">{{ block.settings.label }}</h3>
+            {%- if block.settings.subtitle != blank -%}
+              <p class="why-us__card-subtitle">{{ block.settings.subtitle }}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "¿Por qué elegirnos?",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta superior",
+      "default": "BEAUTY TECHNOLOGY"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "¿Por qué elegirnos?"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción (opcional)",
+      "default": "Tecnología avanzada, resultados visibles y un diseño que se siente premium en cada detalle."
+    }
+  ],
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Característica",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "icon_fallback",
+          "label": "Emoji (si no hay imagen)",
+          "default": "✨"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Etiqueta (título corto)",
+          "default": "Tecnología avanzada"
+        },
+        {
+          "type": "textarea",
+          "id": "subtitle",
+          "label": "Descripción breve (opcional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "¿Por qué elegirnos? Saluva",
+      "blocks": [
+        { "type": "feature", "settings": { "label": "Tecnología avanzada", "icon_fallback": "⚡" } },
+        { "type": "feature", "settings": { "label": "Resultados visibles", "icon_fallback": "✨" } },
+        { "type": "feature", "settings": { "label": "Diseño premium", "icon_fallback": "💎" } },
+        { "type": "feature", "settings": { "label": "Cuidado en casa", "icon_fallback": "🏡" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -45,6 +45,49 @@
         "view_all_url": "shopify://collections/ofertas"
       }
     },
+    "why-us": {
+      "type": "saluva-why-us",
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "label": "Tecnología avanzada",
+            "icon_fallback": "⚡",
+            "subtitle": "Dispositivos con tecnología de última generación."
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "label": "Resultados visibles",
+            "icon_fallback": "✨",
+            "subtitle": "Notarás la diferencia desde la primera sesión."
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "label": "Diseño premium",
+            "icon_fallback": "💎",
+            "subtitle": "Estética cuidada hasta el último detalle."
+          }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "label": "Cuidado en casa",
+            "icon_fallback": "🏡",
+            "subtitle": "Tu spa personal donde sea que estés."
+          }
+        }
+      },
+      "block_order": ["feature_1", "feature_2", "feature_3", "feature_4"],
+      "settings": {
+        "label": "BEAUTY TECHNOLOGY",
+        "title": "¿Por qué elegirnos?",
+        "description": "Tecnología avanzada, resultados visibles y un diseño que se siente premium en cada detalle."
+      }
+    },
     "stories": {
       "type": "saluva-stories",
       "blocks": {
@@ -56,8 +99,8 @@
             "subtitle": "",
             "media_type": "video",
             "video_url": "https://youtube.com/watch?v=xML725I6z40",
-            "gradient_start": "#b2a5f5",
-            "gradient_end": "#d6c6f7",
+            "gradient_start": "#C8B7FF",
+            "gradient_end": "#8ED8FF",
             "story_image": "shopify://shop_images/suplementos_para_mujeres_Colombia.png",
             "story_text": "Descubre nuestra rutina matutina perfecta",
             "story_cta_text": "Omega 3",
@@ -72,8 +115,8 @@
             "subtitle": "",
             "media_type": "video",
             "video_url": "https://www.youtube.com/watch?v=QyojWP-hKcE",
-            "gradient_start": "#b2a5f5",
-            "gradient_end": "#d6c6f7",
+            "gradient_start": "#C8B7FF",
+            "gradient_end": "#8ED8FF",
             "story_image": "shopify://shop_images/uro.png",
             "story_text": "",
             "story_cta_text": "Uro Probióticos",
@@ -88,8 +131,8 @@
             "subtitle": "",
             "media_type": "video",
             "video_url": "https://www.youtube.com/watch?v=FdGnqPKuI7w",
-            "gradient_start": "#b2a5f5",
-            "gradient_end": "#d6c6f7",
+            "gradient_start": "#C8B7FF",
+            "gradient_end": "#8ED8FF",
             "story_image": "shopify://shop_images/creatina_video.png",
             "story_text": "",
             "story_cta_text": "Creatina",
@@ -135,7 +178,7 @@
         "description": "<p>Nuestro producto estrella combina tecnología avanzada y un diseño elegante para potenciar tu belleza natural día tras día. Resultados visibles desde la primera sesión.</p>",
         "cta_text": "COMPRAR AHORA",
         "cta_url": "shopify://collections/all",
-        "bg_color": "#f8f7fc"
+        "bg_color": "#F5F7FA"
       }
     },
     "trust-badges": {
@@ -148,33 +191,19 @@
         "card_induction": {
           "type": "card",
           "settings": {
-            "bg_color": "",
             "wide": false,
-            "theme": "light",
-            "text_position": "top",
-            "eyebrow": "NUEVO",
-            "title": "Induction Device",
-            "subtitle": "Belleza que se siente, tecnología que transforma.",
-            "primary_cta_text": "Más información",
-            "primary_cta_url": "",
-            "secondary_cta_text": "Comprar",
-            "secondary_cta_url": ""
+            "caption": "Induction Device",
+            "cta_text": "Ver producto",
+            "cta_url": ""
           }
         },
         "card_aurora": {
           "type": "card",
           "settings": {
-            "bg_color": "",
             "wide": false,
-            "theme": "light",
-            "text_position": "top",
-            "eyebrow": "AURORA SERIES",
-            "title": "Tu rutina, elevada.",
-            "subtitle": "Resultados reales, desde la primera sesión.",
-            "primary_cta_text": "Descubrir",
-            "primary_cta_url": "",
-            "secondary_cta_text": "Comprar",
-            "secondary_cta_url": ""
+            "caption": "Aurora Series",
+            "cta_text": "Ver producto",
+            "cta_url": ""
           }
         }
       },
@@ -229,6 +258,7 @@
   "order": [
     "1776438283cae0ebdf",
     "ofertas",
+    "why-us",
     "stories",
     "featured-product",
     "trust-badges",

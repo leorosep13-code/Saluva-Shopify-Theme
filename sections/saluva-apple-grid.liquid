@@ -1,7 +1,6 @@
 {%- comment -%}
-  Galería tipo Apple: tarjetas grandes con imagen, eyebrow, título, subtítulo y CTAs.
-  Layout 2 columnas en desktop, apiladas en mobile. Tarjetas marcadas con "wide"
-  ocupan ancho completo. Diseñada como bloque destacado de "Los más vendidos".
+  Galería de imágenes en formato grande tipo Apple.
+  Cada tarjeta es una imagen con un overlay inferior (texto + botón al producto).
 {%- endcomment -%}
 
 <section id="apple-grid" class="apple-grid">
@@ -21,51 +20,34 @@
       {%- for block in section.blocks -%}
         {%- assign card_class = 'apple-grid__card' -%}
         {%- if block.settings.wide -%}{%- assign card_class = card_class | append: ' apple-grid__card--wide' -%}{%- endif -%}
-        {%- assign theme = block.settings.theme | default: 'light' -%}
-        {%- assign card_class = card_class | append: ' apple-grid__card--' | append: theme -%}
 
-        <a href="{{ block.settings.primary_cta_url | default: '#' }}"
-           class="{{ card_class }}"
-           {{ block.shopify_attributes }}>
-
-          <div class="apple-grid__card-bg" {% if block.settings.bg_color != blank %}style="background:{{ block.settings.bg_color }};"{% endif %}>
+        <div class="{{ card_class }}" {{ block.shopify_attributes }}>
+          <div class="apple-grid__card-bg">
             {%- if block.settings.image != blank -%}
-              <img src="{{ block.settings.image | image_url: width: 1400 }}"
-                   alt="{{ block.settings.image.alt | default: block.settings.title }}"
+              <img src="{{ block.settings.image | image_url: width: 1600 }}"
+                   alt="{{ block.settings.image.alt | default: block.settings.caption | default: 'Producto Saluva' }}"
                    class="apple-grid__card-img"
                    loading="lazy"
-                   width="1400">
+                   width="1600">
             {%- else -%}
               <div class="apple-grid__card-placeholder">✨</div>
             {%- endif -%}
           </div>
 
-          <div class="apple-grid__card-content apple-grid__card-content--{{ block.settings.text_position | default: 'top' }}">
-            {%- if block.settings.eyebrow != blank -%}
-              <p class="apple-grid__card-eyebrow">{{ block.settings.eyebrow }}</p>
-            {%- endif -%}
-            <h3 class="apple-grid__card-title">{{ block.settings.title }}</h3>
-            {%- if block.settings.subtitle != blank -%}
-              <p class="apple-grid__card-subtitle">{{ block.settings.subtitle }}</p>
-            {%- endif -%}
-            {%- if block.settings.primary_cta_text != blank or block.settings.secondary_cta_text != blank -%}
-              <div class="apple-grid__card-ctas">
-                {%- if block.settings.primary_cta_text != blank -%}
-                  <span class="apple-grid__cta apple-grid__cta--primary">
-                    {{ block.settings.primary_cta_text }}
-                  </span>
-                {%- endif -%}
-                {%- if block.settings.secondary_cta_text != blank -%}
-                  <a href="{{ block.settings.secondary_cta_url | default: '#' }}"
-                     class="apple-grid__cta apple-grid__cta--secondary"
-                     onclick="event.stopPropagation();">
-                    {{ block.settings.secondary_cta_text }}
-                  </a>
-                {%- endif -%}
-              </div>
-            {%- endif -%}
-          </div>
-        </a>
+          {%- if block.settings.caption != blank or block.settings.cta_url != blank -%}
+            <div class="apple-grid__card-overlay">
+              {%- if block.settings.caption != blank -%}
+                <p class="apple-grid__card-caption">{{ block.settings.caption }}</p>
+              {%- endif -%}
+              {%- if block.settings.cta_url != blank -%}
+                <a href="{{ block.settings.cta_url }}" class="apple-grid__card-btn">
+                  {{ block.settings.cta_text | default: 'Ver producto' }}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
       {%- endfor -%}
     </div>
   </div>
@@ -97,47 +79,31 @@
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Imagen (alta calidad recomendado)"
-        },
-        {
-          "type": "color",
-          "id": "bg_color",
-          "label": "Color de fondo (si no hay imagen o como base)"
+          "label": "Imagen (recomendado alta resolución)"
         },
         {
           "type": "checkbox",
           "id": "wide",
-          "label": "Ancho completo (full width)",
+          "label": "Ancho completo",
           "default": false
         },
         {
-          "type": "select",
-          "id": "theme",
-          "label": "Tema",
-          "options": [
-            { "value": "light", "label": "Claro (texto oscuro)" },
-            { "value": "dark", "label": "Oscuro (texto claro)" }
-          ],
-          "default": "light"
+          "type": "text",
+          "id": "caption",
+          "label": "Texto inferior (opcional)",
+          "default": "Induction Device"
         },
         {
-          "type": "select",
-          "id": "text_position",
-          "label": "Posición del texto",
-          "options": [
-            { "value": "top", "label": "Arriba" },
-            { "value": "center", "label": "Centro" },
-            { "value": "bottom", "label": "Abajo" }
-          ],
-          "default": "top"
+          "type": "text",
+          "id": "cta_text",
+          "label": "Texto del botón",
+          "default": "Ver producto"
         },
-        { "type": "text", "id": "eyebrow", "label": "Eyebrow (texto pequeño)", "default": "NUEVO" },
-        { "type": "text", "id": "title", "label": "Título", "default": "Induction Device" },
-        { "type": "textarea", "id": "subtitle", "label": "Subtítulo", "default": "Tecnología que cuida tu piel desde la primera sesión." },
-        { "type": "text", "id": "primary_cta_text", "label": "CTA principal", "default": "Más información" },
-        { "type": "url", "id": "primary_cta_url", "label": "URL CTA principal" },
-        { "type": "text", "id": "secondary_cta_text", "label": "CTA secundario", "default": "Comprar" },
-        { "type": "url", "id": "secondary_cta_url", "label": "URL CTA secundario" }
+        {
+          "type": "url",
+          "id": "cta_url",
+          "label": "URL del producto"
+        }
       ]
     }
   ],
@@ -145,8 +111,8 @@
     {
       "name": "Galería tipo Apple Saluva",
       "blocks": [
-        { "type": "card", "settings": { "eyebrow": "NUEVO", "title": "Induction Device", "subtitle": "Belleza que se siente, tecnología que transforma.", "primary_cta_text": "Más información", "secondary_cta_text": "Comprar", "theme": "light" } },
-        { "type": "card", "settings": { "eyebrow": "AURORA SERIES", "title": "Tu rutina, elevada.", "subtitle": "Resultados reales, desde la primera sesión.", "primary_cta_text": "Descubrir", "secondary_cta_text": "Comprar", "theme": "light" } }
+        { "type": "card", "settings": { "caption": "Induction Device", "cta_text": "Ver producto" } },
+        { "type": "card", "settings": { "caption": "Aurora Series", "cta_text": "Ver producto" } }
       ]
     }
   ]

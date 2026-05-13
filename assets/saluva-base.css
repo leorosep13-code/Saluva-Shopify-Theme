@@ -1,40 +1,52 @@
 /* ═══════════════════════════════════════════
    SALUVA THEME — Base Styles
    Brand: Saluva · Beauty Technology
-   Palette: Aurora Purple (primary) · Dreamy Pink (secondary)
-            Lilac Glow · Icy Blue · Pearl White · Deep Charcoal
+   Palette Aurora Boreal:
+     Midnight Graphite #1E1F25  · texto/UI
+     Soft Ice          #F5F7FA  · base / fondos
+     Mist Lavender     #C8B7FF  · aurora soft / hover / gradientes
+     Arctic Blue       #8ED8FF  · glow tecnológico / links / highlights
+     Aurora Mint       #7FFFD4  · accent sutil (no abusar)
+     Deep Aurora       #5D4EFF  · profundidad / gradientes
+     Frost White       #FFFFFF  · glassmorphism / overlays
+     Cloud Grey        #DDE3EA  · bordes / divisores
    Fonts: Playfair Display (títulos) · Montserrat (cuerpo)
    ═══════════════════════════════════════════ */
 
 :root {
-  /* Aurora Purple #B2A5F5 — color principal */
-  --color-primary: #B2A5F5;
-  --color-primary-dark: #8E7FE0;
-  --color-primary-light: #D6C6F7;
-  --color-primary-10: rgba(178, 165, 245, 0.10);
-  --color-primary-20: rgba(178, 165, 245, 0.20);
-  --color-primary-40: rgba(178, 165, 245, 0.40);
+  /* Color principal: Mist Lavender (aurora soft) */
+  --color-primary: #C8B7FF;
+  --color-primary-dark: #5D4EFF;       /* Deep Aurora para hover/énfasis */
+  --color-primary-light: #E4DCFF;
+  --color-primary-10: rgba(200, 183, 255, 0.10);
+  --color-primary-20: rgba(200, 183, 255, 0.20);
+  --color-primary-40: rgba(200, 183, 255, 0.40);
 
-  /* Dreamy Pink #F8D6E7 — color secundario */
-  --color-secondary: #F8D6E7;
-  --color-secondary-dark: #E6A8C8;
-  --color-secondary-light: #FCE9F1;
-  --color-secondary-10: rgba(248, 214, 231, 0.10);
-  --color-secondary-20: rgba(248, 214, 231, 0.20);
+  /* Color secundario: Arctic Blue (glow tecnológico) */
+  --color-secondary: #8ED8FF;
+  --color-secondary-dark: #4FB6E8;
+  --color-secondary-light: #D6F0FF;
+  --color-secondary-10: rgba(142, 216, 255, 0.10);
+  --color-secondary-20: rgba(142, 216, 255, 0.20);
 
-  /* Tokens adicionales de marca */
-  --color-lilac: #D6C6F7;
-  --color-icy-blue: #D7F2FF;
-  --color-pearl: #F8F7FC;
-  --color-charcoal: #1D1B23;
+  /* Tokens de marca Aurora Boreal */
+  --color-midnight: #1E1F25;
+  --color-soft-ice: #F5F7FA;
+  --color-mist-lavender: #C8B7FF;
+  --color-arctic-blue: #8ED8FF;
+  --color-aurora-mint: #7FFFD4;
+  --color-deep-aurora: #5D4EFF;
+  --color-frost: #FFFFFF;
+  --color-cloud-grey: #DDE3EA;
 
-  --color-bg: #ffffff;
-  --color-bg-soft: #F8F7FC;        /* Pearl White */
-  --color-bg-warm: #FCE9F1;        /* Pink tinte cálido */
-  --color-text: #1D1B23;           /* Deep Charcoal */
-  --color-text-muted: #6b6677;
-  --color-text-light: #a09cae;
-  --color-border: #ECE6F5;
+  /* Tokens base (mantienen los nombres usados en el resto del tema) */
+  --color-bg: #FFFFFF;
+  --color-bg-soft: #F5F7FA;          /* Soft Ice */
+  --color-bg-warm: #F5F7FA;
+  --color-text: #1E1F25;             /* Midnight Graphite */
+  --color-text-muted: #5b5e6b;
+  --color-text-light: #9aa0ad;
+  --color-border: #DDE3EA;           /* Cloud Grey */
 
   --font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, sans-serif;
   --font-heading: 'Playfair Display', Georgia, serif;
@@ -72,6 +84,61 @@ button { font-family: var(--font-family); cursor: pointer; }
 img { max-width: 100%; height: auto; display: block; object-fit: contain; }
 #main-content img { max-width: 100%; height: auto; }
 
+/* ═══════════════════════════════════════════
+   AURORA BOREAL — efecto de fondo reusable
+   Aplicar .aurora-bg a un contenedor para obtener el degradado
+   aurora animado. Usa los 4 colores aurora con blur sutil.
+   ═══════════════════════════════════════════ */
+.aurora-bg {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--color-soft-ice);
+}
+.aurora-bg::before,
+.aurora-bg::after {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 32% at 18% 22%, rgba(200,183,255,0.55) 0%, transparent 60%),
+    radial-gradient(40% 30% at 78% 18%, rgba(142,216,255,0.45) 0%, transparent 65%),
+    radial-gradient(32% 28% at 70% 78%, rgba(93,78,255,0.32) 0%, transparent 60%),
+    radial-gradient(25% 22% at 22% 78%, rgba(127,255,212,0.22) 0%, transparent 60%);
+  filter: blur(28px) saturate(115%);
+  animation: auroraDrift 22s ease-in-out infinite alternate;
+}
+.aurora-bg::after {
+  animation-duration: 32s;
+  animation-direction: alternate-reverse;
+  opacity: 0.7;
+  mix-blend-mode: screen;
+}
+@keyframes auroraDrift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(4%, -3%, 0) scale(1.08); }
+  100% { transform: translate3d(-3%, 2%, 0) scale(1.04); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aurora-bg::before, .aurora-bg::after { animation: none; }
+}
+/* Variante oscura (sobre fondo midnight) */
+.aurora-bg--dark {
+  background: var(--color-midnight);
+  color: #fff;
+}
+.aurora-bg--dark::before {
+  background:
+    radial-gradient(40% 35% at 20% 25%, rgba(93,78,255,0.55) 0%, transparent 60%),
+    radial-gradient(42% 32% at 80% 20%, rgba(142,216,255,0.42) 0%, transparent 65%),
+    radial-gradient(34% 30% at 72% 80%, rgba(200,183,255,0.40) 0%, transparent 60%),
+    radial-gradient(26% 22% at 22% 78%, rgba(127,255,212,0.28) 0%, transparent 60%);
+  filter: blur(36px) saturate(120%);
+}
+
+/* Container ──────────────────────────────────── */
 /* ── Container ── */
 .container {
   max-width: 1280px;

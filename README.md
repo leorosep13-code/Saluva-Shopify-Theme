@@ -2,13 +2,15 @@
 
 Tema personalizado de Shopify para **Saluva**, marca de **Beauty Technology / electro-belleza**.
 
-## 🎨 Identidad Visual
-- **Primario (Aurora Purple):** `#B2A5F5`
-- **Secundario (Dreamy Pink):** `#F8D6E7`
-- **Acento (Lilac Glow):** `#D6C6F7`
-- **Icy Blue:** `#D7F2FF`
-- **Pearl White:** `#F8F7FC`
-- **Texto (Deep Charcoal):** `#1D1B23`
+## 🎨 Identidad Visual — Aurora Boreal
+- **Midnight Graphite** `#1E1F25` — texto/UI premium
+- **Soft Ice** `#F5F7FA` — base / fondos
+- **Mist Lavender** `#C8B7FF` — primario / aurora soft
+- **Arctic Blue** `#8ED8FF` — glow tecnológico / links
+- **Aurora Mint** `#7FFFD4` — accent sutil (no abusar)
+- **Deep Aurora** `#5D4EFF` — profundidad / gradientes premium
+- **Frost White** `#FFFFFF` — glassmorphism / overlays
+- **Cloud Grey** `#DDE3EA` — bordes / divisores
 - **Tipografía títulos:** Playfair Display
 - **Tipografía cuerpo:** Montserrat
 - **Tagline:** *Tecnología que realza tu versión más radiante.*
