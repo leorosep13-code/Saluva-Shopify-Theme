@@ -150,9 +150,13 @@
       {% form 'product', product, id: 'pdp-form-desktop' %}
         <input type="hidden" name="id" value="{{ current_variant.id }}" id="pdp-variant-id-desktop">
         <div class="pdp__qty">
-          <button type="button" class="qty-btn pdp__qty-btn" data-action="minus" aria-label="Menos">−</button>
+          <button type="button" class="qty-btn pdp__qty-btn" data-action="minus" aria-label="Menos">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
           <input type="number" name="quantity" value="1" min="1" class="pdp__qty-input" onwheel="this.blur()">
-          <button type="button" class="qty-btn pdp__qty-btn" data-action="plus" aria-label="Más">+</button>
+          <button type="button" class="qty-btn pdp__qty-btn" data-action="plus" aria-label="Más">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
         </div>
         <button type="submit" class="btn btn--primary pdp__add-btn product-add-btn" {% unless current_variant.available %}disabled{% endunless %}>
           {% if current_variant.available %}Agregar al Carrito{% else %}Agotado{% endif %}

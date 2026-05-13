@@ -2,11 +2,11 @@
   <div class="header__inner container">
     <a href="/" class="header__logo">
       {% if settings.logo != blank %}
-        <img src="{{ settings.logo | image_url: width: 200 }}" alt="{{ shop.name }}" class="header__logo-img" style="width: {{ settings.logo_width }}px;">
+        <img src="{{ settings.logo | image_url: width: 200 }}" alt="misoji Beauty" class="header__logo-img" style="width: {{ settings.logo_width }}px;">
       {% elsif section.settings.logo != blank %}
-        <img src="{{ section.settings.logo | image_url: width: 200 }}" alt="{{ shop.name }}" class="header__logo-img">
+        <img src="{{ section.settings.logo | image_url: width: 200 }}" alt="misoji Beauty" class="header__logo-img">
       {% else %}
-        <span class="header__logo-text">{{ shop.name }}</span>
+        <img src="{{ 'logo_misoji.jpeg' | asset_url }}" alt="misoji Beauty" class="header__logo-img header__logo-img--misoji">
       {% endif %}
     </a>
 

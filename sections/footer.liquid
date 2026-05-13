@@ -26,7 +26,11 @@
 
     <div class="footer__grid">
       <div class="footer__brand">
-        <div class="footer__logo">{{ shop.name }}</div>
+        {% if settings.logo != blank %}
+          <img src="{{ settings.logo | image_url: width: 240 }}" alt="misoji Beauty" class="footer__logo footer__logo--img">
+        {% else %}
+          <img src="{{ 'logo_misoji.jpeg' | asset_url }}" alt="misoji Beauty" class="footer__logo footer__logo--img">
+        {% endif %}
         <p class="footer__tagline">{{ section.settings.tagline }}</p>
         <div class="footer__social">
           {% if settings.social_instagram != blank %}
