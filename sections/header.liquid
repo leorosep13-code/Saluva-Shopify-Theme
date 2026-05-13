@@ -6,7 +6,10 @@
       {% elsif section.settings.logo != blank %}
         <img src="{{ section.settings.logo | image_url: width: 200 }}" alt="misoji Beauty" class="header__logo-img">
       {% else %}
-        <img src="{{ 'logo_misoji.jpeg' | asset_url }}" alt="misoji Beauty" class="header__logo-img header__logo-img--misoji">
+        <span class="header__logo-misoji"
+              role="img"
+              aria-label="misoji Beauty"
+              style="background-image: url('{{ 'logo_misoji.png' | asset_url }}');"></span>
       {% endif %}
     </a>
 

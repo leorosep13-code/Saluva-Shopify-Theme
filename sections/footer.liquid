@@ -29,7 +29,10 @@
         {% if settings.logo != blank %}
           <img src="{{ settings.logo | image_url: width: 240 }}" alt="misoji Beauty" class="footer__logo footer__logo--img">
         {% else %}
-          <img src="{{ 'logo_misoji.jpeg' | asset_url }}" alt="misoji Beauty" class="footer__logo footer__logo--img">
+          <span class="footer__logo footer__logo-misoji"
+                role="img"
+                aria-label="misoji Beauty"
+                style="background-image: url('{{ 'logo_misoji.png' | asset_url }}');"></span>
         {% endif %}
         <p class="footer__tagline">{{ section.settings.tagline }}</p>
         <div class="footer__social">
