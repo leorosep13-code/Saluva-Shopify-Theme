@@ -1,0 +1,27 @@
+{%- comment -%}
+  Sección que muestra el carrusel "Aprende un poco más" (reels de video)
+  en la página de producto. Lee el metafield del producto:
+    - saluva.reels_urls / custom.reels_urls (multi_line_text_field)
+{%- endcomment -%}
+
+{%- render 'product-reels', product: product -%}
+
+{% schema %}
+{
+  "name": "Reels del producto",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Carrusel \"Aprende un poco más\". Los reels se configuran desde el metafield del producto (saluva.reels_urls o custom.reels_urls), una URL por línea: Instagram Reels, TikTok, YouTube Shorts o Vimeo."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reels Saluva"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

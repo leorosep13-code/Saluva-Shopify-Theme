@@ -12,9 +12,14 @@
     "main": {
       "type": "main-product",
       "settings": {}
+    },
+    "reels": {
+      "type": "saluva-product-reels",
+      "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "reels"
   ]
 }

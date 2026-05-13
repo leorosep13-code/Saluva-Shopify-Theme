@@ -163,11 +163,12 @@
   </div>
 </section>
 
-{%- comment -%} ═══ SECCIONES SALUVA POST-PDP ═══ {%- endcomment -%}
-{%- render 'product-benefits', product: product -%}
-{%- render 'product-contains', product: product -%}
-{%- render 'product-how-to', product: product -%}
-{%- render 'product-reels', product: product -%}
+{%- comment -%}
+  Vista de producto simplificada:
+  - Bloques ¿Por qué elegirla? / ¿Qué contiene? / ¿Cómo tomarla? removidos
+  - Los reels de video ahora viven en la sección "saluva-product-reels"
+    (configurable desde templates/product.json)
+{%- endcomment -%}
 
 <!-- ═══ SECCIÓN DE VALORACIONES Y COMENTARIOS (Judge.me) ═══ -->
 <section class="pdp-reviews" id="pdp-reviews">
