@@ -1,33 +1,43 @@
-/* ═══════════════════════════════════════════ peter parke
+/* ═══════════════════════════════════════════
    SALUVA THEME — Base Styles
-   Brand: Saluva · Bienestar Femenino
-   Colors: #a4c93b (primary) · #d2a4f3 (secondary)
-   Font: League Spartan
+   Brand: Saluva · Beauty Technology
+   Palette: Aurora Purple (primary) · Dreamy Pink (secondary)
+            Lilac Glow · Icy Blue · Pearl White · Deep Charcoal
+   Fonts: Playfair Display (títulos) · Montserrat (cuerpo)
    ═══════════════════════════════════════════ */
 
 :root {
-  --color-primary: #a4c93b;
-  --color-primary-dark: #8ab52e;
-  --color-primary-light: #e8f5c8;
-  --color-primary-10: rgba(164, 201, 59, 0.1);
-  --color-primary-20: rgba(164, 201, 59, 0.2);
-  --color-primary-40: rgba(164, 201, 59, 0.4);
+  /* Aurora Purple #B2A5F5 — color principal */
+  --color-primary: #B2A5F5;
+  --color-primary-dark: #8E7FE0;
+  --color-primary-light: #D6C6F7;
+  --color-primary-10: rgba(178, 165, 245, 0.10);
+  --color-primary-20: rgba(178, 165, 245, 0.20);
+  --color-primary-40: rgba(178, 165, 245, 0.40);
 
-  --color-secondary: #d2a4f3;
-  --color-secondary-dark: #b87de0;
-  --color-secondary-light: #f3e8ff;
-  --color-secondary-10: rgba(210, 164, 243, 0.1);
-  --color-secondary-20: rgba(210, 164, 243, 0.2);
+  /* Dreamy Pink #F8D6E7 — color secundario */
+  --color-secondary: #F8D6E7;
+  --color-secondary-dark: #E6A8C8;
+  --color-secondary-light: #FCE9F1;
+  --color-secondary-10: rgba(248, 214, 231, 0.10);
+  --color-secondary-20: rgba(248, 214, 231, 0.20);
+
+  /* Tokens adicionales de marca */
+  --color-lilac: #D6C6F7;
+  --color-icy-blue: #D7F2FF;
+  --color-pearl: #F8F7FC;
+  --color-charcoal: #1D1B23;
 
   --color-bg: #ffffff;
-  --color-bg-soft: #faf9f7;
-  --color-bg-warm: #f5f3ef;
-  --color-text: #1a1a1a;
-  --color-text-muted: #6b6b6b;
-  --color-text-light: #9a9a9a;
-  --color-border: #e8e5e0;
+  --color-bg-soft: #F8F7FC;        /* Pearl White */
+  --color-bg-warm: #FCE9F1;        /* Pink tinte cálido */
+  --color-text: #1D1B23;           /* Deep Charcoal */
+  --color-text-muted: #6b6677;
+  --color-text-light: #a09cae;
+  --color-border: #ECE6F5;
 
-  --font-family: 'League Spartan', sans-serif;
+  --font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-heading: 'Playfair Display', Georgia, serif;
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;
@@ -142,11 +152,12 @@ img { max-width: 100%; height: auto; display: block; object-fit: contain; }
 }
 .section-header__icon-label svg { stroke: var(--color-primary); }
 .section-header__title {
-  font-size: 38px;
-  font-weight: 800;
+  font-family: var(--font-heading);
+  font-size: 42px;
+  font-weight: 700;
   color: var(--color-text);
-  letter-spacing: -1px;
-  line-height: 1.15;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
 }
 .section-header__desc {
   font-size: 16px;

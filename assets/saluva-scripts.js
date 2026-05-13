@@ -20,7 +20,37 @@ document.addEventListener('DOMContentLoaded', () => {
   initPdpVariants();
   initPdpShare();
   initSaluvaReelsCarousel();
+  initOfertasRail();
 });
+
+/* ── Ofertas rail (scroll horizontal con navegación) ── */
+function initOfertasRail() {
+  const rail = document.getElementById('ofertas-rail');
+  if (!rail) return;
+  const wrap = rail.closest('.ofertas-rail-wrap');
+  if (!wrap) return;
+  const prev = wrap.querySelector('.ofertas-rail__nav--prev');
+  const next = wrap.querySelector('.ofertas-rail__nav--next');
+
+  const scrollByCard = (dir) => {
+    const card = rail.querySelector('.ofertas-rail__item');
+    const step = card ? card.getBoundingClientRect().width + 18 : 240;
+    rail.scrollBy({ left: dir * step, behavior: 'smooth' });
+  };
+
+  const updateNav = () => {
+    if (!prev || !next) return;
+    const maxScroll = rail.scrollWidth - rail.clientWidth - 2;
+    prev.toggleAttribute('disabled', rail.scrollLeft <= 2);
+    next.toggleAttribute('disabled', rail.scrollLeft >= maxScroll);
+  };
+
+  if (prev) prev.addEventListener('click', () => scrollByCard(-1));
+  if (next) next.addEventListener('click', () => scrollByCard(1));
+  rail.addEventListener('scroll', updateNav, { passive: true });
+  window.addEventListener('resize', updateNav);
+  updateNav();
+}
 
 /* ── Carrusel "Aprende un poco más" (reels) ── */
 function initSaluvaReelsCarousel() {

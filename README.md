@@ -1,12 +1,17 @@
 # Saluva — Tema Shopify
 
-Tema personalizado de Shopify para **Saluva**, marca de bienestar femenino.
+Tema personalizado de Shopify para **Saluva**, marca de **Beauty Technology / electro-belleza**.
 
 ## 🎨 Identidad Visual
-- **Color Principal:** `#a4c93b`
-- **Color Secundario:** `#d2a4f3`
-- **Fondo:** Blanco `#ffffff`
-- **Fuente:** League Spartan
+- **Primario (Aurora Purple):** `#B2A5F5`
+- **Secundario (Dreamy Pink):** `#F8D6E7`
+- **Acento (Lilac Glow):** `#D6C6F7`
+- **Icy Blue:** `#D7F2FF`
+- **Pearl White:** `#F8F7FC`
+- **Texto (Deep Charcoal):** `#1D1B23`
+- **Tipografía títulos:** Playfair Display
+- **Tipografía cuerpo:** Montserrat
+- **Tagline:** *Tecnología que realza tu versión más radiante.*
 - **Tema base Shopify:** Savor
 
 ## 📁 Estructura del Proyecto
@@ -144,7 +149,7 @@ git push -u origin main
 Todos los colores se controlan desde **Personalizar tema → Colores Saluva** en el admin de Shopify. También puedes editarlos en `config/settings_data.json`.
 
 ### Tipografía
-La fuente League Spartan se carga desde Google Fonts en `layout/theme.liquid`. Para cambiarla, modifica el enlace `<link>` y la variable `--font-family` en `saluva-base.css`.
+Playfair Display (títulos) y Montserrat (cuerpo) se cargan desde Google Fonts en `layout/theme.liquid`. Para cambiarlas, modifica el enlace `<link>` y las variables `--font-family` / `--font-heading` en `saluva-base.css`.
 
 ## 📋 Requisitos
 - Shopify (cualquier plan)

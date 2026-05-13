@@ -1,0 +1,154 @@
+{%- comment -%}
+  Galería tipo Apple: tarjetas grandes con imagen, eyebrow, título, subtítulo y CTAs.
+  Layout 2 columnas en desktop, apiladas en mobile. Tarjetas marcadas con "wide"
+  ocupan ancho completo. Diseñada como bloque destacado de "Los más vendidos".
+{%- endcomment -%}
+
+<section id="apple-grid" class="apple-grid">
+  <div class="container">
+    {%- if section.settings.label != blank or section.settings.title != blank -%}
+      <div class="section-header section-header--center anim-flip">
+        {%- if section.settings.label != blank -%}
+          <span class="section-header__label">{{ section.settings.label }}</span>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="section-header__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="apple-grid__layout anim-stagger">
+      {%- for block in section.blocks -%}
+        {%- assign card_class = 'apple-grid__card' -%}
+        {%- if block.settings.wide -%}{%- assign card_class = card_class | append: ' apple-grid__card--wide' -%}{%- endif -%}
+        {%- assign theme = block.settings.theme | default: 'light' -%}
+        {%- assign card_class = card_class | append: ' apple-grid__card--' | append: theme -%}
+
+        <a href="{{ block.settings.primary_cta_url | default: '#' }}"
+           class="{{ card_class }}"
+           {{ block.shopify_attributes }}>
+
+          <div class="apple-grid__card-bg" {% if block.settings.bg_color != blank %}style="background:{{ block.settings.bg_color }};"{% endif %}>
+            {%- if block.settings.image != blank -%}
+              <img src="{{ block.settings.image | image_url: width: 1400 }}"
+                   alt="{{ block.settings.image.alt | default: block.settings.title }}"
+                   class="apple-grid__card-img"
+                   loading="lazy"
+                   width="1400">
+            {%- else -%}
+              <div class="apple-grid__card-placeholder">✨</div>
+            {%- endif -%}
+          </div>
+
+          <div class="apple-grid__card-content apple-grid__card-content--{{ block.settings.text_position | default: 'top' }}">
+            {%- if block.settings.eyebrow != blank -%}
+              <p class="apple-grid__card-eyebrow">{{ block.settings.eyebrow }}</p>
+            {%- endif -%}
+            <h3 class="apple-grid__card-title">{{ block.settings.title }}</h3>
+            {%- if block.settings.subtitle != blank -%}
+              <p class="apple-grid__card-subtitle">{{ block.settings.subtitle }}</p>
+            {%- endif -%}
+            {%- if block.settings.primary_cta_text != blank or block.settings.secondary_cta_text != blank -%}
+              <div class="apple-grid__card-ctas">
+                {%- if block.settings.primary_cta_text != blank -%}
+                  <span class="apple-grid__cta apple-grid__cta--primary">
+                    {{ block.settings.primary_cta_text }}
+                  </span>
+                {%- endif -%}
+                {%- if block.settings.secondary_cta_text != blank -%}
+                  <a href="{{ block.settings.secondary_cta_url | default: '#' }}"
+                     class="apple-grid__cta apple-grid__cta--secondary"
+                     onclick="event.stopPropagation();">
+                    {{ block.settings.secondary_cta_text }}
+                  </a>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Galería tipo Apple",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta superior",
+      "default": "MÁS VENDIDOS"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título de la sección",
+      "default": "Lo más amado por nuestra comunidad"
+    }
+  ],
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Tarjeta",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen (alta calidad recomendado)"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Color de fondo (si no hay imagen o como base)"
+        },
+        {
+          "type": "checkbox",
+          "id": "wide",
+          "label": "Ancho completo (full width)",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "theme",
+          "label": "Tema",
+          "options": [
+            { "value": "light", "label": "Claro (texto oscuro)" },
+            { "value": "dark", "label": "Oscuro (texto claro)" }
+          ],
+          "default": "light"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Posición del texto",
+          "options": [
+            { "value": "top", "label": "Arriba" },
+            { "value": "center", "label": "Centro" },
+            { "value": "bottom", "label": "Abajo" }
+          ],
+          "default": "top"
+        },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow (texto pequeño)", "default": "NUEVO" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Induction Device" },
+        { "type": "textarea", "id": "subtitle", "label": "Subtítulo", "default": "Tecnología que cuida tu piel desde la primera sesión." },
+        { "type": "text", "id": "primary_cta_text", "label": "CTA principal", "default": "Más información" },
+        { "type": "url", "id": "primary_cta_url", "label": "URL CTA principal" },
+        { "type": "text", "id": "secondary_cta_text", "label": "CTA secundario", "default": "Comprar" },
+        { "type": "url", "id": "secondary_cta_url", "label": "URL CTA secundario" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Galería tipo Apple Saluva",
+      "blocks": [
+        { "type": "card", "settings": { "eyebrow": "NUEVO", "title": "Induction Device", "subtitle": "Belleza que se siente, tecnología que transforma.", "primary_cta_text": "Más información", "secondary_cta_text": "Comprar", "theme": "light" } },
+        { "type": "card", "settings": { "eyebrow": "AURORA SERIES", "title": "Tu rutina, elevada.", "subtitle": "Resultados reales, desde la primera sesión.", "primary_cta_text": "Descubrir", "secondary_cta_text": "Comprar", "theme": "light" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

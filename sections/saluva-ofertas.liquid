@@ -1,0 +1,102 @@
+{%- assign ofertas_collection = collections[section.settings.collection] -%}
+{%- assign ofertas_url = section.settings.view_all_url | default: ofertas_collection.url | default: '/collections/ofertas' -%}
+
+<section id="ofertas" class="ofertas-section">
+  <div class="container">
+    <div class="section-header section-header--split anim-slide-left">
+      <div>
+        <div class="section-header__icon-label">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          <span class="section-header__label text-primary">{{ section.settings.label }}</span>
+        </div>
+        <h2 class="section-header__title">{{ section.settings.title }}</h2>
+      </div>
+      <a href="{{ ofertas_url }}" class="btn btn--outline btn--md">
+        Ver Todas →
+      </a>
+    </div>
+
+    <div class="ofertas-rail-wrap">
+      <button class="ofertas-rail__nav ofertas-rail__nav--prev" aria-label="Anterior" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+
+      <div class="ofertas-rail" id="ofertas-rail" tabindex="0" aria-label="Productos en oferta">
+        {%- if ofertas_collection.products.size > 0 -%}
+          {%- for product in ofertas_collection.products limit: section.settings.products_limit -%}
+            <div class="ofertas-rail__item">
+              {% render 'product-card', product: product %}
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          {%- comment -%} Placeholders cuando no hay productos asignados {%- endcomment -%}
+          {%- for i in (1..section.settings.products_limit) -%}
+            <div class="ofertas-rail__item ofertas-rail__item--placeholder">
+              <div class="product-card">
+                <div class="product-card__media">
+                  <div class="product-card__placeholder">✨</div>
+                </div>
+                <div class="product-card__info">
+                  <p class="product-card__type">Próximamente</p>
+                  <h3 class="product-card__title">Producto en oferta</h3>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      <button class="ofertas-rail__nav ofertas-rail__nav--next" aria-label="Siguiente" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Ofertas (carrusel)",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta superior",
+      "default": "OFERTAS DE LA SEMANA"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "Promociones especiales"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Colección de ofertas",
+      "info": "Selecciona la colección que contiene tus productos en oferta. Recomendado: handle ofertas"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Cantidad de productos",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "url",
+      "id": "view_all_url",
+      "label": "URL ver todas (opcional)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ofertas Saluva"
+    }
+  ]
+}
+{% endschema %}

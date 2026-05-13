@@ -9,18 +9,18 @@
  */
 {
   "current": {
-    "color_primary": "#a4c93b",
-    "color_secondary": "#d2a4f3",
+    "color_primary": "#B2A5F5",
+    "color_secondary": "#F8D6E7",
     "color_background": "#ffffff",
-    "color_text": "#1a1a1a",
-    "color_text_muted": "#6b6b6b",
-    "color_accent": "#f59e0b",
+    "color_text": "#1D1B23",
+    "color_text_muted": "#6b6677",
+    "color_accent": "#D6C6F7",
     "font_size_base": 16,
     "logo_width": 120,
     "cart_type": "page",
     "cart_note_enable": true,
-    "newsletter_title": "Unete a nuestra comunidad",
-    "newsletter_description": "Recibe tips de bienestar, ofertas exclusivas y novedades directamente en tu correo.",
+    "newsletter_title": "Únete a la comunidad Saluva",
+    "newsletter_description": "Recibe lanzamientos exclusivos, tips de electro-belleza y ofertas anticipadas directamente en tu correo.",
     "sections": {
       "promo-bar": {
         "type": "promo-bar",
@@ -36,15 +36,15 @@
           "nav_link_7VTixt": {
             "type": "nav_link",
             "settings": {
-              "label": "Catalogo",
-              "url": "",
-              "is_anchor": true,
-              "anchor_id": "landing",
+              "label": "Productos",
+              "url": "shopify://collections/all",
+              "is_anchor": false,
+              "anchor_id": "tienda",
               "has_megamenu": true,
-              "mega_col1_title": "POR CATEGORIA",
-              "mega_col1_links": "Vitaminas|Minerales|Superfoods|Proteinas|Collageno",
-              "mega_col2_title": "POR BENEFICIO",
-              "mega_col2_links": "Energia|Belleza|Inmunidad|Digestion|Relajacion",
+              "mega_col1_title": "POR ZONA",
+              "mega_col1_links": "Rostro|Cuerpo|Cabello|Ojos|Manos y pies",
+              "mega_col2_title": "POR TECNOLOGIA",
+              "mega_col2_links": "Induction|LED|Microcorriente|Radiofrecuencia|Ultrasonido",
               "mega_img_1_title": "Novedades",
               "mega_img_1_url": "",
               "mega_img_2_title": "Mas Vendidos",
@@ -62,7 +62,7 @@
       "footer": {
         "type": "footer",
         "settings": {
-          "tagline": "Bienestar natural diseñado para la mujer moderna. Suplementos que tu cuerpo agradece."
+          "tagline": "Beauty Technology para la mujer moderna. Dispositivos de electro-belleza que realzan tu versión más radiante."
         }
       }
     },

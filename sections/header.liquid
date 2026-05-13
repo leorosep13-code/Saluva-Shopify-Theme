@@ -16,10 +16,10 @@
         <a href="/" class="header__nav-link nav-anchor" data-section="landing">Inicio</a>
       </div>
       <div class="header__nav-item">
-        <a href="/collections/all" class="header__nav-link">Tienda Online</a>
+        <a href="/collections/ofertas" class="header__nav-link nav-anchor" data-section="ofertas">Ofertas</a>
       </div>
 
-      {% comment %} Bloques dinámicos del customizer (Catálogo, etc.) — se ubican aquí para que queden junto a Tienda Online {% endcomment %}
+      {% comment %} Bloques dinámicos del customizer (Productos con mega menu de categorías) {% endcomment %}
       {% for block in section.blocks %}
         {% if block.type == 'nav_link' %}
           <div class="header__nav-item {% if block.settings.has_megamenu %}header__nav-item--mega{% endif %}">
@@ -211,25 +211,25 @@
           "type": "text",
           "id": "mega_col1_title",
           "label": "Mega Menu - Titulo columna 1",
-          "default": "POR CATEGORIA"
+          "default": "POR ZONA"
         },
         {
           "type": "text",
           "id": "mega_col1_links",
           "label": "Mega Menu - Links columna 1 (nombre|nombre)",
-          "default": "Vitaminas|Minerales|Superfoods|Proteinas|Collageno"
+          "default": "Rostro|Cuerpo|Cabello|Ojos|Manos y pies"
         },
         {
           "type": "text",
           "id": "mega_col2_title",
           "label": "Mega Menu - Titulo columna 2",
-          "default": "POR BENEFICIO"
+          "default": "POR TECNOLOGIA"
         },
         {
           "type": "text",
           "id": "mega_col2_links",
           "label": "Mega Menu - Links columna 2 (nombre|nombre)",
-          "default": "Energia|Belleza|Inmunidad|Digestion|Relajacion"
+          "default": "Induction|LED|Microcorriente|Radiofrecuencia|Ultrasonido"
         },
         {
           "type": "image_picker",
@@ -286,11 +286,7 @@
     {
       "name": "Encabezado Saluva",
       "blocks": [
-        { "type": "nav_link", "settings": { "label": "Inicio", "url": "/", "is_anchor": true, "anchor_id": "landing" } },
-        { "type": "nav_link", "settings": { "label": "Tienda", "url": "/collections/all", "is_anchor": true, "anchor_id": "tienda", "has_megamenu": true } },
-        { "type": "nav_link", "settings": { "label": "Mas Vendidos", "url": "/collections/mas-vendidos", "is_anchor": true, "anchor_id": "bestsellers" } },
-        { "type": "nav_link", "settings": { "label": "Crece con Nosotros", "url": "/pages/aprende", "is_anchor": true, "anchor_id": "aprende" } },
-        { "type": "nav_link", "settings": { "label": "Tu Quiz", "url": "/pages/quiz", "is_anchor": true, "anchor_id": "quiz" } }
+        { "type": "nav_link", "settings": { "label": "Productos", "url": "/collections/all", "is_anchor": false, "has_megamenu": true } }
       ]
     }
   ]
