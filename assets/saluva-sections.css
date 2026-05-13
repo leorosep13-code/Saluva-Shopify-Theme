@@ -2,15 +2,52 @@
    SALUVA THEME — Section Styles
    ═══════════════════════════════════════════ */
 
-/* ── Promo Bar ── */
+/* ── Promo Bar (Aurora Boreal) ── */
 .promo-bar {
-  background: var(--color-primary);
-  color: #fff;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--color-midnight);
   text-align: center;
   padding: 10px 16px;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 1px;
+  background:
+    linear-gradient(
+      90deg,
+      #C8B7FF 0%,
+      #8ED8FF 28%,
+      #7FFFD4 52%,
+      #C8B7FF 76%,
+      #5D4EFF 100%
+    );
+  background-size: 220% 100%;
+  animation: promoAuroraShift 14s ease-in-out infinite alternate;
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+}
+.promo-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 200% at 20% 50%, rgba(255,255,255,0.35) 0%, transparent 60%),
+    radial-gradient(60% 200% at 80% 50%, rgba(93,78,255,0.18) 0%, transparent 60%);
+  mix-blend-mode: screen;
+  animation: promoAuroraGlow 9s ease-in-out infinite alternate;
+}
+@keyframes promoAuroraShift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+@keyframes promoAuroraGlow {
+  0%   { transform: translateX(-6%); opacity: 0.85; }
+  100% { transform: translateX(6%); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .promo-bar, .promo-bar::before { animation: none; }
 }
 .promo-bar__inner {
   display: flex;
@@ -18,8 +55,15 @@
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
 }
-.promo-bar__text { display: inline-flex; align-items: center; gap: 6px; }
+.promo-bar__text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-shadow: 0 1px 6px rgba(255,255,255,0.5);
+}
 
 /* ── Header ── */
 .header {
