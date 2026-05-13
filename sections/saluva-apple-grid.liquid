@@ -25,7 +25,7 @@
           <div class="apple-grid__card-bg">
             {%- if block.settings.image != blank -%}
               <img src="{{ block.settings.image | image_url: width: 1600 }}"
-                   alt="{{ block.settings.image.alt | default: block.settings.caption | default: 'Producto Saluva' }}"
+                   alt="{{ block.settings.image.alt | default: block.settings.caption | default: 'Producto misoji' }}"
                    class="apple-grid__card-img"
                    loading="lazy"
                    width="1600">
@@ -109,7 +109,7 @@
   ],
   "presets": [
     {
-      "name": "Galería tipo Apple Saluva",
+      "name": "Galería tipo Apple misoji",
       "blocks": [
         { "type": "card", "settings": { "caption": "Induction Device", "cta_text": "Ver producto" } },
         { "type": "card", "settings": { "caption": "Aurora Series", "cta_text": "Ver producto" } }

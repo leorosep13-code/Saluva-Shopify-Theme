@@ -1,6 +1,6 @@
-# Saluva — Tema Shopify
+# misoji Beauty — Tema Shopify
 
-Tema personalizado de Shopify para **Saluva**, marca de **Beauty Technology / electro-belleza**.
+Tema personalizado de Shopify para **misoji Beauty**, marca de **Beauty Technology / electro-belleza**.
 
 ## 🎨 Identidad Visual — Aurora Boreal
 - **Midnight Graphite** `#1E1F25` — texto/UI premium
@@ -67,7 +67,7 @@ cd saluva-theme
 # Inicializa Git
 git init
 git add .
-git commit -m "feat: tema inicial Saluva con todas las secciones"
+git commit -m "feat: tema inicial misoji Beauty con todas las secciones"
 
 # Conecta con GitHub (reemplaza TU_USUARIO)
 git remote add origin https://github.com/TU_USUARIO/saluva-theme.git
@@ -148,7 +148,7 @@ git push -u origin main
 ## 🔧 Personalización Adicional
 
 ### Colores
-Todos los colores se controlan desde **Personalizar tema → Colores Saluva** en el admin de Shopify. También puedes editarlos en `config/settings_data.json`.
+Todos los colores se controlan desde **Personalizar tema → Colores** en el admin de Shopify. También puedes editarlos en `config/settings_data.json`.
 
 ### Tipografía
 Playfair Display (títulos) y Montserrat (cuerpo) se cargan desde Google Fonts en `layout/theme.liquid`. Para cambiarlas, modifica el enlace `<link>` y las variables `--font-family` / `--font-heading` en `saluva-base.css`.
@@ -160,4 +160,4 @@ Playfair Display (títulos) y Montserrat (cuerpo) se cargan desde Google Fonts e
 - Colecciones creadas para "Tienda" y "Más Vendidos"
 
 ## 📄 Licencia
-Tema privado para uso exclusivo de Saluva.
+Tema privado para uso exclusivo de misoji Beauty.

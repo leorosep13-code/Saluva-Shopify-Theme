@@ -156,14 +156,14 @@
           "type": "image",
           "settings": {
             "image": "shopify://shop_images/tabla_nutricional_colageno_hidrolizado.png",
-            "alt": "Producto Saluva"
+            "alt": "Producto misoji"
           }
         },
         "image_TaCUND": {
           "type": "image",
           "settings": {
             "image": "shopify://shop_images/colageno_hidrolizado_puro.png",
-            "alt": "Producto Saluva"
+            "alt": "Producto misoji"
           }
         }
       },
@@ -246,7 +246,7 @@
     },
     "saluva_blog_NgkUM6": {
       "type": "saluva-blog",
-      "name": "Blog Destacado Saluva",
+      "name": "Blog Destacado misoji",
       "settings": {
         "label": "NUESTRO BLOG",
         "title": "Blog Destacado",

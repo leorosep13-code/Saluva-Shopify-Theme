@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   SALUVA THEME — Scripts
+   MISOJI BEAUTY — Scripts
    ═══════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initPdpCarousel();
   initPdpVariants();
   initPdpShare();
-  initSaluvaReelsCarousel();
+  initReelsCarousel();
   initOfertasRail();
 });
 
@@ -53,7 +53,7 @@ function initOfertasRail() {
 }
 
 /* ── Carrusel "Aprende un poco más" (reels) ── */
-function initSaluvaReelsCarousel() {
+function initReelsCarousel() {
   const wrap = document.querySelector('.saluva-reels__carousel-wrap');
   if (!wrap) return;
 
@@ -667,9 +667,9 @@ function initQuiz() {
   if (shareBtn) {
     shareBtn.addEventListener('click', () => {
       const nameEl = document.getElementById('quiz-result-name');
-      const text = 'Mi resultado en el Quiz de Saluva: ' + (nameEl ? nameEl.textContent : 'Mi Pack Ideal');
+      const text = 'Mi resultado en el Quiz de misoji: ' + (nameEl ? nameEl.textContent : 'Mi Pack Ideal');
       if (navigator.share) {
-        navigator.share({ title: 'Mi Quiz Saluva', text: text, url: window.location.href });
+        navigator.share({ title: 'Mi Quiz misoji', text: text, url: window.location.href });
       } else {
         navigator.clipboard.writeText(text + ' ' + window.location.href).then(() => {
           showToast('Enlace copiado al portapapeles', 'success');

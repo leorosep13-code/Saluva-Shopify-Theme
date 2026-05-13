@@ -6,7 +6,7 @@
     <div class="landing-hero__bg-full">
       {% if section.settings.hero_image != blank %}
         <img src="{{ section.settings.hero_image | image_url: width: 1200 }}"
-             alt="{{ section.settings.hero_image.alt | default: 'Hero Saluva' }}"
+             alt="{{ section.settings.hero_image.alt | default: 'Hero misoji' }}"
              class="landing-hero__bg-image"
              loading="eager">
       {% else %}
@@ -139,7 +139,7 @@
   ],
   "presets": [
     {
-      "name": "Landing Hero Saluva"
+      "name": "Landing Hero misoji"
     }
   ]
 }
