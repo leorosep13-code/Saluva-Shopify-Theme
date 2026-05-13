@@ -43,13 +43,7 @@
               "mega_col1_title": "POR ZONA",
               "mega_col1_links": "Rostro|Cuerpo|Cabello|Ojos|Manos y pies",
               "mega_col2_title": "POR TECNOLOGIA",
-              "mega_col2_links": "Induction|LED|Microcorriente|Radiofrecuencia|Ultrasonido",
-              "mega_img_1_title": "Novedades",
-              "mega_img_1_url": "",
-              "mega_img_2_title": "Mas Vendidos",
-              "mega_img_2_url": "",
-              "mega_img_3_title": "Ofertas",
-              "mega_img_3_url": ""
+              "mega_col2_links": "Induction|LED|Microcorriente|Radiofrecuencia|Ultrasonido"
             }
           }
         },

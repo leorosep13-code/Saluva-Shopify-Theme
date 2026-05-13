@@ -65,53 +65,6 @@
                       {% endfor %}
                     </div>
                   </div>
-                  <div class="mega-menu__featured">
-                    {% if block.settings.mega_img_1 != blank %}
-                      <a href="{{ block.settings.mega_img_1_url }}" class="mega-menu__featured-card">
-                        <div class="mega-menu__featured-img-wrap">
-                          <img src="{{ block.settings.mega_img_1 | image_url: width: 300 }}" alt="{{ block.settings.mega_img_1_title }}" class="mega-menu__featured-img" loading="lazy">
-                        </div>
-                        <span class="mega-menu__featured-title">{{ block.settings.mega_img_1_title }} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-                      </a>
-                    {% endif %}
-                    {% if block.settings.mega_img_2 != blank %}
-                      <a href="{{ block.settings.mega_img_2_url }}" class="mega-menu__featured-card">
-                        <div class="mega-menu__featured-img-wrap">
-                          <img src="{{ block.settings.mega_img_2 | image_url: width: 300 }}" alt="{{ block.settings.mega_img_2_title }}" class="mega-menu__featured-img" loading="lazy">
-                        </div>
-                        <span class="mega-menu__featured-title">{{ block.settings.mega_img_2_title }} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-                      </a>
-                    {% endif %}
-                    {% if block.settings.mega_img_3 != blank %}
-                      <a href="{{ block.settings.mega_img_3_url }}" class="mega-menu__featured-card">
-                        <div class="mega-menu__featured-img-wrap">
-                          <img src="{{ block.settings.mega_img_3 | image_url: width: 300 }}" alt="{{ block.settings.mega_img_3_title }}" class="mega-menu__featured-img" loading="lazy">
-                        </div>
-                        <span class="mega-menu__featured-title">{{ block.settings.mega_img_3_title }} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-                      </a>
-                    {% endif %}
-                    {%- comment -%} Placeholders si no hay imagenes {%- endcomment -%}
-                    {% if block.settings.mega_img_1 == blank and block.settings.mega_img_2 == blank and block.settings.mega_img_3 == blank %}
-                      <a href="/collections/all" class="mega-menu__featured-card">
-                        <div class="mega-menu__featured-img-wrap mega-menu__featured-placeholder">
-                          <span>🌿</span>
-                        </div>
-                        <span class="mega-menu__featured-title">Novedades <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-                      </a>
-                      <a href="/collections/mas-vendidos" class="mega-menu__featured-card">
-                        <div class="mega-menu__featured-img-wrap mega-menu__featured-placeholder">
-                          <span>🔥</span>
-                        </div>
-                        <span class="mega-menu__featured-title">Mas Vendidos <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-                      </a>
-                      <a href="/collections/ofertas" class="mega-menu__featured-card">
-                        <div class="mega-menu__featured-img-wrap mega-menu__featured-placeholder">
-                          <span>✨</span>
-                        </div>
-                        <span class="mega-menu__featured-title">Ofertas <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-                      </a>
-                    {% endif %}
-                  </div>
                 </div>
               </div>
             {% endif %}
@@ -230,54 +183,6 @@
           "id": "mega_col2_links",
           "label": "Mega Menu - Links columna 2 (nombre|nombre)",
           "default": "Induction|LED|Microcorriente|Radiofrecuencia|Ultrasonido"
-        },
-        {
-          "type": "image_picker",
-          "id": "mega_img_1",
-          "label": "Mega Menu - Imagen destacada 1"
-        },
-        {
-          "type": "text",
-          "id": "mega_img_1_title",
-          "label": "Mega Menu - Titulo imagen 1",
-          "default": "Novedades"
-        },
-        {
-          "type": "url",
-          "id": "mega_img_1_url",
-          "label": "Mega Menu - URL imagen 1"
-        },
-        {
-          "type": "image_picker",
-          "id": "mega_img_2",
-          "label": "Mega Menu - Imagen destacada 2"
-        },
-        {
-          "type": "text",
-          "id": "mega_img_2_title",
-          "label": "Mega Menu - Titulo imagen 2",
-          "default": "Mas Vendidos"
-        },
-        {
-          "type": "url",
-          "id": "mega_img_2_url",
-          "label": "Mega Menu - URL imagen 2"
-        },
-        {
-          "type": "image_picker",
-          "id": "mega_img_3",
-          "label": "Mega Menu - Imagen destacada 3"
-        },
-        {
-          "type": "text",
-          "id": "mega_img_3_title",
-          "label": "Mega Menu - Titulo imagen 3",
-          "default": "Ofertas"
-        },
-        {
-          "type": "url",
-          "id": "mega_img_3_url",
-          "label": "Mega Menu - URL imagen 3"
         }
       ]
     }
