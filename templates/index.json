@@ -9,48 +9,9 @@
  */
 {
   "sections": {
-    "landing-hero": {
-      "type": "saluva-landing",
-      "settings": {
-        "layout_mode": "lateral",
-        "badge_text": "ELECTRO-BELLEZA · BEAUTY TECHNOLOGY",
-        "title_line1": "Tecnología que realza",
-        "title_highlight": "tu versión más radiante",
-        "description": "Dispositivos de belleza inteligentes para tu rostro, cuerpo y bienestar. Diseñados para potenciar tu belleza natural en casa.",
-        "cta_text": "Descubrir ahora",
-        "cta_url": "shopify://collections/all",
-        "cta2_text": "Explorar tecnología",
-        "cta2_url": "shopify://collections/ofertas",
-        "hero_image": ""
-      }
-    },
     "1776438283cae0ebdf": {
       "type": "_blocks",
       "blocks": {
-        "ai_gen_block_c5eb1ea_ecTLmT": {
-          "type": "ai_gen_block_c5eb1ea",
-          "name": "Banner promocional",
-          "settings": {
-            "promo_text": "Envío gratis en compras superiores a $160.000",
-            "show_icon": true,
-            "icon_type": "tag",
-            "show_separator": true,
-            "background_color": "#B2A5F5",
-            "text_color": "#ffffff",
-            "icon_color": "#ffffff",
-            "separator_color": "#ffffff",
-            "font_size": 16,
-            "font_weight": "500",
-            "icon_size": 20,
-            "separator_size": 6,
-            "padding_vertical": 12,
-            "item_spacing": 40,
-            "icon_text_gap": 8,
-            "animation_speed": 20,
-            "desktop_width_percent": 100
-          },
-          "blocks": {}
-        },
         "ai_gen_block_7077edc_rJi7k9": {
           "type": "ai_gen_block_7077edc",
           "settings": {
@@ -67,36 +28,10 @@
             "promo_5_link": ""
           },
           "blocks": {}
-        },
-        "ai_gen_block_c5eb1ea_gVfb6X": {
-          "type": "ai_gen_block_c5eb1ea",
-          "name": "Banner promocional",
-          "settings": {
-            "promo_text": "Descubre la nueva era de la belleza inteligente",
-            "show_icon": true,
-            "icon_type": "gift",
-            "show_separator": true,
-            "background_color": "#F8D6E7",
-            "text_color": "#ffffff",
-            "icon_color": "#ffffff",
-            "separator_color": "#ffffff",
-            "font_size": 16,
-            "font_weight": "500",
-            "icon_size": 20,
-            "separator_size": 6,
-            "padding_vertical": 12,
-            "item_spacing": 40,
-            "icon_text_gap": 8,
-            "animation_speed": 20,
-            "desktop_width_percent": 100
-          },
-          "blocks": {}
         }
       },
       "block_order": [
-        "ai_gen_block_c5eb1ea_ecTLmT",
-        "ai_gen_block_7077edc_rJi7k9",
-        "ai_gen_block_c5eb1ea_gVfb6X"
+        "ai_gen_block_7077edc_rJi7k9"
       ],
       "settings": {}
     },
@@ -121,8 +56,8 @@
             "subtitle": "",
             "media_type": "video",
             "video_url": "https://youtube.com/watch?v=xML725I6z40",
-            "gradient_start": "#B2A5F5",
-            "gradient_end": "#D6C6F7",
+            "gradient_start": "#b2a5f5",
+            "gradient_end": "#d6c6f7",
             "story_image": "shopify://shop_images/suplementos_para_mujeres_Colombia.png",
             "story_text": "Descubre nuestra rutina matutina perfecta",
             "story_cta_text": "Omega 3",
@@ -137,8 +72,8 @@
             "subtitle": "",
             "media_type": "video",
             "video_url": "https://www.youtube.com/watch?v=QyojWP-hKcE",
-            "gradient_start": "#B2A5F5",
-            "gradient_end": "#D6C6F7",
+            "gradient_start": "#b2a5f5",
+            "gradient_end": "#d6c6f7",
             "story_image": "shopify://shop_images/uro.png",
             "story_text": "",
             "story_cta_text": "Uro Probióticos",
@@ -153,8 +88,8 @@
             "subtitle": "",
             "media_type": "video",
             "video_url": "https://www.youtube.com/watch?v=FdGnqPKuI7w",
-            "gradient_start": "#B2A5F5",
-            "gradient_end": "#D6C6F7",
+            "gradient_start": "#b2a5f5",
+            "gradient_end": "#d6c6f7",
             "story_image": "shopify://shop_images/creatina_video.png",
             "story_text": "",
             "story_cta_text": "Creatina",
@@ -200,20 +135,56 @@
         "description": "<p>Nuestro producto estrella combina tecnología avanzada y un diseño elegante para potenciar tu belleza natural día tras día. Resultados visibles desde la primera sesión.</p>",
         "cta_text": "COMPRAR AHORA",
         "cta_url": "shopify://collections/all",
-        "bg_color": "#F8F7FC"
+        "bg_color": "#f8f7fc"
       }
     },
     "trust-badges": {
       "type": "saluva-trust-badges",
       "settings": {}
     },
-    "tienda": {
-      "type": "saluva-tienda",
+    "apple-grid": {
+      "type": "saluva-apple-grid",
+      "blocks": {
+        "card_induction": {
+          "type": "card",
+          "settings": {
+            "bg_color": "",
+            "wide": false,
+            "theme": "light",
+            "text_position": "top",
+            "eyebrow": "NUEVO",
+            "title": "Induction Device",
+            "subtitle": "Belleza que se siente, tecnología que transforma.",
+            "primary_cta_text": "Más información",
+            "primary_cta_url": "",
+            "secondary_cta_text": "Comprar",
+            "secondary_cta_url": ""
+          }
+        },
+        "card_aurora": {
+          "type": "card",
+          "settings": {
+            "bg_color": "",
+            "wide": false,
+            "theme": "light",
+            "text_position": "top",
+            "eyebrow": "AURORA SERIES",
+            "title": "Tu rutina, elevada.",
+            "subtitle": "Resultados reales, desde la primera sesión.",
+            "primary_cta_text": "Descubrir",
+            "primary_cta_url": "",
+            "secondary_cta_text": "Comprar",
+            "secondary_cta_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "card_induction",
+        "card_aurora"
+      ],
       "settings": {
-        "label": "NUESTRA TIENDA",
-        "title": "Explora Nuestros Productos",
-        "collection": "",
-        "products_limit": 8
+        "label": "MÁS VENDIDOS",
+        "title": "Lo más amado por nuestra comunidad"
       }
     },
     "bestsellers": {
@@ -224,40 +195,6 @@
         "title": "Lo Que Más Aman Nuestras Clientas",
         "collection": "mas-vendidos",
         "view_all_url": ""
-      }
-    },
-    "apple-grid": {
-      "type": "saluva-apple-grid",
-      "blocks": {
-        "card_induction": {
-          "type": "card",
-          "settings": {
-            "eyebrow": "NUEVO",
-            "title": "Induction Device",
-            "subtitle": "Belleza que se siente, tecnología que transforma.",
-            "primary_cta_text": "Más información",
-            "secondary_cta_text": "Comprar",
-            "theme": "light",
-            "text_position": "top"
-          }
-        },
-        "card_aurora": {
-          "type": "card",
-          "settings": {
-            "eyebrow": "AURORA SERIES",
-            "title": "Tu rutina, elevada.",
-            "subtitle": "Resultados reales, desde la primera sesión.",
-            "primary_cta_text": "Descubrir",
-            "secondary_cta_text": "Comprar",
-            "theme": "light",
-            "text_position": "top"
-          }
-        }
-      },
-      "block_order": ["card_induction", "card_aurora"],
-      "settings": {
-        "label": "MÁS VENDIDOS",
-        "title": "Lo más amado por nuestra comunidad"
       }
     },
     "aprende": {
@@ -290,13 +227,11 @@
     }
   },
   "order": [
-    "landing-hero",
     "1776438283cae0ebdf",
     "ofertas",
     "stories",
     "featured-product",
     "trust-badges",
-    "tienda",
     "apple-grid",
     "bestsellers",
     "aprende",
