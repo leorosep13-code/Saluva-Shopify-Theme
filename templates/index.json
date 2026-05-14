@@ -15,14 +15,8 @@
         "ai_gen_block_7077edc_rJi7k9": {
           "type": "ai_gen_block_7077edc",
           "settings": {
-            "promo_1_image_desktop": "shopify://shop_images/promocion_combo_mayo.png",
-            "promo_1_image_mobile": "shopify://shop_images/promo_combo_mayo.png",
             "promo_1_link": "shopify://products/combo-truly-creatina",
-            "promo_2_image_desktop": "shopify://shop_images/descuento_d_as_de_las_madres.png",
-            "promo_2_image_mobile": "shopify://shop_images/descuento_madres_30_off.png",
             "promo_2_link": "shopify://collections/suplementos",
-            "promo_3_image_desktop": "shopify://shop_images/guia_21_dias_por_compra.png",
-            "promo_3_image_mobile": "shopify://shop_images/guia_21_dias_gratis.png",
             "promo_3_link": "",
             "promo_4_link": "",
             "promo_5_link": ""
@@ -51,37 +45,42 @@
         "feature_1": {
           "type": "feature",
           "settings": {
-            "label": "Tecnología avanzada",
             "icon_fallback": "⚡",
+            "label": "Tecnología avanzada",
             "subtitle": "Dispositivos con tecnología de última generación."
           }
         },
         "feature_2": {
           "type": "feature",
           "settings": {
-            "label": "Resultados visibles",
             "icon_fallback": "✨",
+            "label": "Resultados visibles",
             "subtitle": "Notarás la diferencia desde la primera sesión."
           }
         },
         "feature_3": {
           "type": "feature",
           "settings": {
-            "label": "Diseño premium",
             "icon_fallback": "💎",
+            "label": "Diseño premium",
             "subtitle": "Estética cuidada hasta el último detalle."
           }
         },
         "feature_4": {
           "type": "feature",
           "settings": {
-            "label": "Cuidado en casa",
             "icon_fallback": "🏡",
+            "label": "Cuidado en casa",
             "subtitle": "Tu spa personal donde sea que estés."
           }
         }
       },
-      "block_order": ["feature_1", "feature_2", "feature_3", "feature_4"],
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3",
+        "feature_4"
+      ],
       "settings": {
         "label": "BEAUTY TECHNOLOGY",
         "title": "¿Por qué elegirnos?",
@@ -99,8 +98,8 @@
             "subtitle": "",
             "media_type": "video",
             "video_url": "https://youtube.com/watch?v=xML725I6z40",
-            "gradient_start": "#C8B7FF",
-            "gradient_end": "#8ED8FF",
+            "gradient_start": "#c8b7ff",
+            "gradient_end": "#8ed8ff",
             "story_image": "shopify://shop_images/suplementos_para_mujeres_Colombia.png",
             "story_text": "Descubre nuestra rutina matutina perfecta",
             "story_cta_text": "Omega 3",
@@ -115,8 +114,8 @@
             "subtitle": "",
             "media_type": "video",
             "video_url": "https://www.youtube.com/watch?v=QyojWP-hKcE",
-            "gradient_start": "#C8B7FF",
-            "gradient_end": "#8ED8FF",
+            "gradient_start": "#c8b7ff",
+            "gradient_end": "#8ed8ff",
             "story_image": "shopify://shop_images/uro.png",
             "story_text": "",
             "story_cta_text": "Uro Probióticos",
@@ -131,8 +130,8 @@
             "subtitle": "",
             "media_type": "video",
             "video_url": "https://www.youtube.com/watch?v=FdGnqPKuI7w",
-            "gradient_start": "#C8B7FF",
-            "gradient_end": "#8ED8FF",
+            "gradient_start": "#c8b7ff",
+            "gradient_end": "#8ed8ff",
             "story_image": "shopify://shop_images/creatina_video.png",
             "story_text": "",
             "story_cta_text": "Creatina",
@@ -178,7 +177,7 @@
         "description": "<p>Nuestro producto estrella combina tecnología avanzada y un diseño elegante para potenciar tu belleza natural día tras día. Resultados visibles desde la primera sesión.</p>",
         "cta_text": "COMPRAR AHORA",
         "cta_url": "shopify://collections/all",
-        "bg_color": "#F5F7FA"
+        "bg_color": "#f5f7fa"
       }
     },
     "trust-badges": {
