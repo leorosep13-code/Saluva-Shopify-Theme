@@ -151,24 +151,16 @@
     "featured-product": {
       "type": "saluva-featured-product",
       "blocks": {
-        "image_4GYgbn": {
+        "image_awjFDf": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/tabla_nutricional_colageno_hidrolizado.png",
-            "alt": "Producto misoji"
-          }
-        },
-        "image_TaCUND": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/colageno_hidrolizado_puro.png",
+            "image": "shopify://shop_images/ChatGPTImage13may2026_19_49_10.png",
             "alt": "Producto misoji"
           }
         }
       },
       "block_order": [
-        "image_4GYgbn",
-        "image_TaCUND"
+        "image_awjFDf"
       ],
       "custom_css": [],
       "settings": {
