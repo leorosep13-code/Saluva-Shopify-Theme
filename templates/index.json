@@ -105,10 +105,9 @@
             "title": "Para tu piel",
             "subtitle": "",
             "media_type": "video",
-            "video_url": "https://youtube.com/watch?v=xML725I6z40",
+            "video_url": "",
             "gradient_start": "#c8b7ff",
             "gradient_end": "#8ed8ff",
-            "story_image": "shopify://shop_images/suplementos_para_mujeres_Colombia.png",
             "story_text": "Descubre nuestra rutina matutina perfecta",
             "story_cta_text": "Omega 3",
             "story_cta_url": "shopify://products/omega-3-active-plus-1300-mg"
@@ -118,13 +117,12 @@
           "type": "story",
           "settings": {
             "emoji": "",
-            "title": "Probioticos",
+            "title": "",
             "subtitle": "",
             "media_type": "video",
-            "video_url": "https://www.youtube.com/watch?v=QyojWP-hKcE",
+            "video_url": "",
             "gradient_start": "#c8b7ff",
             "gradient_end": "#8ed8ff",
-            "story_image": "shopify://shop_images/uro.png",
             "story_text": "",
             "story_cta_text": "Uro Probióticos",
             "story_cta_url": "shopify://products/uro-probiotico-vaginal"
@@ -134,13 +132,12 @@
           "type": "story",
           "settings": {
             "emoji": "💪",
-            "title": "Reglas de la Creatina",
+            "title": "",
             "subtitle": "",
             "media_type": "video",
-            "video_url": "https://www.youtube.com/watch?v=FdGnqPKuI7w",
+            "video_url": "",
             "gradient_start": "#c8b7ff",
             "gradient_end": "#8ed8ff",
-            "story_image": "shopify://shop_images/creatina_video.png",
             "story_text": "",
             "story_cta_text": "Creatina",
             "story_cta_url": "shopify://products/creatina-monohidratada-for-women"
