@@ -19,7 +19,7 @@
             "promo_1_image_mobile": "shopify://shop_images/ChatGPT_Image_14_may_2026_17_33_22.png",
             "promo_1_link": "shopify://products/depiladora-laser-misoji-sin-vello-en-12-semanas",
             "promo_2_image_desktop": "shopify://shop_images/ChatGPT_Image_14_may_2026_17_42_55.png",
-            "promo_2_image_mobile": "shopify://shop_images/ChatGPT_Image_14_may_2026_17_44_26.png",
+            "promo_2_image_mobile": "shopify://shop_images/ChatGPT_Image_15_may_2026_09_10_23.png",
             "promo_2_link": "shopify://products/juego-de-rizador-profesional-6-en-1-versatilidad-sin-limites",
             "promo_3_link": "",
             "promo_4_link": "",
@@ -49,6 +49,7 @@
         "feature_1": {
           "type": "feature",
           "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_15_may_2026_09_21_47.png",
             "icon_fallback": "⚡",
             "label": "Tecnología avanzada",
             "subtitle": "Dispositivos con tecnología de última generación."
