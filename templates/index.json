@@ -58,6 +58,7 @@
         "feature_2": {
           "type": "feature",
           "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_15_may_2026_09_28_22.png",
             "icon_fallback": "✨",
             "label": "Resultados visibles",
             "subtitle": "Notarás la diferencia desde la primera sesión."
