@@ -67,7 +67,7 @@
         "feature_3": {
           "type": "feature",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_15_may_2026_09_41_45.png",
+            "image": "shopify://shop_images/ChatGPT_Image_15_may_2026_09_47_29.png",
             "icon_fallback": "💎",
             "label": "Diseño Estetico",
             "subtitle": "Estética cuidada para tus herramientas favoritas."
@@ -76,6 +76,7 @@
         "feature_4": {
           "type": "feature",
           "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_15_may_2026_10_15_05.png",
             "icon_fallback": "🏡",
             "label": "Cuidado en casa",
             "subtitle": "Tu spa personal donde sea que estés."
