@@ -67,6 +67,7 @@
         "feature_3": {
           "type": "feature",
           "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_15_may_2026_09_41_45.png",
             "icon_fallback": "💎",
             "label": "Diseño Estetico",
             "subtitle": "Estética cuidada para tus herramientas favoritas."
