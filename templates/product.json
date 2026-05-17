@@ -11,7 +11,10 @@
   "sections": {
     "main": {
       "type": "main-product",
-      "settings": {}
+      "settings": {
+        "whatsapp_number": "573127862532",
+        "whatsapp_message": "Hola, estoy interesada en"
+      }
     },
     "reels": {
       "type": "saluva-product-reels",
