@@ -26,7 +26,7 @@
         "type": "promo-bar",
         "settings": {
           "text": "ENVIOS GRATIS A TODO EL PAÍS",
-          "icon": "🇨🇴 💛💙❤️"
+          "icon": "🇨🇴"
         }
       },
       "header": {
@@ -41,16 +41,16 @@
               "anchor_id": "tienda",
               "has_megamenu": true,
               "mega_col1_title": "POR ZONA",
-              "mega_col1_links": "Rostro|Cuerpo|Cabello|Ojos|Manos y pies",
-              "mega_col2_title": "POR TECNOLOGIA",
-              "mega_col2_links": "Induction|LED|Microcorriente|Radiofrecuencia|Ultrasonido"
+              "mega_col1_links": "Rostro|Cuerpo|Cabello|Ojos|Manos y pies"
             }
           }
         },
         "block_order": [
           "nav_link_7VTixt"
         ],
-        "settings": {}
+        "settings": {
+          "logo": "shopify://shop_images/logo_misoji_2.png"
+        }
       },
       "footer": {
         "type": "footer",
