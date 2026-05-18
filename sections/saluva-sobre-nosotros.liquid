@@ -24,7 +24,9 @@
       <nav class="sobre-tabs" aria-label="Apartados Sobre Nosotros">
         {% for block in section.blocks %}
           {%- assign anchor = block.settings.anchor_id | default: block.id -%}
-          <a href="#{{ anchor }}" class="sobre-tab">{{ block.settings.title }}</a>
+          {%- assign tab_title = block.settings.title -%}
+          {% if tab_title == blank %}{%- assign tab_title = block.type | capitalize -%}{% endif %}
+          <a href="#{{ anchor }}" class="sobre-tab">{{ tab_title }}</a>
         {% endfor %}
       </nav>
     {% endif %}
@@ -32,67 +34,178 @@
     <div class="sobre-stack">
       {% for block in section.blocks %}
         {%- assign anchor = block.settings.anchor_id | default: block.id -%}
-        {%- assign layout = block.settings.layout | default: 'image-left' -%}
-        <article id="{{ anchor }}"
-                 class="sobre-block sobre-block--{{ layout }} anim-bounce-up"
-                 {{ block.shopify_attributes }}>
-          <div class="sobre-block__media">
-            {% if block.settings.video_url != blank %}
-              {%- assign video_src = block.settings.video_url -%}
-              {% if video_src contains 'youtube' or video_src contains 'youtu.be' %}
-                {%- assign yt_id = '' -%}
-                {% if video_src contains 'watch?v=' %}
-                  {%- assign yt_id = video_src | split: 'watch?v=' | last | split: '&' | first -%}
-                {% elsif video_src contains 'youtu.be/' %}
-                  {%- assign yt_id = video_src | split: 'youtu.be/' | last | split: '?' | first -%}
-                {% elsif video_src contains 'embed/' %}
-                  {%- assign yt_id = video_src | split: 'embed/' | last | split: '?' | first -%}
+
+        {% case block.type %}
+
+        {%- comment -%} ───── Imagen + texto (historia / marcas / apartado genérico) ───── {%- endcomment -%}
+        {% when 'historia' or 'marcas' or 'apartado' %}
+          {%- assign layout = block.settings.layout | default: 'image-left' -%}
+          <article id="{{ anchor }}"
+                   class="sobre-block sobre-block--{{ layout }} anim-bounce-up"
+                   {{ block.shopify_attributes }}>
+            <div class="sobre-block__media">
+              {% if block.settings.video_url != blank %}
+                {%- assign video_src = block.settings.video_url -%}
+                {% if video_src contains 'youtube' or video_src contains 'youtu.be' %}
+                  {%- assign yt_id = '' -%}
+                  {% if video_src contains 'watch?v=' %}
+                    {%- assign yt_id = video_src | split: 'watch?v=' | last | split: '&' | first -%}
+                  {% elsif video_src contains 'youtu.be/' %}
+                    {%- assign yt_id = video_src | split: 'youtu.be/' | last | split: '?' | first -%}
+                  {% elsif video_src contains 'embed/' %}
+                    {%- assign yt_id = video_src | split: 'embed/' | last | split: '?' | first -%}
+                  {% endif %}
+                  <div class="sobre-block__video">
+                    <iframe src="https://www.youtube.com/embed/{{ yt_id }}"
+                            title="{{ block.settings.title }}"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                            loading="lazy"></iframe>
+                  </div>
+                {% elsif video_src contains 'vimeo' %}
+                  {%- assign vimeo_id = video_src | split: 'vimeo.com/' | last | split: '?' | first -%}
+                  <div class="sobre-block__video">
+                    <iframe src="https://player.vimeo.com/video/{{ vimeo_id }}"
+                            title="{{ block.settings.title }}"
+                            frameborder="0"
+                            allow="autoplay; fullscreen; picture-in-picture"
+                            allowfullscreen
+                            loading="lazy"></iframe>
+                  </div>
+                {% else %}
+                  <div class="sobre-block__video">
+                    <video src="{{ video_src }}" controls preload="metadata" playsinline></video>
+                  </div>
                 {% endif %}
-                <div class="sobre-block__video">
-                  <iframe src="https://www.youtube.com/embed/{{ yt_id }}"
-                          title="{{ block.settings.title }}"
-                          frameborder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen
-                          loading="lazy"></iframe>
-                </div>
-              {% elsif video_src contains 'vimeo' %}
-                {%- assign vimeo_id = video_src | split: 'vimeo.com/' | last | split: '?' | first -%}
-                <div class="sobre-block__video">
-                  <iframe src="https://player.vimeo.com/video/{{ vimeo_id }}"
-                          title="{{ block.settings.title }}"
-                          frameborder="0"
-                          allow="autoplay; fullscreen; picture-in-picture"
-                          allowfullscreen
-                          loading="lazy"></iframe>
-                </div>
+              {% elsif block.settings.image != blank %}
+                <img src="{{ block.settings.image | image_url: width: 900 }}"
+                     alt="{{ block.settings.title }}"
+                     class="sobre-block__img"
+                     loading="lazy">
               {% else %}
-                <div class="sobre-block__video">
-                  <video src="{{ video_src }}" controls preload="metadata" playsinline></video>
+                <div class="sobre-block__placeholder">
+                  <span>{{ block.settings.emoji | default: '✨' }}</span>
                 </div>
               {% endif %}
-            {% elsif block.settings.image != blank %}
-              <img src="{{ block.settings.image | image_url: width: 900 }}"
-                   alt="{{ block.settings.title }}"
-                   class="sobre-block__img"
-                   loading="lazy">
-            {% else %}
-              <div class="sobre-block__placeholder">
-                <span>{{ block.settings.emoji | default: '✨' }}</span>
-              </div>
-            {% endif %}
-          </div>
-          <div class="sobre-block__content">
-            {% if block.settings.label != blank %}
-              <span class="sobre-block__label">{{ block.settings.label }}</span>
-            {% endif %}
-            <h2 class="sobre-block__title">{{ block.settings.title }}</h2>
-            <div class="sobre-block__body">{{ block.settings.body }}</div>
-            {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
-              <a href="{{ block.settings.cta_url }}" class="btn btn--primary btn--md">{{ block.settings.cta_text }}</a>
-            {% endif %}
-          </div>
-        </article>
+            </div>
+            <div class="sobre-block__content">
+              {% if block.settings.label != blank %}
+                <span class="sobre-block__label">{{ block.settings.label }}</span>
+              {% endif %}
+              <h2 class="sobre-block__title">{{ block.settings.title }}</h2>
+              <div class="sobre-block__body">{{ block.settings.body }}</div>
+              {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
+                <a href="{{ block.settings.cta_url }}" class="btn btn--primary btn--md">{{ block.settings.cta_text }}</a>
+              {% endif %}
+            </div>
+          </article>
+
+        {%- comment -%} ───── Valores (galería de 5 imágenes con texto) ───── {%- endcomment -%}
+        {% when 'valores' %}
+          <article id="{{ anchor }}"
+                   class="sobre-block sobre-block--valores anim-bounce-up"
+                   {{ block.shopify_attributes }}>
+            <header class="sobre-block__head">
+              {% if block.settings.label != blank %}
+                <span class="sobre-block__label">{{ block.settings.label }}</span>
+              {% endif %}
+              <h2 class="sobre-block__title">{{ block.settings.title }}</h2>
+              {% if block.settings.body != blank %}
+                <div class="sobre-block__body sobre-block__body--centered">{{ block.settings.body }}</div>
+              {% endif %}
+            </header>
+            <div class="sobre-gallery">
+              {% for i in (1..5) %}
+                {%- assign img_key = 'image_' | append: i -%}
+                {%- assign cap_key = 'caption_' | append: i -%}
+                {%- assign txt_key = 'text_' | append: i -%}
+                {%- assign img = block.settings[img_key] -%}
+                {%- assign cap = block.settings[cap_key] -%}
+                {%- assign txt = block.settings[txt_key] -%}
+                <figure class="sobre-gallery__item sobre-gallery__item--{{ i }}">
+                  {% if img != blank %}
+                    <img src="{{ img | image_url: width: 800 }}"
+                         alt="{{ cap | default: 'Valor misoji' }}"
+                         class="sobre-gallery__img"
+                         loading="lazy">
+                  {% else %}
+                    <div class="sobre-gallery__placeholder">{{ forloop.index }}</div>
+                  {% endif %}
+                  {% if cap != blank or txt != blank %}
+                    <figcaption class="sobre-gallery__cap">
+                      {% if cap != blank %}<strong class="sobre-gallery__cap-title">{{ cap }}</strong>{% endif %}
+                      {% if txt != blank %}<span class="sobre-gallery__cap-text">{{ txt }}</span>{% endif %}
+                    </figcaption>
+                  {% endif %}
+                </figure>
+              {% endfor %}
+            </div>
+          </article>
+
+        {%- comment -%} ───── Servicio al cliente (canales) ───── {%- endcomment -%}
+        {% when 'servicio' %}
+          <article id="{{ anchor }}"
+                   class="sobre-block sobre-block--servicio anim-bounce-up"
+                   {{ block.shopify_attributes }}>
+            <header class="sobre-block__head">
+              {% if block.settings.label != blank %}
+                <span class="sobre-block__label">{{ block.settings.label }}</span>
+              {% endif %}
+              <h2 class="sobre-block__title">{{ block.settings.title }}</h2>
+              {% if block.settings.body != blank %}
+                <div class="sobre-block__body sobre-block__body--centered">{{ block.settings.body }}</div>
+              {% endif %}
+            </header>
+            <div class="sobre-channels">
+              {% if block.settings.whatsapp_url != blank %}
+                <a href="{{ block.settings.whatsapp_url }}" class="sobre-channel sobre-channel--whatsapp" target="_blank" rel="noopener">
+                  <span class="sobre-channel__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  </span>
+                  <div class="sobre-channel__text">
+                    <strong>WhatsApp</strong>
+                    <span>{{ block.settings.whatsapp_label | default: 'Chatea con nosotros' }}</span>
+                  </div>
+                </a>
+              {% endif %}
+              {% if block.settings.instagram_url != blank %}
+                <a href="{{ block.settings.instagram_url }}" class="sobre-channel sobre-channel--instagram" target="_blank" rel="noopener">
+                  <span class="sobre-channel__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  </span>
+                  <div class="sobre-channel__text">
+                    <strong>Instagram</strong>
+                    <span>{{ block.settings.instagram_label | default: '@misoji' }}</span>
+                  </div>
+                </a>
+              {% endif %}
+              {% if block.settings.facebook_url != blank %}
+                <a href="{{ block.settings.facebook_url }}" class="sobre-channel sobre-channel--facebook" target="_blank" rel="noopener">
+                  <span class="sobre-channel__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                  </span>
+                  <div class="sobre-channel__text">
+                    <strong>Facebook</strong>
+                    <span>{{ block.settings.facebook_label | default: 'misoji.beauty' }}</span>
+                  </div>
+                </a>
+              {% endif %}
+              {% if block.settings.tiktok_url != blank %}
+                <a href="{{ block.settings.tiktok_url }}" class="sobre-channel sobre-channel--tiktok" target="_blank" rel="noopener">
+                  <span class="sobre-channel__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.42a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.21z"/></svg>
+                  </span>
+                  <div class="sobre-channel__text">
+                    <strong>TikTok</strong>
+                    <span>{{ block.settings.tiktok_label | default: '@misoji' }}</span>
+                  </div>
+                </a>
+              {% endif %}
+            </div>
+          </article>
+
+        {% endcase %}
       {% endfor %}
     </div>
   </div>
@@ -109,13 +222,14 @@
   ],
   "blocks": [
     {
-      "type": "apartado",
-      "name": "Apartado",
+      "type": "historia",
+      "name": "Nuestra historia (imagen + texto)",
+      "limit": 1,
       "settings": [
         { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "nuestra-historia" },
         { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 01" },
         { "type": "text", "id": "title", "label": "Título", "default": "Nuestra historia" },
-        { "type": "richtext", "id": "body", "label": "Contenido", "default": "<p>Cuenta aquí la historia de tu marca, cómo empezó y a dónde quieren llegar.</p>" },
+        { "type": "richtext", "id": "body", "label": "Contenido", "default": "<p>Cuenta aquí la historia de tu marca: cómo nació, qué te inspiró y a dónde quieren llegar.</p>" },
         { "type": "image_picker", "id": "image", "label": "Imagen" },
         { "type": "url", "id": "video_url", "label": "URL de video (YouTube, Vimeo o MP4)", "info": "Si está presente, reemplaza a la imagen." },
         { "type": "text", "id": "emoji", "label": "Emoji fallback", "default": "🌿" },
@@ -133,58 +247,97 @@
         { "type": "text", "id": "cta_text", "label": "Texto CTA (opcional)" },
         { "type": "url", "id": "cta_url", "label": "URL CTA (opcional)" }
       ]
+    },
+    {
+      "type": "valores",
+      "name": "Nuestros valores (galería 5 imágenes)",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "nuestros-valores" },
+        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 02" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Nuestros valores" },
+        { "type": "richtext", "id": "body", "label": "Introducción", "default": "<p>Lo que nos guía cada día y nos hace ser diferentes.</p>" },
+        { "type": "header", "content": "Valor 1 (destacado, ocupa toda la columna grande)" },
+        { "type": "image_picker", "id": "image_1", "label": "Imagen" },
+        { "type": "text", "id": "caption_1", "label": "Título", "default": "Calidad" },
+        { "type": "text", "id": "text_1", "label": "Descripción", "default": "Cada dispositivo pasa rigurosos controles." },
+        { "type": "header", "content": "Valor 2" },
+        { "type": "image_picker", "id": "image_2", "label": "Imagen" },
+        { "type": "text", "id": "caption_2", "label": "Título", "default": "Cercanía" },
+        { "type": "text", "id": "text_2", "label": "Descripción", "default": "Acompañamos en cada paso." },
+        { "type": "header", "content": "Valor 3" },
+        { "type": "image_picker", "id": "image_3", "label": "Imagen" },
+        { "type": "text", "id": "caption_3", "label": "Título", "default": "Transparencia" },
+        { "type": "text", "id": "text_3", "label": "Descripción", "default": "Decimos las cosas como son." },
+        { "type": "header", "content": "Valor 4" },
+        { "type": "image_picker", "id": "image_4", "label": "Imagen" },
+        { "type": "text", "id": "caption_4", "label": "Título", "default": "Innovación" },
+        { "type": "text", "id": "text_4", "label": "Descripción", "default": "Tecnología siempre actualizada." },
+        { "type": "header", "content": "Valor 5" },
+        { "type": "image_picker", "id": "image_5", "label": "Imagen" },
+        { "type": "text", "id": "caption_5", "label": "Título", "default": "Sostenibilidad" },
+        { "type": "text", "id": "text_5", "label": "Descripción", "default": "Belleza responsable con el planeta." }
+      ]
+    },
+    {
+      "type": "marcas",
+      "name": "Marcas y convenios (imagen + texto)",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "marcas-convenios" },
+        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 03" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Nuestras marcas y convenios" },
+        { "type": "richtext", "id": "body", "label": "Contenido", "default": "<p>Trabajamos con marcas líderes en electro-belleza y mantenemos convenios con profesionales que validan cada uno de nuestros productos.</p>" },
+        { "type": "image_picker", "id": "image", "label": "Imagen" },
+        { "type": "url", "id": "video_url", "label": "URL de video (opcional)" },
+        { "type": "text", "id": "emoji", "label": "Emoji fallback", "default": "🤝" },
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Disposición",
+          "options": [
+            { "value": "image-left", "label": "Imagen a la izquierda" },
+            { "value": "image-right", "label": "Imagen a la derecha" },
+            { "value": "no-image", "label": "Sin imagen (solo texto)" }
+          ],
+          "default": "image-right"
+        },
+        { "type": "text", "id": "cta_text", "label": "Texto CTA (opcional)" },
+        { "type": "url", "id": "cta_url", "label": "URL CTA (opcional)" }
+      ]
+    },
+    {
+      "type": "servicio",
+      "name": "Servicio al cliente (canales)",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "servicio-al-cliente" },
+        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 04" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Servicio al cliente" },
+        { "type": "richtext", "id": "body", "label": "Introducción", "default": "<p>Escríbenos por el canal que prefieras. Te respondemos antes, durante y después de tu compra.</p>" },
+        { "type": "header", "content": "WhatsApp" },
+        { "type": "url", "id": "whatsapp_url", "label": "URL WhatsApp (wa.me/...)" },
+        { "type": "text", "id": "whatsapp_label", "label": "Etiqueta", "default": "Chatea con nosotras" },
+        { "type": "header", "content": "Instagram" },
+        { "type": "url", "id": "instagram_url", "label": "URL Instagram" },
+        { "type": "text", "id": "instagram_label", "label": "Etiqueta", "default": "@misoji" },
+        { "type": "header", "content": "Facebook" },
+        { "type": "url", "id": "facebook_url", "label": "URL Facebook" },
+        { "type": "text", "id": "facebook_label", "label": "Etiqueta", "default": "misoji.beauty" },
+        { "type": "header", "content": "TikTok" },
+        { "type": "url", "id": "tiktok_url", "label": "URL TikTok" },
+        { "type": "text", "id": "tiktok_label", "label": "Etiqueta", "default": "@misoji" }
+      ]
     }
   ],
   "presets": [
     {
       "name": "Sobre Nosotros",
       "blocks": [
-        {
-          "type": "apartado",
-          "settings": {
-            "anchor_id": "nuestra-historia",
-            "label": "CAPÍTULO 01",
-            "title": "Nuestra historia",
-            "body": "<p>Misoji nació de la pasión por democratizar la belleza con tecnología. Combinamos dispositivos de electro-belleza de última generación con un enfoque cercano y consciente para tus clientes.</p>",
-            "layout": "image-left",
-            "emoji": "🌿"
-          }
-        },
-        {
-          "type": "apartado",
-          "settings": {
-            "anchor_id": "nuestros-valores",
-            "label": "CAPÍTULO 02",
-            "title": "Nuestros valores",
-            "body": "<p><strong>Calidad ·</strong> Cada dispositivo pasa rigurosos controles.<br><strong>Cercanía ·</strong> Acompañamos a nuestras clientas en cada paso.<br><strong>Transparencia ·</strong> Decimos las cosas como son.<br><strong>Innovación ·</strong> Siempre con tecnología actualizada.</p>",
-            "layout": "image-right",
-            "emoji": "💎"
-          }
-        },
-        {
-          "type": "apartado",
-          "settings": {
-            "anchor_id": "marcas-convenios",
-            "label": "CAPÍTULO 03",
-            "title": "Nuestras marcas y convenios",
-            "body": "<p>Trabajamos con marcas líderes en electro-belleza y mantenemos convenios con profesionales que validan cada uno de nuestros productos.</p>",
-            "layout": "image-left",
-            "emoji": "🤝"
-          }
-        },
-        {
-          "type": "apartado",
-          "settings": {
-            "anchor_id": "servicio-al-cliente",
-            "label": "CAPÍTULO 04",
-            "title": "Servicio al cliente",
-            "body": "<p>Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza.</p>",
-            "layout": "image-right",
-            "emoji": "💌",
-            "cta_text": "Contáctanos",
-            "cta_url": "/pages/contacto"
-          }
-        }
+        { "type": "historia" },
+        { "type": "valores" },
+        { "type": "marcas" },
+        { "type": "servicio" }
       ]
     }
   ]
