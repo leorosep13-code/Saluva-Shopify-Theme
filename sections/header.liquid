@@ -1,5 +1,15 @@
 <header class="header" id="site-header">
   <div class="header__inner container">
+    {%- comment -%} Zona izquierda (solo móvil): menú hamburguesa + lupa de búsqueda {%- endcomment -%}
+    <div class="header__mobile-left">
+      <button class="header__hamburger" id="mobile-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <button class="header__action-btn js-search-toggle" aria-label="Buscar" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+    </div>
+
     <a href="/" class="header__logo">
       {% if settings.logo != blank %}
         <img src="{{ settings.logo | image_url: width: 200 }}" alt="misoji Beauty" class="header__logo-img" style="width: {{ settings.logo_width }}px;">
@@ -19,7 +29,10 @@
         <a href="/" class="header__nav-link nav-anchor" data-section="landing">Inicio</a>
       </div>
       <div class="header__nav-item">
-        <a href="/collections/ofertas" class="header__nav-link nav-anchor" data-section="ofertas">Ofertas</a>
+        <a href="/collections/ofertas" class="header__nav-link">Ofertas</a>
+      </div>
+      <div class="header__nav-item">
+        <a href="/collections/combos-imperdibles" class="header__nav-link header__nav-link--combos">Combos imperdibles</a>
       </div>
 
       {% comment %} Bloques dinámicos del customizer (Productos con mega menu de categorías) {% endcomment %}
@@ -40,25 +53,13 @@
             {%- endif -%}
 
             {% if block.settings.has_megamenu %}
-              <div class="mega-menu" id="mega-menu">
+              <div class="mega-menu mega-menu--single" id="mega-menu">
                 <div class="mega-menu__inner container">
-                  <div class="mega-menu__columns">
+                  <div class="mega-menu__columns mega-menu__columns--single">
                     <div class="mega-menu__col">
                       <h4 class="mega-menu__col-title">{{ block.settings.mega_col1_title }}</h4>
                       {% assign links1 = block.settings.mega_col1_links | split: '|' %}
                       {% for link_text in links1 %}
-                        {% assign parts = link_text | split: ':' %}
-                        {% if parts.size >= 2 %}
-                          <a href="{{ parts[1] }}" class="mega-menu__link">{{ parts[0] }}</a>
-                        {% elsif link_text != blank %}
-                          <a href="/collections/{{ link_text | handleize }}" class="mega-menu__link">{{ link_text }}</a>
-                        {% endif %}
-                      {% endfor %}
-                    </div>
-                    <div class="mega-menu__col">
-                      <h4 class="mega-menu__col-title">{{ block.settings.mega_col2_title }}</h4>
-                      {% assign links2 = block.settings.mega_col2_links | split: '|' %}
-                      {% for link_text in links2 %}
                         {% assign parts = link_text | split: ':' %}
                         {% if parts.size >= 2 %}
                           <a href="{{ parts[1] }}" class="mega-menu__link">{{ parts[0] }}</a>
@@ -75,16 +76,17 @@
         {% endif %}
       {% endfor %}
 
-      <div class="header__nav-item">
+      {% comment %} Productos Digitales: oculto temporalmente, reservado para desarrollo posterior. {% endcomment %}
+      <div class="header__nav-item" style="display:none;" aria-hidden="true">
         <a href="/pages/productos-digitales" class="header__nav-link">Productos Digitales</a>
       </div>
       <div class="header__nav-item">
-        <a href="/pages/aprende-a-cuidarte" class="header__nav-link">Aprende a Cuidarte</a>
+        <a href="/pages/sobre-nosotros" class="header__nav-link">Sobre Nosotros</a>
       </div>
     </nav>
 
     <div class="header__actions">
-      <button class="header__action-btn" aria-label="Buscar" id="search-toggle">
+      <button class="header__action-btn header__action-btn--desktop-search js-search-toggle" aria-label="Buscar" id="search-toggle" type="button">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
       <a href="/account" class="header__action-btn" aria-label="Cuenta">
@@ -95,9 +97,20 @@
         <span class="header__cart-count" id="cart-count">{{ cart.item_count }}</span>
       </a>
 
-      <button class="header__hamburger" id="mobile-toggle" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
+      {%- comment -%} Bandera de Colombia circular (visible en móvil y desktop) {%- endcomment -%}
+      <a href="/" class="header__flag" aria-label="Tienda Colombia">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <defs>
+            <clipPath id="header-flag-clip"><circle cx="12" cy="12" r="11"/></clipPath>
+          </defs>
+          <g clip-path="url(#header-flag-clip)">
+            <rect x="0" y="1"  width="24" height="11" fill="#FCD116"/>
+            <rect x="0" y="12" width="24" height="6"  fill="#003893"/>
+            <rect x="0" y="18" width="24" height="6"  fill="#CE1126"/>
+          </g>
+          <circle cx="12" cy="12" r="11" fill="none" stroke="rgba(30,31,37,0.18)" stroke-width="1"/>
+        </svg>
+      </a>
     </div>
   </div>
 </header>
@@ -166,26 +179,14 @@
         {
           "type": "text",
           "id": "mega_col1_title",
-          "label": "Mega Menu - Titulo columna 1",
+          "label": "Mega Menu - Titulo",
           "default": "POR ZONA"
         },
         {
           "type": "text",
           "id": "mega_col1_links",
-          "label": "Mega Menu - Links columna 1 (nombre|nombre)",
+          "label": "Mega Menu - Links (nombre|nombre)",
           "default": "Rostro|Cuerpo|Cabello|Ojos|Manos y pies"
-        },
-        {
-          "type": "text",
-          "id": "mega_col2_title",
-          "label": "Mega Menu - Titulo columna 2",
-          "default": "POR TECNOLOGIA"
-        },
-        {
-          "type": "text",
-          "id": "mega_col2_links",
-          "label": "Mega Menu - Links columna 2 (nombre|nombre)",
-          "default": "Induction|LED|Microcorriente|Radiofrecuencia|Ultrasonido"
         }
       ]
     }

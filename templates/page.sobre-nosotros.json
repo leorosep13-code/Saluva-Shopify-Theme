@@ -1,0 +1,69 @@
+{
+  "sections": {
+    "main": {
+      "type": "saluva-sobre-nosotros",
+      "blocks": {
+        "historia": {
+          "type": "apartado",
+          "settings": {
+            "anchor_id": "nuestra-historia",
+            "label": "CAPÍTULO 01",
+            "title": "Nuestra historia",
+            "body": "<p>Misoji nació de la pasión por democratizar la belleza con tecnología. Combinamos dispositivos de electro-belleza de última generación con un enfoque cercano y consciente para que cada cliente viva una experiencia premium en casa.</p>",
+            "layout": "image-left",
+            "emoji": "🌿"
+          }
+        },
+        "valores": {
+          "type": "apartado",
+          "settings": {
+            "anchor_id": "nuestros-valores",
+            "label": "CAPÍTULO 02",
+            "title": "Nuestros valores",
+            "body": "<p><strong>Calidad ·</strong> Cada dispositivo pasa rigurosos controles.<br><strong>Cercanía ·</strong> Acompañamos a nuestras clientas en cada paso.<br><strong>Transparencia ·</strong> Decimos las cosas como son.<br><strong>Innovación ·</strong> Siempre con tecnología actualizada.</p>",
+            "layout": "image-right",
+            "emoji": "💎"
+          }
+        },
+        "marcas": {
+          "type": "apartado",
+          "settings": {
+            "anchor_id": "marcas-convenios",
+            "label": "CAPÍTULO 03",
+            "title": "Nuestras marcas y convenios",
+            "body": "<p>Trabajamos con marcas líderes en electro-belleza y mantenemos convenios con profesionales que validan cada uno de nuestros productos.</p>",
+            "layout": "image-left",
+            "emoji": "🤝"
+          }
+        },
+        "servicio": {
+          "type": "apartado",
+          "settings": {
+            "anchor_id": "servicio-al-cliente",
+            "label": "CAPÍTULO 04",
+            "title": "Servicio al cliente",
+            "body": "<p>Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza.</p>",
+            "layout": "image-right",
+            "emoji": "💌",
+            "cta_text": "Contáctanos",
+            "cta_url": "/pages/contacto"
+          }
+        }
+      },
+      "block_order": [
+        "historia",
+        "valores",
+        "marcas",
+        "servicio"
+      ],
+      "settings": {
+        "label": "NUESTRA ESENCIA",
+        "title": "Sobre Nosotros",
+        "description": "Detrás de misoji hay un equipo apasionado por la belleza con tecnología. Conoce nuestra historia, valores y compromiso."
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,192 @@
+<section id="sobre-nosotros" class="sobre-nosotros aurora-bg">
+  <div class="container">
+    <div class="sobre-hero anim-slide-right">
+      <div class="sobre-hero__content">
+        {% if section.settings.label != blank %}
+          <span class="section-header__label text-primary">{{ section.settings.label }}</span>
+        {% endif %}
+        <h1 class="sobre-hero__title">{{ section.settings.title }}</h1>
+        {% if section.settings.description != blank %}
+          <p class="sobre-hero__desc">{{ section.settings.description }}</p>
+        {% endif %}
+      </div>
+      {% if section.settings.image != blank %}
+        <div class="sobre-hero__media">
+          <img src="{{ section.settings.image | image_url: width: 800 }}"
+               alt="{{ section.settings.title }}"
+               class="sobre-hero__img"
+               loading="lazy">
+        </div>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <nav class="sobre-tabs" aria-label="Apartados Sobre Nosotros">
+        {% for block in section.blocks %}
+          {%- assign anchor = block.settings.anchor_id | default: block.id -%}
+          <a href="#{{ anchor }}" class="sobre-tab">{{ block.settings.title }}</a>
+        {% endfor %}
+      </nav>
+    {% endif %}
+
+    <div class="sobre-stack">
+      {% for block in section.blocks %}
+        {%- assign anchor = block.settings.anchor_id | default: block.id -%}
+        {%- assign layout = block.settings.layout | default: 'image-left' -%}
+        <article id="{{ anchor }}"
+                 class="sobre-block sobre-block--{{ layout }} anim-bounce-up"
+                 {{ block.shopify_attributes }}>
+          <div class="sobre-block__media">
+            {% if block.settings.video_url != blank %}
+              {%- assign video_src = block.settings.video_url -%}
+              {% if video_src contains 'youtube' or video_src contains 'youtu.be' %}
+                {%- assign yt_id = '' -%}
+                {% if video_src contains 'watch?v=' %}
+                  {%- assign yt_id = video_src | split: 'watch?v=' | last | split: '&' | first -%}
+                {% elsif video_src contains 'youtu.be/' %}
+                  {%- assign yt_id = video_src | split: 'youtu.be/' | last | split: '?' | first -%}
+                {% elsif video_src contains 'embed/' %}
+                  {%- assign yt_id = video_src | split: 'embed/' | last | split: '?' | first -%}
+                {% endif %}
+                <div class="sobre-block__video">
+                  <iframe src="https://www.youtube.com/embed/{{ yt_id }}"
+                          title="{{ block.settings.title }}"
+                          frameborder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowfullscreen
+                          loading="lazy"></iframe>
+                </div>
+              {% elsif video_src contains 'vimeo' %}
+                {%- assign vimeo_id = video_src | split: 'vimeo.com/' | last | split: '?' | first -%}
+                <div class="sobre-block__video">
+                  <iframe src="https://player.vimeo.com/video/{{ vimeo_id }}"
+                          title="{{ block.settings.title }}"
+                          frameborder="0"
+                          allow="autoplay; fullscreen; picture-in-picture"
+                          allowfullscreen
+                          loading="lazy"></iframe>
+                </div>
+              {% else %}
+                <div class="sobre-block__video">
+                  <video src="{{ video_src }}" controls preload="metadata" playsinline></video>
+                </div>
+              {% endif %}
+            {% elsif block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 900 }}"
+                   alt="{{ block.settings.title }}"
+                   class="sobre-block__img"
+                   loading="lazy">
+            {% else %}
+              <div class="sobre-block__placeholder">
+                <span>{{ block.settings.emoji | default: '✨' }}</span>
+              </div>
+            {% endif %}
+          </div>
+          <div class="sobre-block__content">
+            {% if block.settings.label != blank %}
+              <span class="sobre-block__label">{{ block.settings.label }}</span>
+            {% endif %}
+            <h2 class="sobre-block__title">{{ block.settings.title }}</h2>
+            <div class="sobre-block__body">{{ block.settings.body }}</div>
+            {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
+              <a href="{{ block.settings.cta_url }}" class="btn btn--primary btn--md">{{ block.settings.cta_text }}</a>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Sobre Nosotros",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "NUESTRA ESENCIA" },
+    { "type": "text", "id": "title", "label": "Título", "default": "Sobre Nosotros" },
+    { "type": "textarea", "id": "description", "label": "Descripción", "default": "Detrás de misoji hay un equipo apasionado por la belleza con tecnología. Conoce nuestra historia, valores y compromiso." },
+    { "type": "image_picker", "id": "image", "label": "Imagen hero" }
+  ],
+  "blocks": [
+    {
+      "type": "apartado",
+      "name": "Apartado",
+      "settings": [
+        { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "nuestra-historia" },
+        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 01" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Nuestra historia" },
+        { "type": "richtext", "id": "body", "label": "Contenido", "default": "<p>Cuenta aquí la historia de tu marca, cómo empezó y a dónde quieren llegar.</p>" },
+        { "type": "image_picker", "id": "image", "label": "Imagen" },
+        { "type": "url", "id": "video_url", "label": "URL de video (YouTube, Vimeo o MP4)", "info": "Si está presente, reemplaza a la imagen." },
+        { "type": "text", "id": "emoji", "label": "Emoji fallback", "default": "🌿" },
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Disposición",
+          "options": [
+            { "value": "image-left", "label": "Imagen a la izquierda" },
+            { "value": "image-right", "label": "Imagen a la derecha" },
+            { "value": "no-image", "label": "Sin imagen (solo texto)" }
+          ],
+          "default": "image-left"
+        },
+        { "type": "text", "id": "cta_text", "label": "Texto CTA (opcional)" },
+        { "type": "url", "id": "cta_url", "label": "URL CTA (opcional)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sobre Nosotros",
+      "blocks": [
+        {
+          "type": "apartado",
+          "settings": {
+            "anchor_id": "nuestra-historia",
+            "label": "CAPÍTULO 01",
+            "title": "Nuestra historia",
+            "body": "<p>Misoji nació de la pasión por democratizar la belleza con tecnología. Combinamos dispositivos de electro-belleza de última generación con un enfoque cercano y consciente para tus clientes.</p>",
+            "layout": "image-left",
+            "emoji": "🌿"
+          }
+        },
+        {
+          "type": "apartado",
+          "settings": {
+            "anchor_id": "nuestros-valores",
+            "label": "CAPÍTULO 02",
+            "title": "Nuestros valores",
+            "body": "<p><strong>Calidad ·</strong> Cada dispositivo pasa rigurosos controles.<br><strong>Cercanía ·</strong> Acompañamos a nuestras clientas en cada paso.<br><strong>Transparencia ·</strong> Decimos las cosas como son.<br><strong>Innovación ·</strong> Siempre con tecnología actualizada.</p>",
+            "layout": "image-right",
+            "emoji": "💎"
+          }
+        },
+        {
+          "type": "apartado",
+          "settings": {
+            "anchor_id": "marcas-convenios",
+            "label": "CAPÍTULO 03",
+            "title": "Nuestras marcas y convenios",
+            "body": "<p>Trabajamos con marcas líderes en electro-belleza y mantenemos convenios con profesionales que validan cada uno de nuestros productos.</p>",
+            "layout": "image-left",
+            "emoji": "🤝"
+          }
+        },
+        {
+          "type": "apartado",
+          "settings": {
+            "anchor_id": "servicio-al-cliente",
+            "label": "CAPÍTULO 04",
+            "title": "Servicio al cliente",
+            "body": "<p>Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza.</p>",
+            "layout": "image-right",
+            "emoji": "💌",
+            "cta_text": "Contáctanos",
+            "cta_url": "/pages/contacto"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

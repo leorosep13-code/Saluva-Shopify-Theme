@@ -10,7 +10,7 @@
      Deep Aurora       #5D4EFF  · profundidad / gradientes
      Frost White       #FFFFFF  · glassmorphism / overlays
      Cloud Grey        #DDE3EA  · bordes / divisores
-   Fonts: Playfair Display (títulos) · Montserrat (cuerpo)
+   Fonts: Space Grotesk (títulos) · Outfit (cuerpo)
    ═══════════════════════════════════════════ */
 
 :root {
@@ -48,8 +48,8 @@
   --color-text-light: #9aa0ad;
   --color-border: #DDE3EA;           /* Cloud Grey */
 
-  --font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, sans-serif;
-  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-family: 'Outfit', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-heading: 'Space Grotesk', 'Outfit', system-ui, -apple-system, Segoe UI, sans-serif;
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;

@@ -764,13 +764,13 @@ function initAnimateOnScroll() {
 
 /* ── Search Overlay ── */
 function initSearchOverlay() {
-  const toggleBtn = document.getElementById('search-toggle');
+  const toggleBtns = document.querySelectorAll('.js-search-toggle, #search-toggle');
   const overlay = document.getElementById('search-overlay');
   const input = document.getElementById('search-input');
   const resultsContainer = document.getElementById('search-results');
   const backdrop = document.getElementById('search-close-backdrop');
 
-  if (!toggleBtn || !overlay) return;
+  if (!toggleBtns.length || !overlay) return;
 
   let debounceTimer = null;
 
@@ -792,7 +792,7 @@ function initSearchOverlay() {
     }
   }
 
-  toggleBtn.addEventListener('click', openSearch);
+  toggleBtns.forEach(btn => btn.addEventListener('click', openSearch));
   if (backdrop) backdrop.addEventListener('click', closeSearch);
 
   document.addEventListener('keydown', (e) => {
