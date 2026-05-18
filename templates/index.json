@@ -197,6 +197,7 @@
         "card_aurora": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_18_may_2026_14_26_44.png",
             "wide": false,
             "caption": "Aurora Series",
             "cta_text": "Ver producto",
