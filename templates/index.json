@@ -135,19 +135,35 @@
             "title": "",
             "subtitle": "",
             "media_type": "video",
-            "video_url": "",
+            "video_url": "https://www.youtube.com/watch?v=2UksjawytNo",
             "gradient_start": "#c8b7ff",
             "gradient_end": "#8ed8ff",
             "story_text": "",
-            "story_cta_text": "Creatina",
-            "story_cta_url": "shopify://products/creatina-monohidratada-for-women"
+            "story_cta_text": "Rizador 6 en 1",
+            "story_cta_url": "shopify://products/juego-de-rizador-profesional-6-en-1-versatilidad-sin-limites"
+          }
+        },
+        "story_J8xtcV": {
+          "type": "story",
+          "settings": {
+            "emoji": "",
+            "title": "",
+            "subtitle": "",
+            "media_type": "imagen",
+            "video_url": "https://www.youtube.com/watch?v=1T6xjVrTjNQ",
+            "gradient_start": "#c8b7ff",
+            "gradient_end": "#8ed8ff",
+            "story_text": "Descubre nuestra rutina matutina perfecta",
+            "story_cta_text": "Masajeador Facial",
+            "story_cta_url": "shopify://products/radiofrecuencia-masajeador-facial"
           }
         }
       },
       "block_order": [
         "story_dcqE4D",
         "story_pBGA6K",
-        "story_nrkHAg"
+        "story_nrkHAg",
+        "story_J8xtcV"
       ],
       "settings": {
         "title": "Descubre Nuestro Mundo"
