@@ -11,8 +11,8 @@ Tema personalizado de Shopify para **misoji Beauty**, marca de **Beauty Technolo
 - **Deep Aurora** `#5D4EFF` — profundidad / gradientes premium
 - **Frost White** `#FFFFFF` — glassmorphism / overlays
 - **Cloud Grey** `#DDE3EA` — bordes / divisores
-- **Tipografía títulos:** Playfair Display
-- **Tipografía cuerpo:** Montserrat
+- **Tipografía títulos:** Space Grotesk
+- **Tipografía cuerpo:** Outfit
 - **Tagline:** *Tecnología que realza tu versión más radiante.*
 - **Tema base Shopify:** Savor
 
@@ -151,7 +151,7 @@ git push -u origin main
 Todos los colores se controlan desde **Personalizar tema → Colores** en el admin de Shopify. También puedes editarlos en `config/settings_data.json`.
 
 ### Tipografía
-Playfair Display (títulos) y Montserrat (cuerpo) se cargan desde Google Fonts en `layout/theme.liquid`. Para cambiarlas, modifica el enlace `<link>` y las variables `--font-family` / `--font-heading` en `saluva-base.css`.
+Space Grotesk (títulos) y Outfit (cuerpo) se cargan desde Google Fonts en `layout/theme.liquid`. Para cambiarlas, modifica el enlace `<link>` y las variables `--font-family` / `--font-heading` en `saluva-base.css`.
 
 ## 📋 Requisitos
 - Shopify (cualquier plan)

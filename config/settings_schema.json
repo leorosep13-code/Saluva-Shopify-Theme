@@ -55,13 +55,15 @@
         "type": "font_picker",
         "id": "font_heading",
         "label": "Fuente de títulos",
-        "default": "helvetica_n4"
+        "default": "space_grotesk_n4",
+        "info": "Por defecto usa Space Grotesk (cargada desde Google Fonts)."
       },
       {
         "type": "font_picker",
         "id": "font_body",
         "label": "Fuente de cuerpo",
-        "default": "helvetica_n4"
+        "default": "outfit_n4",
+        "info": "Por defecto usa Outfit (cargada desde Google Fonts)."
       },
       {
         "type": "range",
