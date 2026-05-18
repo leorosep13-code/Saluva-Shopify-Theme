@@ -187,6 +187,7 @@
         "card_induction": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_18_may_2026_14_18_43.png",
             "wide": false,
             "caption": "Induction Device",
             "cta_text": "Ver producto",
@@ -239,6 +240,16 @@
         "title": "Descubre Tu Rutina Ideal",
         "description": "Responde unas preguntas rapidas y te recomendaremos los productos perfectos para ti."
       }
+    },
+    "saluva_blog_NgkUM6": {
+      "type": "saluva-blog",
+      "name": "Blog Destacado misoji",
+      "settings": {
+        "label": "NUESTRO BLOG",
+        "title": "Blog Destacado",
+        "blog": "desde-adentro",
+        "view_all_url": "shopify://blogs/desde-adentro/por-que-te-sientes-cansada-todo-el-tiempo-y-como-solucionarlo"
+      }
     }
   },
   "order": [
@@ -251,6 +262,7 @@
     "apple-grid",
     "bestsellers",
     "aprende",
-    "quiz"
+    "quiz",
+    "saluva_blog_NgkUM6"
   ]
 }
