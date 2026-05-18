@@ -102,10 +102,10 @@
           "type": "story",
           "settings": {
             "emoji": "",
-            "title": "Para tu piel",
+            "title": "",
             "subtitle": "",
             "media_type": "video",
-            "video_url": "",
+            "video_url": "https://www.youtube.com/watch?v=oS2_tRKh7Xw",
             "gradient_start": "#c8b7ff",
             "gradient_end": "#8ed8ff",
             "story_text": "Descubre nuestra rutina matutina perfecta",
