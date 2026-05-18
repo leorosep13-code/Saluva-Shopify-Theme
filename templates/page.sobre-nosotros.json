@@ -16,9 +16,9 @@
           "type": "apartado",
           "settings": {
             "anchor_id": "nuestra-historia",
-            "label": "CAPÍTULO 01",
+            "label": "",
             "title": "Nuestra historia",
-            "body": "<p>Misoji nació de la pasión por democratizar la belleza con tecnología. Combinamos dispositivos de electro-belleza de última generación con un enfoque cercano y consciente para que cada cliente viva una experiencia premium en casa.</p>",
+            "body": "<p>Misoji nació de la pasión por democratizar la belleza a través de la tecnología. Somos una empresa colombiana, hecha por y para la mujer, que busca acercar la innovación en electro-belleza a más hogares de una manera accesible, práctica y consciente.</p>",
             "video_url": "",
             "emoji": "🌿",
             "layout": "image-left",
