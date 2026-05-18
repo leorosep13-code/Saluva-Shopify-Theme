@@ -244,6 +244,7 @@
     },
     "saluva_blog_NgkUM6": {
       "type": "saluva-blog",
+      "disabled": true,
       "name": "Blog Destacado misoji",
       "settings": {
         "label": "NUESTRO BLOG",
