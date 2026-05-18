@@ -189,9 +189,9 @@
           "settings": {
             "image": "shopify://shop_images/ChatGPT_Image_18_may_2026_14_38_53.png",
             "wide": false,
-            "caption": "Induction Device",
+            "caption": "",
             "cta_text": "Ver producto",
-            "cta_url": ""
+            "cta_url": "shopify://products/cepillo-secador-5-en-1-pro-elite-estuche"
           }
         },
         "card_aurora": {
@@ -199,9 +199,9 @@
           "settings": {
             "image": "shopify://shop_images/ChatGPT_Image_18_may_2026_14_26_44.png",
             "wide": false,
-            "caption": "Aurora Series",
+            "caption": "",
             "cta_text": "Ver producto",
-            "cta_url": ""
+            "cta_url": "shopify://products/depiladora-laser-misoji-sin-vello-en-12-semanas"
           }
         }
       },
