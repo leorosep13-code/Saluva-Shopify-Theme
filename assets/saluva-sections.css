@@ -1771,84 +1771,86 @@
 /* ===== PRODUCT CARD BADGES ===== */
 .product-card__tag--recommended { background: var(--color-primary); }
 
-/* Badge OFERTA "Wow": gradiente coral-aurora con glow pulsante */
+/* Badge OFERTA — paleta pastel aurora (lavanda · azul · menta) con texto midnight */
 .product-card__tag--sale {
   top: 12px;
   left: 12px;
-  background: linear-gradient(135deg, #FF3D7F 0%, #FF6FA8 55%, #C8B7FF 100%);
-  color: #fff;
+  background: linear-gradient(135deg, #E4DCFF 0%, #C8B7FF 35%, #B6E2FF 70%, #C4F5E0 100%);
+  color: var(--color-midnight);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.6px;
   padding: 5px 14px;
   border-radius: 999px;
-  box-shadow: 0 6px 18px rgba(255, 61, 127, 0.45), 0 0 0 1px rgba(255,255,255,0.25) inset;
+  box-shadow: 0 4px 14px rgba(200, 183, 255, 0.55), 0 0 0 1px rgba(255,255,255,0.6) inset;
   text-transform: uppercase;
-  animation: saleGlow 2.4s ease-in-out infinite;
+  animation: saleGlow 3s ease-in-out infinite;
 }
 
-/* Badge de % descuento: ribbon llamativo en esquina superior derecha */
+/* Badge de % descuento — gradiente pastel + texto oscuro */
 .product-card__tag--percent {
   top: 12px;
   right: 12px;
   left: auto;
-  background: linear-gradient(135deg, #5D4EFF 0%, #FF3D7F 100%);
-  color: #fff;
+  background: linear-gradient(135deg, #C4F5E0 0%, #B6E2FF 50%, #C8B7FF 100%);
+  color: var(--color-midnight);
   font-size: 13px;
   font-weight: 900;
   letter-spacing: 0.4px;
   padding: 6px 12px;
   border-radius: 12px;
-  box-shadow: 0 8px 22px rgba(93, 78, 255, 0.45), 0 0 0 2px rgba(255,255,255,0.35) inset;
-  animation: saleBounce 2s ease-in-out infinite;
+  box-shadow: 0 6px 16px rgba(142, 216, 255, 0.45), 0 0 0 1.5px rgba(255,255,255,0.7) inset;
+  animation: saleBounce 2.4s ease-in-out infinite;
   z-index: 2;
 }
 
 @keyframes saleGlow {
-  0%, 100% { box-shadow: 0 6px 18px rgba(255, 61, 127, 0.45), 0 0 0 1px rgba(255,255,255,0.25) inset; }
-  50%      { box-shadow: 0 10px 26px rgba(255, 61, 127, 0.7),  0 0 0 1px rgba(255,255,255,0.45) inset; }
+  0%, 100% { box-shadow: 0 4px 14px rgba(200, 183, 255, 0.55), 0 0 0 1px rgba(255,255,255,0.6) inset; }
+  50%      { box-shadow: 0 8px 22px rgba(142, 216, 255, 0.70), 0 0 0 1px rgba(255,255,255,0.85) inset; }
 }
 @keyframes saleBounce {
-  0%, 100% { transform: scale(1)   rotate(0deg); }
-  40%      { transform: scale(1.08) rotate(-2deg); }
-  60%      { transform: scale(1.05) rotate(2deg); }
+  0%, 100% { transform: scale(1)    rotate(0deg); }
+  40%      { transform: scale(1.06) rotate(-1.5deg); }
+  60%      { transform: scale(1.03) rotate(1.5deg); }
 }
 
-/* Tarjetas dentro del rail de ofertas: borde aurora sutil + glow al hover */
+/* Tarjetas dentro del rail de ofertas: borde aurora pastel + glow al hover */
 .ofertas-rail__item .product-card {
   position: relative;
   border: 1px solid transparent;
   background:
     linear-gradient(#fff, #fff) padding-box,
-    linear-gradient(135deg, rgba(255, 61, 127, 0.55), rgba(200, 183, 255, 0.6), rgba(142, 216, 255, 0.55)) border-box;
-  box-shadow: 0 8px 24px rgba(93, 78, 255, 0.08);
+    linear-gradient(135deg, rgba(200, 183, 255, 0.65), rgba(142, 216, 255, 0.6), rgba(127, 255, 212, 0.5)) border-box;
+  box-shadow: 0 6px 20px rgba(200, 183, 255, 0.18);
   transition: transform var(--transition), box-shadow var(--transition);
 }
 .ofertas-rail__item .product-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 16px 38px rgba(255, 61, 127, 0.18), 0 8px 24px rgba(93, 78, 255, 0.12);
+  box-shadow: 0 14px 34px rgba(142, 216, 255, 0.30), 0 6px 20px rgba(200, 183, 255, 0.22);
 }
 
-/* Precio tachado más dramático dentro del rail de ofertas */
+/* Precio tachado: aurora sutil, no agresivo */
 .ofertas-rail__item .product-card__price-compare {
-  color: #b1b5c2;
+  color: var(--color-text-light);
   text-decoration: line-through;
-  text-decoration-color: rgba(255, 61, 127, 0.7);
+  text-decoration-color: rgba(93, 78, 255, 0.55);
   text-decoration-thickness: 2px;
 }
 .ofertas-rail__item .product-card__price-current {
-  color: #FF3D7F;
+  color: var(--color-deep-aurora);
 }
 
-/* CTA "Agregar al Carrito" más llamativo dentro de ofertas */
+/* CTA "Agregar al Carrito" pastel aurora con texto oscuro */
 .ofertas-rail__item .product-card__add-btn {
-  background: linear-gradient(135deg, #5D4EFF, #FF3D7F);
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(93, 78, 255, 0.25);
+  background: linear-gradient(135deg, #E4DCFF 0%, #C8B7FF 45%, #B6E2FF 100%);
+  color: var(--color-midnight);
+  font-weight: 800;
+  box-shadow: 0 6px 16px rgba(200, 183, 255, 0.30);
 }
 .ofertas-rail__item .product-card__add-btn:hover {
-  background: linear-gradient(135deg, #FF3D7F, #5D4EFF);
-  box-shadow: 0 12px 28px rgba(255, 61, 127, 0.35);
+  background: linear-gradient(135deg, #C4F5E0 0%, #B6E2FF 50%, #C8B7FF 100%);
+  color: var(--color-midnight);
+  box-shadow: 0 10px 24px rgba(142, 216, 255, 0.40);
   transform: translateY(-1px);
 }
 
