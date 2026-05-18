@@ -15,14 +15,9 @@
         "whatsapp_number": "573127862532",
         "whatsapp_message": "Hola, estoy interesada en"
       }
-    },
-    "reels": {
-      "type": "saluva-product-reels",
-      "settings": {}
     }
   },
   "order": [
-    "main",
-    "reels"
+    "main"
   ]
 }
