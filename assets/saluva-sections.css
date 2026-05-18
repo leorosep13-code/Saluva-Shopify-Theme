@@ -2636,13 +2636,15 @@
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  font-weight: 700;
-  color: #16a34a;
-  background: #dcfce7;
+  font-weight: 800;
+  color: var(--color-midnight);
+  background: linear-gradient(135deg, #E4DCFF 0%, #C8B7FF 45%, #B6E2FF 100%);
   padding: 8px 14px;
   border-radius: var(--radius-pill);
   margin-bottom: 24px;
+  box-shadow: 0 4px 14px rgba(200, 183, 255, 0.30);
 }
+.pdp__savings svg { stroke: var(--color-deep-aurora); }
 
 /* Variantes */
 .pdp__option {

@@ -120,13 +120,6 @@
       </div>
     {% endif %}
 
-    {%- comment -%} Pequeña descripción debajo del precio (texto del producto en Shopify Admin) {%- endcomment -%}
-    {% if product.description != blank %}
-      <div class="pdp__short-desc rte">
-        {{ product.description }}
-      </div>
-    {% endif %}
-
     <!-- Variantes -->
     {% if product.variants.size > 1 %}
       {% for option in product.options_with_values %}
@@ -145,7 +138,7 @@
       {% endfor %}
     {% endif %}
 
-    <!-- Cantidad + Agregar (desktop) -->
+    <!-- Cantidad + Agregar (desktop) — ahora justo debajo del precio/variantes, antes de la descripción -->
     <div class="pdp__add-row pdp__add-row--desktop">
       {% form 'product', product, id: 'pdp-form-desktop' %}
         <input type="hidden" name="id" value="{{ current_variant.id }}" id="pdp-variant-id-desktop">
@@ -163,6 +156,13 @@
         </button>
       {% endform %}
     </div>
+
+    {%- comment -%} Pequeña descripción debajo del precio (texto del producto en Shopify Admin) {%- endcomment -%}
+    {% if product.description != blank %}
+      <div class="pdp__short-desc rte">
+        {{ product.description }}
+      </div>
+    {% endif %}
 
   </div>
 </section>
