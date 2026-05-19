@@ -1,6 +1,6 @@
 <section id="sobre-nosotros" class="sobre-nosotros aurora-bg">
   <div class="container">
-    <div class="sobre-hero anim-slide-right">
+    <div class="sobre-hero">
       <div class="sobre-hero__content">
         {% if section.settings.label != blank %}
           <span class="section-header__label text-primary">{{ section.settings.label }}</span>
@@ -158,50 +158,49 @@
               {% endif %}
             </header>
             <div class="sobre-channels">
-              {% if block.settings.whatsapp_url != blank %}
-                <a href="{{ block.settings.whatsapp_url }}" class="sobre-channel sobre-channel--whatsapp" target="_blank" rel="noopener">
+              {%- comment -%} Renderiza siempre los 4 canales como "espacios" para logo + cuenta {%- endcomment -%}
+              {%- assign channel_keys = 'whatsapp,instagram,facebook,tiktok' | split: ',' -%}
+              {%- assign channel_names = 'WhatsApp,Instagram,Facebook,TikTok' | split: ',' -%}
+              {%- assign channel_defaults = 'Chatea con nosotras,@misoji,misoji.beauty,@misoji' | split: ',' -%}
+              {% for key in channel_keys %}
+                {%- assign name = channel_names[forloop.index0] -%}
+                {%- assign default_label = channel_defaults[forloop.index0] -%}
+                {%- assign url_key   = key | append: '_url' -%}
+                {%- assign label_key = key | append: '_label' -%}
+                {%- assign logo_key  = key | append: '_logo' -%}
+                {%- assign ch_url   = block.settings[url_key] -%}
+                {%- assign ch_label = block.settings[label_key] -%}
+                {%- assign ch_logo  = block.settings[logo_key] -%}
+                {%- assign has_logo_mod = '' -%}
+                {% if ch_logo != blank %}{%- assign has_logo_mod = ' sobre-channel--has-logo' -%}{% endif %}
+                <a {% if ch_url != blank %}href="{{ ch_url }}" target="_blank" rel="noopener"{% else %}role="button" aria-disabled="true"{% endif %}
+                   class="sobre-channel sobre-channel--{{ key }}{{ has_logo_mod }}">
                   <span class="sobre-channel__icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    {% if ch_logo != blank %}
+                      <img src="{{ ch_logo | image_url: width: 120 }}"
+                           alt="{{ name }}"
+                           class="sobre-channel__logo"
+                           loading="lazy"
+                           width="48" height="48">
+                    {% else %}
+                      {% case key %}
+                        {% when 'whatsapp' %}
+                          <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        {% when 'instagram' %}
+                          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        {% when 'facebook' %}
+                          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        {% when 'tiktok' %}
+                          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.42a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.21z"/></svg>
+                      {% endcase %}
+                    {% endif %}
                   </span>
                   <div class="sobre-channel__text">
-                    <strong>WhatsApp</strong>
-                    <span>{{ block.settings.whatsapp_label | default: 'Chatea con nosotros' }}</span>
+                    <strong>{{ name }}</strong>
+                    <span>{{ ch_label | default: default_label }}</span>
                   </div>
                 </a>
-              {% endif %}
-              {% if block.settings.instagram_url != blank %}
-                <a href="{{ block.settings.instagram_url }}" class="sobre-channel sobre-channel--instagram" target="_blank" rel="noopener">
-                  <span class="sobre-channel__icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                  </span>
-                  <div class="sobre-channel__text">
-                    <strong>Instagram</strong>
-                    <span>{{ block.settings.instagram_label | default: '@misoji' }}</span>
-                  </div>
-                </a>
-              {% endif %}
-              {% if block.settings.facebook_url != blank %}
-                <a href="{{ block.settings.facebook_url }}" class="sobre-channel sobre-channel--facebook" target="_blank" rel="noopener">
-                  <span class="sobre-channel__icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                  </span>
-                  <div class="sobre-channel__text">
-                    <strong>Facebook</strong>
-                    <span>{{ block.settings.facebook_label | default: 'misoji.beauty' }}</span>
-                  </div>
-                </a>
-              {% endif %}
-              {% if block.settings.tiktok_url != blank %}
-                <a href="{{ block.settings.tiktok_url }}" class="sobre-channel sobre-channel--tiktok" target="_blank" rel="noopener">
-                  <span class="sobre-channel__icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.42a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.21z"/></svg>
-                  </span>
-                  <div class="sobre-channel__text">
-                    <strong>TikTok</strong>
-                    <span>{{ block.settings.tiktok_label | default: '@misoji' }}</span>
-                  </div>
-                </a>
-              {% endif %}
+              {% endfor %}
             </div>
           </article>
 
@@ -316,17 +315,21 @@
         { "type": "text", "id": "title", "label": "Título", "default": "Servicio al cliente" },
         { "type": "richtext", "id": "body", "label": "Introducción", "default": "<p>Escríbenos por el canal que prefieras. Te respondemos antes, durante y después de tu compra.</p>" },
         { "type": "header", "content": "WhatsApp" },
+        { "type": "image_picker", "id": "whatsapp_logo", "label": "Logo (opcional)", "info": "Si no subes un logo se usa el ícono por defecto." },
         { "type": "url", "id": "whatsapp_url", "label": "URL WhatsApp (wa.me/...)" },
-        { "type": "text", "id": "whatsapp_label", "label": "Etiqueta", "default": "Chatea con nosotras" },
+        { "type": "text", "id": "whatsapp_label", "label": "Cuenta / etiqueta", "default": "Chatea con nosotras" },
         { "type": "header", "content": "Instagram" },
+        { "type": "image_picker", "id": "instagram_logo", "label": "Logo (opcional)", "info": "Si no subes un logo se usa el ícono por defecto." },
         { "type": "url", "id": "instagram_url", "label": "URL Instagram" },
-        { "type": "text", "id": "instagram_label", "label": "Etiqueta", "default": "@misoji" },
+        { "type": "text", "id": "instagram_label", "label": "Cuenta / etiqueta", "default": "@misoji" },
         { "type": "header", "content": "Facebook" },
+        { "type": "image_picker", "id": "facebook_logo", "label": "Logo (opcional)", "info": "Si no subes un logo se usa el ícono por defecto." },
         { "type": "url", "id": "facebook_url", "label": "URL Facebook" },
-        { "type": "text", "id": "facebook_label", "label": "Etiqueta", "default": "misoji.beauty" },
+        { "type": "text", "id": "facebook_label", "label": "Cuenta / etiqueta", "default": "misoji.beauty" },
         { "type": "header", "content": "TikTok" },
+        { "type": "image_picker", "id": "tiktok_logo", "label": "Logo (opcional)", "info": "Si no subes un logo se usa el ícono por defecto." },
         { "type": "url", "id": "tiktok_url", "label": "URL TikTok" },
-        { "type": "text", "id": "tiktok_label", "label": "Etiqueta", "default": "@misoji" }
+        { "type": "text", "id": "tiktok_label", "label": "Cuenta / etiqueta", "default": "@misoji" }
       ]
     }
   ],

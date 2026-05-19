@@ -56,17 +56,12 @@
           }
         },
         "servicio": {
-          "type": "apartado",
+          "type": "servicio",
           "settings": {
             "anchor_id": "servicio-al-cliente",
             "label": "CAPÍTULO 04",
             "title": "Servicio al cliente",
-            "body": "<p>Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza.</p>",
-            "video_url": "",
-            "emoji": "💌",
-            "layout": "image-right",
-            "cta_text": "Contáctanos",
-            "cta_url": "/pages/contacto"
+            "body": "<p>Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza.</p>"
           }
         }
       },
