@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDigitalProductModals();
   initMegaMenuMobile();
   initPdpCarousel();
+  initPdpLightbox();
   initPdpVariants();
   initPdpShare();
   initReelsCarousel();
@@ -1178,6 +1179,193 @@ function initPdpCarousel() {
       else goTo(current - 1);
     }
   }, { passive: true });
+}
+
+/* ── PDP Lightbox con zoom ── */
+function initPdpLightbox() {
+  const lightbox = document.getElementById('pdp-lightbox');
+  const stage    = document.getElementById('pdp-lightbox-stage');
+  const img      = document.getElementById('pdp-lightbox-img');
+  const closeBtn = document.getElementById('pdp-lightbox-close');
+  const prevBtn  = document.getElementById('pdp-lightbox-prev');
+  const nextBtn  = document.getElementById('pdp-lightbox-next');
+  const counter  = document.getElementById('pdp-lightbox-counter');
+  const carousel = document.getElementById('pdp-carousel-track');
+  if (!lightbox || !img || !stage || !carousel) return;
+
+  const slides = carousel.querySelectorAll('.pdp__carousel-slide');
+  const items = [];
+
+  slides.forEach((slide) => {
+    if (slide.querySelector('video, iframe')) return; // saltar videos
+    const slideImg = slide.querySelector('img');
+    if (!slideImg) return;
+    const idx = items.length;
+    items.push({
+      src: slideImg.dataset.zoom || slideImg.src,
+      alt: slideImg.alt || ''
+    });
+    slide.style.cursor = 'zoom-in';
+    slide.addEventListener('click', (e) => {
+      // Evitar abrir si fue un swipe (mover > 8px)
+      if (slide._wasSwipe) { slide._wasSwipe = false; return; }
+      e.preventDefault();
+      open(idx);
+    });
+    // Detectar swipe vs tap en táctil para no abrir lightbox tras swipe
+    let tStartX = 0, tStartY = 0;
+    slide.addEventListener('touchstart', (ev) => {
+      tStartX = ev.touches[0].clientX;
+      tStartY = ev.touches[0].clientY;
+      slide._wasSwipe = false;
+    }, { passive: true });
+    slide.addEventListener('touchend', (ev) => {
+      const dx = Math.abs(ev.changedTouches[0].clientX - tStartX);
+      const dy = Math.abs(ev.changedTouches[0].clientY - tStartY);
+      slide._wasSwipe = dx > 10 || dy > 10;
+    }, { passive: true });
+  });
+
+  if (items.length === 0) return;
+
+  let current = 0;
+  let zoom    = 1;
+  let panX    = 0, panY = 0;
+  let isPanning = false;
+  let panStartX = 0, panStartY = 0;
+  let panStartTX = 0, panStartTY = 0;
+  let pinchStartDist = 0, pinchStartZoom = 1;
+  let touchStartX = 0, touchStartY = 0;
+
+  function applyTransform() {
+    img.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + zoom + ')';
+    lightbox.classList.toggle('is-zoomed', zoom > 1);
+  }
+
+  function resetZoom() {
+    zoom = 1; panX = 0; panY = 0;
+    applyTransform();
+  }
+
+  function show(i) {
+    current = (i + items.length) % items.length;
+    img.src = items[current].src;
+    img.alt = items[current].alt;
+    if (counter) counter.textContent = (current + 1) + ' / ' + items.length;
+    resetZoom();
+  }
+
+  function open(i) {
+    show(i);
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    resetZoom();
+  }
+
+  if (closeBtn) closeBtn.addEventListener('click', close);
+  if (prevBtn)  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(current - 1); });
+  if (nextBtn)  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(current + 1); });
+  if (items.length <= 1) {
+    if (prevBtn) prevBtn.style.display = 'none';
+    if (nextBtn) nextBtn.style.display = 'none';
+  }
+
+  // Clic fuera de la imagen cierra
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox || e.target === stage) close();
+  });
+
+  // Teclado
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('is-open')) return;
+    if (e.key === 'Escape')     close();
+    if (e.key === 'ArrowLeft')  show(current - 1);
+    if (e.key === 'ArrowRight') show(current + 1);
+  });
+
+  // Zoom con rueda
+  stage.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const delta = -e.deltaY * 0.0025;
+    zoom = Math.max(1, Math.min(4, zoom + delta));
+    if (zoom === 1) { panX = 0; panY = 0; }
+    applyTransform();
+  }, { passive: false });
+
+  // Doble clic alterna zoom
+  stage.addEventListener('dblclick', () => {
+    zoom = zoom === 1 ? 2.5 : 1;
+    panX = 0; panY = 0;
+    applyTransform();
+  });
+
+  // Pan con mouse cuando hay zoom
+  stage.addEventListener('mousedown', (e) => {
+    if (zoom <= 1) return;
+    isPanning = true;
+    panStartX = e.clientX; panStartY = e.clientY;
+    panStartTX = panX;     panStartTY = panY;
+    lightbox.classList.add('is-panning');
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!isPanning) return;
+    panX = panStartTX + (e.clientX - panStartX);
+    panY = panStartTY + (e.clientY - panStartY);
+    applyTransform();
+  });
+  document.addEventListener('mouseup', () => {
+    isPanning = false;
+    lightbox.classList.remove('is-panning');
+  });
+
+  // Táctil: pinch para zoom, drag para pan, swipe para navegar (sin zoom)
+  stage.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      pinchStartDist = Math.hypot(dx, dy);
+      pinchStartZoom = zoom;
+    } else if (e.touches.length === 1) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      panStartTX = panX;
+      panStartTY = panY;
+    }
+  }, { passive: true });
+
+  stage.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2 && pinchStartDist > 0) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const dist = Math.hypot(dx, dy);
+      zoom = Math.max(1, Math.min(4, pinchStartZoom * (dist / pinchStartDist)));
+      if (zoom === 1) { panX = 0; panY = 0; }
+      applyTransform();
+    } else if (e.touches.length === 1 && zoom > 1) {
+      panX = panStartTX + (e.touches[0].clientX - touchStartX);
+      panY = panStartTY + (e.touches[0].clientY - touchStartY);
+      applyTransform();
+    }
+  }, { passive: true });
+
+  stage.addEventListener('touchend', (e) => {
+    pinchStartDist = 0;
+    if (zoom === 1 && e.changedTouches.length === 1 && items.length > 1) {
+      const diff = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(diff) > 60) {
+        if (diff < 0) show(current + 1);
+        else show(current - 1);
+      }
+    }
+  });
 }
 
 /* ── PDP Variantes ── */
