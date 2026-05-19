@@ -20,17 +20,6 @@
       {% endif %}
     </div>
 
-    {% if section.blocks.size > 0 %}
-      <nav class="sobre-tabs" aria-label="Apartados Sobre Nosotros">
-        {% for block in section.blocks %}
-          {%- assign anchor = block.settings.anchor_id | default: block.id -%}
-          {%- assign tab_title = block.settings.title -%}
-          {% if tab_title == blank %}{%- assign tab_title = block.type | capitalize -%}{% endif %}
-          <a href="#{{ anchor }}" class="sobre-tab">{{ tab_title }}</a>
-        {% endfor %}
-      </nav>
-    {% endif %}
-
     <div class="sobre-stack">
       {% for block in section.blocks %}
         {%- assign anchor = block.settings.anchor_id | default: block.id -%}
