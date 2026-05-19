@@ -2001,13 +2001,16 @@
   margin-bottom: 12px;
 }
 .featured-product__title {
+  font-family: var(--font-heading);
   font-size: 36px;
   font-weight: 800;
   line-height: 1.15;
   margin-bottom: 20px;
   letter-spacing: -1px;
 }
-.featured-product__desc {
+.featured-product__desc,
+.featured-product__desc p {
+  font-family: var(--font-family);
   font-size: 16px;
   color: var(--color-text-muted);
   line-height: 1.7;
