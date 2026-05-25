@@ -33,9 +33,10 @@
             "anchor_id": "nuestros-valores",
             "label": "CAPÍTULO 02",
             "title": "Nuestros valores",
-            "body": "<p><strong>Calidad ·</strong> Cada dispositivo pasa rigurosos controles.<br><strong>Cercanía ·</strong> Acompañamos a nuestras clientas en cada paso.<br><strong>Transparencia ·</strong> Decimos las cosas como son.<br><strong>Innovación ·</strong> Siempre con tecnología actualizada.</p>",
+            "body": "<p><strong>Calidad ·</strong> Cada dispositivo pasa rigurosos controles.<br/><strong>Cercanía ·</strong> Acompañamos a nuestras clientas en cada paso.<br/><strong>Transparencia ·</strong> Decimos las cosas como son.<br/><strong>Innovación ·</strong> Siempre con tecnología actualizada.</p>",
+            "image": "shopify://shop_images/empacando_pedidos.png",
             "video_url": "",
-            "emoji": "💎",
+            "emoji": "",
             "layout": "image-right",
             "cta_text": "",
             "cta_url": ""
@@ -56,12 +57,17 @@
           }
         },
         "servicio": {
-          "type": "servicio",
+          "type": "apartado",
           "settings": {
             "anchor_id": "servicio-al-cliente",
             "label": "CAPÍTULO 04",
             "title": "Servicio al cliente",
-            "body": "<p>Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza.</p>"
+            "body": "<p>Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza.</p>",
+            "video_url": "",
+            "emoji": "💌",
+            "layout": "image-right",
+            "cta_text": "Contáctanos",
+            "cta_url": "/pages/contacto"
           }
         }
       },
