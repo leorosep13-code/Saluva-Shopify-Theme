@@ -5164,270 +5164,72 @@ body.cart-drawer-open { overflow: hidden; }
 }
 
 /* ═══════════════════════════════════════════
-   SOBRE NOSOTROS — basada en patrones de la landing
-   (hero + featured-product + why-us)
+   SOBRE NOSOTROS — reusa featured-product y why-us de la landing.
+   Solo añadimos lo justo: wrapper de imagen para historia,
+   inversión de orden y card-as-link para servicio.
    ═══════════════════════════════════════════ */
-.about-page {
-  padding: 70px 0 90px;
+
+/* ── Intro centrado ── */
+.about-page__intro {
+  padding: 60px 0 10px;
 }
 
-/* ── Hero: texto + imagen cuadrada (featured-product style) ── */
-.about-hero {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 56px;
-  align-items: center;
-  margin-bottom: 90px;
-}
-.about-hero__content { display: flex; flex-direction: column; gap: 16px; }
-.about-hero__label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--color-primary);
-  text-transform: uppercase;
-}
-.about-hero__title {
-  font-family: var(--font-heading);
-  font-size: 48px;
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -1px;
-  color: var(--color-midnight);
-  margin: 0;
-}
-.about-hero__desc {
-  font-size: 17px;
-  color: var(--color-text-muted);
-  line-height: 1.65;
-  margin: 0;
-}
-.about-hero__cta { align-self: flex-start; margin-top: 12px; }
-.about-hero__media {
+/* ── Historia: usa .featured-product y .featured-product__inner. ── */
+.about-featured__inner { align-items: center; }
+.about-featured__inner--reverse { flex-direction: row-reverse; }
+.about-featured__media {
+  flex: 1;
   position: relative;
-  aspect-ratio: 1 / 1;
   border-radius: var(--radius-lg, 22px);
   overflow: hidden;
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
-  box-shadow: 0 18px 50px rgba(93, 78, 255, 0.12);
-}
-.about-hero__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.about-hero__placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 80px;
-}
-
-/* ── Feature: imagen cuadrada + texto (historia) ── */
-.about-feature {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 56px;
-  align-items: center;
-  margin-bottom: 90px;
-  scroll-margin-top: 140px;
-}
-.about-feature--image-right .about-feature__media { order: 2; }
-.about-feature__media {
-  position: relative;
   aspect-ratio: 1 / 1;
-  border-radius: var(--radius-lg, 22px);
-  overflow: hidden;
   background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
   box-shadow: 0 18px 50px rgba(93, 78, 255, 0.10);
 }
-.about-feature__img {
+.about-featured__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
-.about-feature__placeholder {
+.about-featured__placeholder {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 90px;
-}
-.about-feature__content { display: flex; flex-direction: column; gap: 16px; }
-.about-feature__label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--color-primary);
-  text-transform: uppercase;
-}
-.about-feature__title {
-  font-family: var(--font-heading);
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.5px;
-  color: var(--color-midnight);
-  margin: 0;
-}
-.about-feature__body {
-  font-size: 16px;
-  color: var(--color-text-muted);
-  line-height: 1.7;
-}
-.about-feature__body p { margin-bottom: 10px; }
-.about-feature__body strong { color: var(--color-text); }
-.about-feature__content .btn { align-self: flex-start; margin-top: 8px; }
-
-/* ── Section con head centrado + grid de tarjetas (valores / servicio) ── */
-.about-section {
-  margin-bottom: 90px;
-  scroll-margin-top: 140px;
-}
-.about-section__head {
-  text-align: center;
-  max-width: 720px;
-  margin: 0 auto 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.about-section__label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--color-primary);
-  text-transform: uppercase;
-}
-.about-section__title {
-  font-family: var(--font-heading);
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.5px;
-  color: var(--color-midnight);
-  margin: 0;
-}
-.about-section__desc {
-  font-size: 16px;
-  color: var(--color-text-muted);
-  line-height: 1.65;
-}
-.about-section__desc p { margin: 0; }
-.about-section__cta {
-  display: flex;
-  justify-content: center;
-  margin-top: 32px;
+  font-size: 96px;
 }
 
-/* ── Grid de 4 tarjetas estilo why-us ── */
-.about-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 22px;
-}
-.about-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(221, 227, 234, 0.7);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 8px 28px rgba(30, 31, 37, 0.05);
-  color: var(--color-text);
+/* ── Tarjetas why-us cuando son links ── */
+.why-us__card--link {
   text-decoration: none;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+  color: inherit;
+  cursor: pointer;
 }
-.about-card--link { cursor: pointer; }
-.about-card--link:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 18px 44px rgba(93, 78, 255, 0.15);
-}
-.about-card__media {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
-}
-.about-card__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.about-card--link:hover .about-card__img { transform: scale(1.05); }
-.about-card__placeholder {
-  width: 100%;
-  height: 100%;
+
+/* ── CTA centrado debajo de un grid why-us ── */
+.about-section-cta {
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 56px;
-  color: var(--color-mist-lavender);
-  font-weight: 800;
-  font-family: var(--font-heading);
-}
-.about-card__body {
-  padding: 18px 18px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  text-align: center;
-}
-.about-card__title {
-  font-family: var(--font-heading);
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.2px;
-  line-height: 1.25;
-  color: var(--color-midnight);
-  margin: 0;
-}
-.about-card__desc {
-  font-size: 14px;
-  color: var(--color-text-muted);
-  line-height: 1.45;
-  margin: 0;
+  margin-top: 36px;
 }
 
 /* ── Limpieza: clases viejas ocultas por si Shopify aún cachea HTML antiguo ── */
 .sobre-tabs, .sobre-tab,
 .sobre-channels, .sobre-channel,
 .sobre-gallery, .sobre-gallery__item,
-.sobre-services, .sobre-service { display: none !important; }
+.sobre-services, .sobre-service,
+.about-hero, .about-feature, .about-section, .about-grid, .about-card { display: none !important; }
 
-/* ── Responsive ── */
-@media (max-width: 1024px) {
-  .about-grid { grid-template-columns: repeat(2, 1fr); }
-}
+/* ── Responsive: stack featured-product en móvil ── */
 @media (max-width: 880px) {
-  .about-page { padding: 50px 0 70px; }
-  .about-hero,
-  .about-feature,
-  .about-feature--image-right {
-    grid-template-columns: 1fr;
+  .about-page__intro { padding: 40px 0 0; }
+  .about-featured__inner,
+  .about-featured__inner--reverse {
+    flex-direction: column;
     gap: 28px;
-    margin-bottom: 60px;
   }
-  .about-feature--image-right .about-feature__media { order: 0; }
-  .about-hero__title { font-size: 36px; }
-  .about-feature__title,
-  .about-section__title { font-size: 28px; }
-  .about-section { margin-bottom: 60px; }
-  .about-section__head { margin-bottom: 28px; }
-}
-@media (max-width: 560px) {
-  .about-grid { grid-template-columns: 1fr; gap: 16px; }
 }
 
 /* ═══════════════════════════════════════════

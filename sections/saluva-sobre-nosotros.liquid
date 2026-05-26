@@ -1,89 +1,79 @@
 {%- comment -%}
-  Sobre Nosotros — reescrito con los patrones de la landing.
-  Hero: texto + imagen cuadrada (estilo featured-product).
-  Historia: imagen cuadrada + texto.
-  Valores: 4 tarjetas cuadradas (estilo why-us).
-  Servicio: 4 tarjetas cuadradas con link (estilo why-us).
+  Sobre Nosotros — usa los componentes de la landing al pie de la letra:
+  - Header centrado (section-header)
+  - Historia: layout featured-product (imagen cuadrada + texto)
+  - Valores: why-us con 4 tarjetas cuadradas
+  - Servicio: why-us con 4 tarjetas cuadradas (clicables)
 {%- endcomment -%}
 
-<section id="sobre-nosotros" class="about-page aurora-bg">
-  <div class="container">
+<div id="sobre-nosotros" class="about-page">
 
-    {%- comment -%} ── Hero: texto + imagen cuadrada ── {%- endcomment -%}
-    <div class="about-hero">
-      <div class="about-hero__content">
-        {% if section.settings.label != blank %}
-          <span class="about-hero__label">{{ section.settings.label }}</span>
-        {% endif %}
-        <h1 class="about-hero__title">{{ section.settings.title }}</h1>
-        {% if section.settings.description != blank %}
-          <p class="about-hero__desc">{{ section.settings.description }}</p>
-        {% endif %}
-        {% if section.settings.cta_text != blank and section.settings.cta_url != blank %}
-          <a href="{{ section.settings.cta_url }}" class="btn btn--primary btn--md about-hero__cta">{{ section.settings.cta_text }}</a>
-        {% endif %}
+  {%- if section.settings.title != blank or section.settings.description != blank -%}
+    <section class="about-page__intro">
+      <div class="container">
+        <div class="section-header section-header--center">
+          {% if section.settings.label != blank %}
+            <span class="section-header__label">{{ section.settings.label }}</span>
+          {% endif %}
+          <h1 class="section-header__title">{{ section.settings.title }}</h1>
+          {% if section.settings.description != blank %}
+            <p class="section-header__desc">{{ section.settings.description }}</p>
+          {% endif %}
+        </div>
       </div>
-      <div class="about-hero__media">
-        {% if section.settings.image != blank %}
-          <img src="{{ section.settings.image | image_url: width: 900 }}"
-               alt="{{ section.settings.title }}"
-               class="about-hero__img"
-               loading="lazy">
-        {% else %}
-          <div class="about-hero__placeholder">✨</div>
-        {% endif %}
-      </div>
-    </div>
+    </section>
+  {%- endif -%}
 
-    {%- comment -%} ── Bloques ── {%- endcomment -%}
-    {% for block in section.blocks %}
-      {%- assign anchor = block.settings.anchor_id | default: block.id -%}
+  {% for block in section.blocks %}
+    {%- assign anchor = block.settings.anchor_id | default: block.id -%}
 
-      {% case block.type %}
+    {% case block.type %}
 
-      {%- comment -%} ── HISTORIA: imagen cuadrada + texto (configurable izquierda/derecha) ── {%- endcomment -%}
-      {% when 'historia' %}
-        {%- assign layout = block.settings.layout | default: 'image-left' -%}
-        <article id="{{ anchor }}"
-                 class="about-feature about-feature--{{ layout }}"
-                 {{ block.shopify_attributes }}>
-          <div class="about-feature__media">
-            {% if block.settings.image != blank %}
-              <img src="{{ block.settings.image | image_url: width: 900 }}"
-                   alt="{{ block.settings.title }}"
-                   class="about-feature__img"
-                   loading="lazy">
-            {% else %}
-              <div class="about-feature__placeholder">{{ block.settings.emoji | default: '🌿' }}</div>
-            {% endif %}
+    {%- comment -%} ───── HISTORIA: featured-product look ───── {%- endcomment -%}
+    {% when 'historia' %}
+      {%- assign reverse_mod = '' -%}
+      {% if block.settings.layout == 'image-right' %}{%- assign reverse_mod = ' about-featured__inner--reverse' -%}{% endif %}
+      <section id="{{ anchor }}" class="featured-product about-featured" {{ block.shopify_attributes }}>
+        <div class="container">
+          <div class="featured-product__inner about-featured__inner{{ reverse_mod }}">
+            <div class="about-featured__media">
+              {% if block.settings.image != blank %}
+                <img src="{{ block.settings.image | image_url: width: 900 }}"
+                     alt="{{ block.settings.title }}"
+                     class="about-featured__img"
+                     loading="lazy">
+              {% else %}
+                <div class="about-featured__placeholder">{{ block.settings.emoji | default: '🌿' }}</div>
+              {% endif %}
+            </div>
+            <div class="featured-product__info">
+              {% if block.settings.label != blank %}
+                <span class="featured-product__label">{{ block.settings.label }}</span>
+              {% endif %}
+              <h2 class="featured-product__title">{{ block.settings.title }}</h2>
+              <div class="featured-product__desc">{{ block.settings.body }}</div>
+              {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
+                <a href="{{ block.settings.cta_url }}" class="btn btn--primary btn--md">{{ block.settings.cta_text }}</a>
+              {% endif %}
+            </div>
           </div>
-          <div class="about-feature__content">
-            {% if block.settings.label != blank %}
-              <span class="about-feature__label">{{ block.settings.label }}</span>
-            {% endif %}
-            <h2 class="about-feature__title">{{ block.settings.title }}</h2>
-            <div class="about-feature__body">{{ block.settings.body }}</div>
-            {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
-              <a href="{{ block.settings.cta_url }}" class="btn btn--primary btn--md">{{ block.settings.cta_text }}</a>
-            {% endif %}
-          </div>
-        </article>
+        </div>
+      </section>
 
-      {%- comment -%} ── VALORES: 4 tarjetas cuadradas estilo why-us ── {%- endcomment -%}
-      {% when 'valores' %}
-        <article id="{{ anchor }}"
-                 class="about-section"
-                 {{ block.shopify_attributes }}>
-          <header class="about-section__head">
+    {%- comment -%} ───── VALORES: why-us look (4 cards) ───── {%- endcomment -%}
+    {% when 'valores' %}
+      <section id="{{ anchor }}" class="why-us aurora-bg" {{ block.shopify_attributes }}>
+        <div class="container">
+          <div class="section-header section-header--center">
             {% if block.settings.label != blank %}
-              <span class="about-section__label">{{ block.settings.label }}</span>
+              <span class="section-header__label">{{ block.settings.label }}</span>
             {% endif %}
-            <h2 class="about-section__title">{{ block.settings.title }}</h2>
+            <h2 class="section-header__title">{{ block.settings.title }}</h2>
             {% if block.settings.body != blank %}
-              <div class="about-section__desc">{{ block.settings.body }}</div>
+              <p class="section-header__desc">{{ block.settings.body | strip_html }}</p>
             {% endif %}
-          </header>
-          <div class="about-grid">
+          </div>
+          <div class="why-us__grid">
             {% for i in (1..4) %}
               {%- assign img_key   = 'image_'   | append: i -%}
               {%- assign title_key = 'caption_' | append: i -%}
@@ -91,43 +81,43 @@
               {%- assign card_img   = block.settings[img_key] -%}
               {%- assign card_title = block.settings[title_key] -%}
               {%- assign card_desc  = block.settings[desc_key] -%}
-              <div class="about-card">
-                <div class="about-card__media">
+              <div class="why-us__card">
+                <div class="why-us__card-media">
                   {% if card_img != blank %}
                     <img src="{{ card_img | image_url: width: 600 }}"
                          alt="{{ card_title | default: 'Valor misoji' }}"
-                         class="about-card__img"
+                         class="why-us__card-img"
                          loading="lazy">
                   {% else %}
-                    <div class="about-card__placeholder">{{ forloop.index }}</div>
+                    <div class="why-us__card-placeholder">{{ forloop.index }}</div>
                   {% endif %}
                 </div>
-                <div class="about-card__body">
-                  <h3 class="about-card__title">{{ card_title | default: 'Valor' }}</h3>
+                <div class="why-us__card-body">
+                  <h3 class="why-us__card-label">{{ card_title | default: 'Valor' }}</h3>
                   {% if card_desc != blank %}
-                    <p class="about-card__desc">{{ card_desc }}</p>
+                    <p class="why-us__card-subtitle">{{ card_desc }}</p>
                   {% endif %}
                 </div>
               </div>
             {% endfor %}
           </div>
-        </article>
+        </div>
+      </section>
 
-      {%- comment -%} ── SERVICIO: 4 tarjetas con link ── {%- endcomment -%}
-      {% when 'servicio' %}
-        <article id="{{ anchor }}"
-                 class="about-section"
-                 {{ block.shopify_attributes }}>
-          <header class="about-section__head">
+    {%- comment -%} ───── SERVICIO: why-us look (4 cards con link) ───── {%- endcomment -%}
+    {% when 'servicio' %}
+      <section id="{{ anchor }}" class="why-us aurora-bg" {{ block.shopify_attributes }}>
+        <div class="container">
+          <div class="section-header section-header--center">
             {% if block.settings.label != blank %}
-              <span class="about-section__label">{{ block.settings.label }}</span>
+              <span class="section-header__label">{{ block.settings.label }}</span>
             {% endif %}
-            <h2 class="about-section__title">{{ block.settings.title }}</h2>
+            <h2 class="section-header__title">{{ block.settings.title }}</h2>
             {% if block.settings.body != blank %}
-              <div class="about-section__desc">{{ block.settings.body }}</div>
+              <p class="section-header__desc">{{ block.settings.body | strip_html }}</p>
             {% endif %}
-          </header>
-          <div class="about-grid">
+          </div>
+          <div class="why-us__grid">
             {% for i in (1..4) %}
               {%- assign img_key   = 'card_image_' | append: i -%}
               {%- assign title_key = 'card_title_' | append: i -%}
@@ -138,41 +128,46 @@
               {%- assign card_desc  = block.settings[desc_key] -%}
               {%- assign card_url   = block.settings[url_key] -%}
               {%- assign tag = 'div' -%}
-              {% if card_url != blank %}{%- assign tag = 'a' -%}{% endif %}
+              {%- assign link_attrs = '' -%}
+              {%- assign link_mod = '' -%}
+              {% if card_url != blank %}
+                {%- assign tag = 'a' -%}
+                {%- assign link_mod = ' why-us__card--link' -%}
+              {% endif %}
               <{{ tag }}
                 {% if card_url != blank %}href="{{ card_url }}"{% endif %}
-                class="about-card{% if card_url != blank %} about-card--link{% endif %}">
-                <div class="about-card__media">
+                class="why-us__card{{ link_mod }}">
+                <div class="why-us__card-media">
                   {% if card_img != blank %}
                     <img src="{{ card_img | image_url: width: 600 }}"
                          alt="{{ card_title | default: 'Servicio misoji' }}"
-                         class="about-card__img"
+                         class="why-us__card-img"
                          loading="lazy">
                   {% else %}
-                    <div class="about-card__placeholder">{{ forloop.index }}</div>
+                    <div class="why-us__card-placeholder">{{ forloop.index }}</div>
                   {% endif %}
                 </div>
-                <div class="about-card__body">
-                  <h3 class="about-card__title">{{ card_title | default: 'Opción de servicio' }}</h3>
+                <div class="why-us__card-body">
+                  <h3 class="why-us__card-label">{{ card_title | default: 'Opción' }}</h3>
                   {% if card_desc != blank %}
-                    <p class="about-card__desc">{{ card_desc }}</p>
+                    <p class="why-us__card-subtitle">{{ card_desc }}</p>
                   {% endif %}
                 </div>
               </{{ tag }}>
             {% endfor %}
           </div>
           {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
-            <div class="about-section__cta">
+            <div class="about-section-cta">
               <a href="{{ block.settings.cta_url }}" class="btn btn--primary btn--md">{{ block.settings.cta_text }}</a>
             </div>
           {% endif %}
-        </article>
+        </div>
+      </section>
 
-      {% endcase %}
-    {% endfor %}
+    {% endcase %}
+  {% endfor %}
 
-  </div>
-</section>
+</div>
 
 {% schema %}
 {
@@ -180,10 +175,7 @@
   "settings": [
     { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "NUESTRA ESENCIA" },
     { "type": "text", "id": "title", "label": "Título", "default": "Sobre Nosotros" },
-    { "type": "textarea", "id": "description", "label": "Descripción", "default": "Detrás de misoji hay un equipo apasionado por la belleza y la tecnología. Conoce nuestra historia, valores y compromiso." },
-    { "type": "image_picker", "id": "image", "label": "Imagen hero (cuadrada recomendada)" },
-    { "type": "text", "id": "cta_text", "label": "Texto CTA hero (opcional)" },
-    { "type": "url", "id": "cta_url", "label": "URL CTA hero (opcional)" }
+    { "type": "textarea", "id": "description", "label": "Descripción", "default": "Detrás de misoji hay un equipo apasionado por la belleza y la tecnología. Conoce nuestra historia, valores y compromiso." }
   ],
   "blocks": [
     {
@@ -192,7 +184,7 @@
       "limit": 1,
       "settings": [
         { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "nuestra-historia" },
-        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 01" },
+        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "NUESTRA HISTORIA" },
         { "type": "text", "id": "title", "label": "Título", "default": "Nuestra historia" },
         { "type": "richtext", "id": "body", "label": "Contenido", "default": "<p>Cuenta aquí la historia de tu marca: cómo nació, qué te inspiró y a dónde quieren llegar.</p>" },
         { "type": "image_picker", "id": "image", "label": "Imagen (cuadrada recomendada)" },
@@ -217,9 +209,9 @@
       "limit": 1,
       "settings": [
         { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "nuestros-valores" },
-        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 02" },
-        { "type": "text", "id": "title", "label": "Título", "default": "Nuestros valores" },
-        { "type": "richtext", "id": "body", "label": "Introducción", "default": "<p>Lo que nos guía cada día y nos hace ser diferentes.</p>" },
+        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "NUESTROS VALORES" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Lo que nos mueve" },
+        { "type": "textarea", "id": "body", "label": "Introducción", "default": "Lo que nos guía cada día y nos hace ser diferentes." },
         { "type": "header", "content": "Valor 1" },
         { "type": "image_picker", "id": "image_1", "label": "Imagen" },
         { "type": "text", "id": "caption_1", "label": "Título", "default": "Calidad" },
@@ -244,9 +236,9 @@
       "limit": 1,
       "settings": [
         { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "servicio-al-cliente" },
-        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 03" },
-        { "type": "text", "id": "title", "label": "Título", "default": "Servicio al cliente" },
-        { "type": "richtext", "id": "body", "label": "Introducción", "default": "<p>Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza.</p>" },
+        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "SERVICIO AL CLIENTE" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Te acompañamos siempre" },
+        { "type": "textarea", "id": "body", "label": "Introducción", "default": "Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza." },
         { "type": "text", "id": "cta_text", "label": "Texto CTA secundario (opcional)" },
         { "type": "url", "id": "cta_url", "label": "URL CTA secundario (opcional)" },
         { "type": "header", "content": "Tarjeta 1" },
