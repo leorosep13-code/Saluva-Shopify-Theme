@@ -1,5 +1,11 @@
 /*
- * Página Nosotros — usa la sección saluva-nosotros.
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
  */
 {
   "sections": {
@@ -13,6 +19,7 @@
             "label": "NUESTRA HISTORIA",
             "title": "Nuestra historia",
             "body": "<p>Misoji nació de la pasión por democratizar la belleza a través de la tecnología. Somos una empresa colombiana, hecha por y para la mujer, que busca acercar la innovación en electro-belleza a más hogares de una manera accesible, práctica y consciente.</p>",
+            "image": "shopify://shop_images/colombia.png",
             "emoji": "🌿",
             "layout": "image-left",
             "cta_text": "",
@@ -28,8 +35,10 @@
             "body": "Lo que nos guía cada día y nos hace ser diferentes.",
             "caption_1": "Calidad",
             "text_1": "Cada dispositivo pasa rigurosos controles.",
+            "image_2": "shopify://shop_images/modelos_con_productos.png",
             "caption_2": "Cercanía",
             "text_2": "Acompañamos a nuestras clientas en cada paso.",
+            "image_3": "shopify://shop_images/trabajadores_bodega.png",
             "caption_3": "Transparencia",
             "text_3": "Decimos las cosas como son.",
             "caption_4": "Innovación",
@@ -45,14 +54,19 @@
             "body": "Te acompañamos antes, durante y después de tu compra. Elige el canal que prefieras.",
             "cta_text": "",
             "cta_url": "",
+            "card_image_1": "shopify://shop_images/ChatGPT_Image_25_may_2026_21_29_44.png",
             "card_title_1": "WhatsApp",
             "card_desc_1": "Chatea con nosotras.",
+            "card_url_1": "",
             "card_title_2": "Instagram",
             "card_desc_2": "Síguenos @misoji.",
+            "card_url_2": "",
             "card_title_3": "Email",
             "card_desc_3": "Escríbenos a hola@misoji.com",
+            "card_url_3": "",
             "card_title_4": "Soporte",
-            "card_desc_4": "Resolvemos tus dudas."
+            "card_desc_4": "Resolvemos tus dudas.",
+            "card_url_4": ""
           }
         }
       },
