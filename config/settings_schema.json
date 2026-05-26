@@ -3,7 +3,9 @@
     "name": "theme_info",
     "theme_name": "misoji Beauty Theme",
     "theme_author": "misoji Beauty",
-    "theme_version": "1.0.0"
+    "theme_version": "1.0.0",
+    "theme_documentation_url": "https://github.com/leorosep13-code/Saluva-Shopify-Theme",
+    "theme_support_url": "https://github.com/leorosep13-code/Saluva-Shopify-Theme/issues"
   },
   {
     "name": "Identidad de la marca",
