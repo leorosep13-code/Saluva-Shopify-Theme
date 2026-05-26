@@ -64,6 +64,7 @@
             "label": "CAPÍTULO 04",
             "title": "Servicio al cliente",
             "body": "<p>Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza.</p>",
+            "image": "shopify://shop_images/Equipo_de_trabajo.png",
             "video_url": "",
             "emoji": "💌",
             "layout": "image-right",
