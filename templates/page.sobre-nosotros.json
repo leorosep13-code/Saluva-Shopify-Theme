@@ -11,63 +11,6 @@
   "sections": {
     "main": {
       "type": "saluva-sobre-nosotros",
-      "blocks": {
-        "historia": {
-          "type": "historia",
-          "settings": {
-            "anchor_id": "nuestra-historia",
-            "label": "NUESTRA HISTORIA",
-            "title": "Nuestra historia",
-            "body": "<p>Misoji nació de la pasión por democratizar la belleza a través de la tecnología. Somos una empresa colombiana, hecha por y para la mujer, que busca acercar la innovación en electro-belleza a más hogares de una manera accesible, práctica y consciente.</p>",
-            "image": "shopify://shop_images/logo_misoji_2.png",
-            "emoji": "🌿",
-            "layout": "image-left",
-            "cta_text": "",
-            "cta_url": ""
-          }
-        },
-        "valores": {
-          "type": "valores",
-          "settings": {
-            "anchor_id": "nuestros-valores",
-            "label": "NUESTROS VALORES",
-            "title": "Lo que nos mueve",
-            "body": "Lo que nos guía cada día y nos hace ser diferentes.",
-            "caption_1": "Calidad",
-            "text_1": "Cada dispositivo pasa rigurosos controles.",
-            "caption_2": "Cercanía",
-            "text_2": "Acompañamos a nuestras clientas en cada paso.",
-            "caption_3": "Transparencia",
-            "text_3": "Decimos las cosas como son.",
-            "caption_4": "Innovación",
-            "text_4": "Tecnología siempre actualizada."
-          }
-        },
-        "servicio": {
-          "type": "servicio",
-          "settings": {
-            "anchor_id": "servicio-al-cliente",
-            "label": "SERVICIO AL CLIENTE",
-            "title": "Te acompañamos siempre",
-            "body": "Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza.",
-            "cta_text": "Contáctanos",
-            "cta_url": "/pages/contacto",
-            "card_title_1": "Garantía",
-            "card_desc_1": "Respaldo en cada compra.",
-            "card_title_2": "Envíos",
-            "card_desc_2": "Llevamos tu pedido a todo el país.",
-            "card_title_3": "Asesoría personalizada",
-            "card_desc_3": "Te ayudamos a elegir.",
-            "card_title_4": "Contacto",
-            "card_desc_4": "Escríbenos cuando quieras."
-          }
-        }
-      },
-      "block_order": [
-        "historia",
-        "valores",
-        "servicio"
-      ],
       "settings": {
         "label": "NUESTRA ESENCIA",
         "title": "Sobre Nosotros",
