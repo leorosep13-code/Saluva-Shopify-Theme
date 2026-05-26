@@ -47,8 +47,9 @@
           "settings": {
             "anchor_id": "marcas-convenios",
             "label": "CAPÍTULO 03",
-            "title": "Nuestras proveedores y convenios",
+            "title": "Nuestros proveedores y convenios",
             "body": "<p>Nos aliamos con fabricantes internacionales y expertos del sector para acercar soluciones de electro-belleza modernas, confiables y fáciles de usar.<br/><br/></p>",
+            "image": "shopify://shop_images/trabajadores_bodega.png",
             "video_url": "",
             "emoji": "🤝",
             "layout": "image-left",
