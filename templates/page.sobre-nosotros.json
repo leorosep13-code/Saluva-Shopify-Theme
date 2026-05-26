@@ -13,14 +13,13 @@
       "type": "saluva-sobre-nosotros",
       "blocks": {
         "historia": {
-          "type": "apartado",
+          "type": "historia",
           "settings": {
             "anchor_id": "nuestra-historia",
-            "label": "",
+            "label": "CAPÍTULO 01",
             "title": "Nuestra historia",
             "body": "<p>Misoji nació de la pasión por democratizar la belleza a través de la tecnología. Somos una empresa colombiana, hecha por y para la mujer, que busca acercar la innovación en electro-belleza a más hogares de una manera accesible, práctica y consciente.</p>",
             "image": "shopify://shop_images/logo_misoji_2.png",
-            "video_url": "",
             "emoji": "🌿",
             "layout": "image-left",
             "cta_text": "",
@@ -28,55 +27,45 @@
           }
         },
         "valores": {
-          "type": "apartado",
+          "type": "valores",
           "settings": {
             "anchor_id": "nuestros-valores",
             "label": "CAPÍTULO 02",
             "title": "Nuestros valores",
-            "body": "<p><strong>Calidad ·</strong> Cada dispositivo pasa rigurosos controles.<br/><strong>Cercanía ·</strong> Acompañamos a nuestras clientas en cada paso.<br/><strong>Transparencia ·</strong> Decimos las cosas como son.<br/><strong>Innovación ·</strong> Siempre con tecnología actualizada.</p>",
-            "image": "shopify://shop_images/empacando_pedidos.png",
-            "video_url": "",
-            "emoji": "",
-            "layout": "image-right",
-            "cta_text": "",
-            "cta_url": ""
-          }
-        },
-        "marcas": {
-          "type": "apartado",
-          "settings": {
-            "anchor_id": "marcas-convenios",
-            "label": "CAPÍTULO 03",
-            "title": "Nuestros proveedores y convenios",
-            "body": "<p>Nos aliamos con fabricantes internacionales y expertos del sector para acercar soluciones de electro-belleza modernas, confiables y fáciles de usar.<br/><br/></p>",
-            "image": "shopify://shop_images/trabajadores_bodega.png",
-            "video_url": "",
-            "emoji": "🤝",
-            "layout": "image-left",
-            "cta_text": "",
-            "cta_url": ""
+            "body": "<p>Lo que nos guía cada día y nos hace ser diferentes.</p>",
+            "caption_1": "Calidad",
+            "text_1": "Cada dispositivo pasa rigurosos controles.",
+            "caption_2": "Cercanía",
+            "text_2": "Acompañamos a nuestras clientas en cada paso.",
+            "caption_3": "Transparencia",
+            "text_3": "Decimos las cosas como son.",
+            "caption_4": "Innovación",
+            "text_4": "Tecnología siempre actualizada."
           }
         },
         "servicio": {
-          "type": "apartado",
+          "type": "servicio",
           "settings": {
             "anchor_id": "servicio-al-cliente",
-            "label": "CAPÍTULO 04",
+            "label": "CAPÍTULO 03",
             "title": "Servicio al cliente",
             "body": "<p>Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza.</p>",
-            "image": "shopify://shop_images/ChatGPT_Image_25_may_2026_21_29_44.png",
-            "video_url": "",
-            "emoji": "💌",
-            "layout": "image-right",
             "cta_text": "Contáctanos",
-            "cta_url": "/pages/contacto"
+            "cta_url": "/pages/contacto",
+            "card_title_1": "Garantía",
+            "card_desc_1": "Respaldo en cada compra.",
+            "card_title_2": "Envíos",
+            "card_desc_2": "Llevamos tu pedido a todo el país.",
+            "card_title_3": "Asesoría personalizada",
+            "card_desc_3": "Te ayudamos a elegir.",
+            "card_title_4": "Contacto",
+            "card_desc_4": "Escríbenos cuando quieras."
           }
         }
       },
       "block_order": [
         "historia",
         "valores",
-        "marcas",
         "servicio"
       ],
       "settings": {

@@ -1,198 +1,176 @@
-<section id="sobre-nosotros" class="sobre-nosotros aurora-bg">
+{%- comment -%}
+  Sobre Nosotros — reescrito con los patrones de la landing.
+  Hero: texto + imagen cuadrada (estilo featured-product).
+  Historia: imagen cuadrada + texto.
+  Valores: 4 tarjetas cuadradas (estilo why-us).
+  Servicio: 4 tarjetas cuadradas con link (estilo why-us).
+{%- endcomment -%}
+
+<section id="sobre-nosotros" class="about-page aurora-bg">
   <div class="container">
-    <div class="sobre-hero">
-      <div class="sobre-hero__content">
+
+    {%- comment -%} ── Hero: texto + imagen cuadrada ── {%- endcomment -%}
+    <div class="about-hero">
+      <div class="about-hero__content">
         {% if section.settings.label != blank %}
-          <span class="section-header__label text-primary">{{ section.settings.label }}</span>
+          <span class="about-hero__label">{{ section.settings.label }}</span>
         {% endif %}
-        <h1 class="sobre-hero__title">{{ section.settings.title }}</h1>
+        <h1 class="about-hero__title">{{ section.settings.title }}</h1>
         {% if section.settings.description != blank %}
-          <p class="sobre-hero__desc">{{ section.settings.description }}</p>
+          <p class="about-hero__desc">{{ section.settings.description }}</p>
+        {% endif %}
+        {% if section.settings.cta_text != blank and section.settings.cta_url != blank %}
+          <a href="{{ section.settings.cta_url }}" class="btn btn--primary btn--md about-hero__cta">{{ section.settings.cta_text }}</a>
         {% endif %}
       </div>
-      {% if section.settings.image != blank %}
-        <div class="sobre-hero__media">
-          <img src="{{ section.settings.image | image_url: width: 800 }}"
+      <div class="about-hero__media">
+        {% if section.settings.image != blank %}
+          <img src="{{ section.settings.image | image_url: width: 900 }}"
                alt="{{ section.settings.title }}"
-               class="sobre-hero__img"
+               class="about-hero__img"
                loading="lazy">
-        </div>
-      {% endif %}
+        {% else %}
+          <div class="about-hero__placeholder">✨</div>
+        {% endif %}
+      </div>
     </div>
 
-    <div class="sobre-stack">
-      {% for block in section.blocks %}
-        {%- assign anchor = block.settings.anchor_id | default: block.id -%}
+    {%- comment -%} ── Bloques ── {%- endcomment -%}
+    {% for block in section.blocks %}
+      {%- assign anchor = block.settings.anchor_id | default: block.id -%}
 
-        {% case block.type %}
+      {% case block.type %}
 
-        {%- comment -%} ───── Imagen + texto (historia / marcas / apartado genérico) ───── {%- endcomment -%}
-        {% when 'historia' or 'marcas' or 'apartado' %}
-          {%- assign layout = block.settings.layout | default: 'image-left' -%}
-          {%- assign focus = block.settings.image_focus | default: 'top' -%}
-          <article id="{{ anchor }}"
-                   class="sobre-block sobre-block--{{ layout }}"
-                   {{ block.shopify_attributes }}>
-            <div class="sobre-block__media sobre-block__media--focus-{{ focus }}">
-              {% if block.settings.video_url != blank %}
-                {%- assign video_src = block.settings.video_url -%}
-                {% if video_src contains 'youtube' or video_src contains 'youtu.be' %}
-                  {%- assign yt_id = '' -%}
-                  {% if video_src contains 'watch?v=' %}
-                    {%- assign yt_id = video_src | split: 'watch?v=' | last | split: '&' | first -%}
-                  {% elsif video_src contains 'youtu.be/' %}
-                    {%- assign yt_id = video_src | split: 'youtu.be/' | last | split: '?' | first -%}
-                  {% elsif video_src contains 'embed/' %}
-                    {%- assign yt_id = video_src | split: 'embed/' | last | split: '?' | first -%}
-                  {% endif %}
-                  <div class="sobre-block__video">
-                    <iframe src="https://www.youtube.com/embed/{{ yt_id }}"
-                            title="{{ block.settings.title }}"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                            loading="lazy"></iframe>
-                  </div>
-                {% elsif video_src contains 'vimeo' %}
-                  {%- assign vimeo_id = video_src | split: 'vimeo.com/' | last | split: '?' | first -%}
-                  <div class="sobre-block__video">
-                    <iframe src="https://player.vimeo.com/video/{{ vimeo_id }}"
-                            title="{{ block.settings.title }}"
-                            frameborder="0"
-                            allow="autoplay; fullscreen; picture-in-picture"
-                            allowfullscreen
-                            loading="lazy"></iframe>
-                  </div>
-                {% else %}
-                  <div class="sobre-block__video">
-                    <video src="{{ video_src }}" controls preload="metadata" playsinline></video>
-                  </div>
-                {% endif %}
-              {% elsif block.settings.image != blank %}
-                <img src="{{ block.settings.image | image_url: width: 900 }}"
-                     alt="{{ block.settings.title }}"
-                     class="sobre-block__img"
-                     loading="lazy">
-              {% else %}
-                <div class="sobre-block__placeholder">
-                  <span>{{ block.settings.emoji | default: '✨' }}</span>
-                </div>
-              {% endif %}
-            </div>
-            <div class="sobre-block__content">
-              {% if block.settings.label != blank %}
-                <span class="sobre-block__label">{{ block.settings.label }}</span>
-              {% endif %}
-              <h2 class="sobre-block__title">{{ block.settings.title }}</h2>
-              <div class="sobre-block__body">{{ block.settings.body }}</div>
-              {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
-                <a href="{{ block.settings.cta_url }}" class="btn btn--primary btn--md">{{ block.settings.cta_text }}</a>
-              {% endif %}
-            </div>
-          </article>
+      {%- comment -%} ── HISTORIA: imagen cuadrada + texto (configurable izquierda/derecha) ── {%- endcomment -%}
+      {% when 'historia' %}
+        {%- assign layout = block.settings.layout | default: 'image-left' -%}
+        <article id="{{ anchor }}"
+                 class="about-feature about-feature--{{ layout }}"
+                 {{ block.shopify_attributes }}>
+          <div class="about-feature__media">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 900 }}"
+                   alt="{{ block.settings.title }}"
+                   class="about-feature__img"
+                   loading="lazy">
+            {% else %}
+              <div class="about-feature__placeholder">{{ block.settings.emoji | default: '🌿' }}</div>
+            {% endif %}
+          </div>
+          <div class="about-feature__content">
+            {% if block.settings.label != blank %}
+              <span class="about-feature__label">{{ block.settings.label }}</span>
+            {% endif %}
+            <h2 class="about-feature__title">{{ block.settings.title }}</h2>
+            <div class="about-feature__body">{{ block.settings.body }}</div>
+            {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
+              <a href="{{ block.settings.cta_url }}" class="btn btn--primary btn--md">{{ block.settings.cta_text }}</a>
+            {% endif %}
+          </div>
+        </article>
 
-        {%- comment -%} ───── Valores (galería de 5 imágenes con texto) ───── {%- endcomment -%}
-        {% when 'valores' %}
-          <article id="{{ anchor }}"
-                   class="sobre-block sobre-block--valores"
-                   {{ block.shopify_attributes }}>
-            <header class="sobre-block__head">
-              {% if block.settings.label != blank %}
-                <span class="sobre-block__label">{{ block.settings.label }}</span>
-              {% endif %}
-              <h2 class="sobre-block__title">{{ block.settings.title }}</h2>
-              {% if block.settings.body != blank %}
-                <div class="sobre-block__body sobre-block__body--centered">{{ block.settings.body }}</div>
-              {% endif %}
-            </header>
-            <div class="sobre-gallery">
-              {% for i in (1..5) %}
-                {%- assign img_key = 'image_' | append: i -%}
-                {%- assign cap_key = 'caption_' | append: i -%}
-                {%- assign txt_key = 'text_' | append: i -%}
-                {%- assign img = block.settings[img_key] -%}
-                {%- assign cap = block.settings[cap_key] -%}
-                {%- assign txt = block.settings[txt_key] -%}
-                <figure class="sobre-gallery__item sobre-gallery__item--{{ i }}">
-                  {% if img != blank %}
-                    <img src="{{ img | image_url: width: 800 }}"
-                         alt="{{ cap | default: 'Valor misoji' }}"
-                         class="sobre-gallery__img"
+      {%- comment -%} ── VALORES: 4 tarjetas cuadradas estilo why-us ── {%- endcomment -%}
+      {% when 'valores' %}
+        <article id="{{ anchor }}"
+                 class="about-section"
+                 {{ block.shopify_attributes }}>
+          <header class="about-section__head">
+            {% if block.settings.label != blank %}
+              <span class="about-section__label">{{ block.settings.label }}</span>
+            {% endif %}
+            <h2 class="about-section__title">{{ block.settings.title }}</h2>
+            {% if block.settings.body != blank %}
+              <div class="about-section__desc">{{ block.settings.body }}</div>
+            {% endif %}
+          </header>
+          <div class="about-grid">
+            {% for i in (1..4) %}
+              {%- assign img_key   = 'image_'   | append: i -%}
+              {%- assign title_key = 'caption_' | append: i -%}
+              {%- assign desc_key  = 'text_'    | append: i -%}
+              {%- assign card_img   = block.settings[img_key] -%}
+              {%- assign card_title = block.settings[title_key] -%}
+              {%- assign card_desc  = block.settings[desc_key] -%}
+              <div class="about-card">
+                <div class="about-card__media">
+                  {% if card_img != blank %}
+                    <img src="{{ card_img | image_url: width: 600 }}"
+                         alt="{{ card_title | default: 'Valor misoji' }}"
+                         class="about-card__img"
                          loading="lazy">
                   {% else %}
-                    <div class="sobre-gallery__placeholder">{{ forloop.index }}</div>
+                    <div class="about-card__placeholder">{{ forloop.index }}</div>
                   {% endif %}
-                  {% if cap != blank or txt != blank %}
-                    <figcaption class="sobre-gallery__cap">
-                      {% if cap != blank %}<strong class="sobre-gallery__cap-title">{{ cap }}</strong>{% endif %}
-                      {% if txt != blank %}<span class="sobre-gallery__cap-text">{{ txt }}</span>{% endif %}
-                    </figcaption>
+                </div>
+                <div class="about-card__body">
+                  <h3 class="about-card__title">{{ card_title | default: 'Valor' }}</h3>
+                  {% if card_desc != blank %}
+                    <p class="about-card__desc">{{ card_desc }}</p>
                   {% endif %}
-                </figure>
-              {% endfor %}
-            </div>
-          </article>
-
-        {%- comment -%} ───── Servicio al cliente (4 tarjetas con hipervínculo) ───── {%- endcomment -%}
-        {% when 'servicio' %}
-          <article id="{{ anchor }}"
-                   class="sobre-block sobre-block--servicio"
-                   {{ block.shopify_attributes }}>
-            <header class="sobre-block__head">
-              {% if block.settings.label != blank %}
-                <span class="sobre-block__label">{{ block.settings.label }}</span>
-              {% endif %}
-              <h2 class="sobre-block__title">{{ block.settings.title }}</h2>
-              {% if block.settings.body != blank %}
-                <div class="sobre-block__body sobre-block__body--centered">{{ block.settings.body }}</div>
-              {% endif %}
-            </header>
-            <div class="sobre-services">
-              {% for i in (1..4) %}
-                {%- assign img_key   = 'card_image_' | append: i -%}
-                {%- assign title_key = 'card_title_' | append: i -%}
-                {%- assign desc_key  = 'card_desc_'  | append: i -%}
-                {%- assign url_key   = 'card_url_'   | append: i -%}
-                {%- assign focus_key = 'card_focus_' | append: i -%}
-                {%- assign card_img   = block.settings[img_key] -%}
-                {%- assign card_title = block.settings[title_key] -%}
-                {%- assign card_desc  = block.settings[desc_key] -%}
-                {%- assign card_url   = block.settings[url_key] -%}
-                {%- assign card_focus = block.settings[focus_key] | default: 'center' -%}
-                {%- assign tag = 'div' -%}
-                {% if card_url != blank %}{%- assign tag = 'a' -%}{% endif %}
-                <{{ tag }}
-                  {% if card_url != blank %}href="{{ card_url }}"{% endif %}
-                  class="sobre-service{% if card_url != blank %} sobre-service--link{% endif %}">
-                  <div class="sobre-service__media sobre-service__media--focus-{{ card_focus }}">
-                    {% if card_img != blank %}
-                      <img src="{{ card_img | image_url: width: 700 }}"
-                           alt="{{ card_title | default: 'Servicio misoji' }}"
-                           class="sobre-service__img"
-                           loading="lazy">
-                    {% else %}
-                      <div class="sobre-service__placeholder">{{ forloop.index }}</div>
-                    {% endif %}
-                  </div>
-                  <div class="sobre-service__body">
-                    <strong class="sobre-service__title">{{ card_title | default: 'Opción de servicio' }}</strong>
-                    {% if card_desc != blank %}
-                      <span class="sobre-service__desc">{{ card_desc }}</span>
-                    {% endif %}
-                  </div>
-                </{{ tag }}>
-              {% endfor %}
-            </div>
-            {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
-              <div class="sobre-block__cta-row">
-                <a href="{{ block.settings.cta_url }}" class="btn btn--primary btn--md">{{ block.settings.cta_text }}</a>
+                </div>
               </div>
-            {% endif %}
-          </article>
+            {% endfor %}
+          </div>
+        </article>
 
-        {% endcase %}
-      {% endfor %}
-    </div>
+      {%- comment -%} ── SERVICIO: 4 tarjetas con link ── {%- endcomment -%}
+      {% when 'servicio' %}
+        <article id="{{ anchor }}"
+                 class="about-section"
+                 {{ block.shopify_attributes }}>
+          <header class="about-section__head">
+            {% if block.settings.label != blank %}
+              <span class="about-section__label">{{ block.settings.label }}</span>
+            {% endif %}
+            <h2 class="about-section__title">{{ block.settings.title }}</h2>
+            {% if block.settings.body != blank %}
+              <div class="about-section__desc">{{ block.settings.body }}</div>
+            {% endif %}
+          </header>
+          <div class="about-grid">
+            {% for i in (1..4) %}
+              {%- assign img_key   = 'card_image_' | append: i -%}
+              {%- assign title_key = 'card_title_' | append: i -%}
+              {%- assign desc_key  = 'card_desc_'  | append: i -%}
+              {%- assign url_key   = 'card_url_'   | append: i -%}
+              {%- assign card_img   = block.settings[img_key] -%}
+              {%- assign card_title = block.settings[title_key] -%}
+              {%- assign card_desc  = block.settings[desc_key] -%}
+              {%- assign card_url   = block.settings[url_key] -%}
+              {%- assign tag = 'div' -%}
+              {% if card_url != blank %}{%- assign tag = 'a' -%}{% endif %}
+              <{{ tag }}
+                {% if card_url != blank %}href="{{ card_url }}"{% endif %}
+                class="about-card{% if card_url != blank %} about-card--link{% endif %}">
+                <div class="about-card__media">
+                  {% if card_img != blank %}
+                    <img src="{{ card_img | image_url: width: 600 }}"
+                         alt="{{ card_title | default: 'Servicio misoji' }}"
+                         class="about-card__img"
+                         loading="lazy">
+                  {% else %}
+                    <div class="about-card__placeholder">{{ forloop.index }}</div>
+                  {% endif %}
+                </div>
+                <div class="about-card__body">
+                  <h3 class="about-card__title">{{ card_title | default: 'Opción de servicio' }}</h3>
+                  {% if card_desc != blank %}
+                    <p class="about-card__desc">{{ card_desc }}</p>
+                  {% endif %}
+                </div>
+              </{{ tag }}>
+            {% endfor %}
+          </div>
+          {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
+            <div class="about-section__cta">
+              <a href="{{ block.settings.cta_url }}" class="btn btn--primary btn--md">{{ block.settings.cta_text }}</a>
+            </div>
+          {% endif %}
+        </article>
+
+      {% endcase %}
+    {% endfor %}
+
   </div>
 </section>
 
@@ -202,44 +180,30 @@
   "settings": [
     { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "NUESTRA ESENCIA" },
     { "type": "text", "id": "title", "label": "Título", "default": "Sobre Nosotros" },
-    { "type": "textarea", "id": "description", "label": "Descripción", "default": "Detrás de misoji hay un equipo apasionado por la belleza con tecnología. Conoce nuestra historia, valores y compromiso." },
-    { "type": "image_picker", "id": "image", "label": "Imagen hero" }
+    { "type": "textarea", "id": "description", "label": "Descripción", "default": "Detrás de misoji hay un equipo apasionado por la belleza y la tecnología. Conoce nuestra historia, valores y compromiso." },
+    { "type": "image_picker", "id": "image", "label": "Imagen hero (cuadrada recomendada)" },
+    { "type": "text", "id": "cta_text", "label": "Texto CTA hero (opcional)" },
+    { "type": "url", "id": "cta_url", "label": "URL CTA hero (opcional)" }
   ],
   "blocks": [
     {
       "type": "historia",
-      "name": "Nuestra historia (imagen + texto)",
+      "name": "Nuestra historia",
       "limit": 1,
       "settings": [
         { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "nuestra-historia" },
         { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 01" },
         { "type": "text", "id": "title", "label": "Título", "default": "Nuestra historia" },
         { "type": "richtext", "id": "body", "label": "Contenido", "default": "<p>Cuenta aquí la historia de tu marca: cómo nació, qué te inspiró y a dónde quieren llegar.</p>" },
-        { "type": "image_picker", "id": "image", "label": "Imagen" },
-        { "type": "url", "id": "video_url", "label": "URL de video (YouTube, Vimeo o MP4)", "info": "Si está presente, reemplaza a la imagen." },
+        { "type": "image_picker", "id": "image", "label": "Imagen (cuadrada recomendada)" },
         { "type": "text", "id": "emoji", "label": "Emoji fallback", "default": "🌿" },
-        {
-          "type": "select",
-          "id": "image_focus",
-          "label": "Posición focal de la imagen",
-          "info": "Define qué zona se mantiene visible al recortar la imagen.",
-          "options": [
-            { "value": "top", "label": "Arriba (recomendado para rostros)" },
-            { "value": "center", "label": "Centro" },
-            { "value": "bottom", "label": "Abajo" },
-            { "value": "left", "label": "Izquierda" },
-            { "value": "right", "label": "Derecha" }
-          ],
-          "default": "top"
-        },
         {
           "type": "select",
           "id": "layout",
           "label": "Disposición",
           "options": [
             { "value": "image-left", "label": "Imagen a la izquierda" },
-            { "value": "image-right", "label": "Imagen a la derecha" },
-            { "value": "no-image", "label": "Sin imagen (solo texto)" }
+            { "value": "image-right", "label": "Imagen a la derecha" }
           ],
           "default": "image-left"
         },
@@ -249,74 +213,29 @@
     },
     {
       "type": "valores",
-      "name": "Nuestros valores (galería 5 imágenes)",
+      "name": "Nuestros valores (4 tarjetas)",
       "limit": 1,
       "settings": [
         { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "nuestros-valores" },
         { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 02" },
         { "type": "text", "id": "title", "label": "Título", "default": "Nuestros valores" },
         { "type": "richtext", "id": "body", "label": "Introducción", "default": "<p>Lo que nos guía cada día y nos hace ser diferentes.</p>" },
-        { "type": "header", "content": "Valor 1 (destacado, ocupa toda la columna grande)" },
+        { "type": "header", "content": "Valor 1" },
         { "type": "image_picker", "id": "image_1", "label": "Imagen" },
         { "type": "text", "id": "caption_1", "label": "Título", "default": "Calidad" },
-        { "type": "text", "id": "text_1", "label": "Descripción", "default": "Cada dispositivo pasa rigurosos controles." },
+        { "type": "text", "id": "text_1", "label": "Descripción corta", "default": "Cada dispositivo pasa rigurosos controles." },
         { "type": "header", "content": "Valor 2" },
         { "type": "image_picker", "id": "image_2", "label": "Imagen" },
         { "type": "text", "id": "caption_2", "label": "Título", "default": "Cercanía" },
-        { "type": "text", "id": "text_2", "label": "Descripción", "default": "Acompañamos en cada paso." },
+        { "type": "text", "id": "text_2", "label": "Descripción corta", "default": "Acompañamos en cada paso." },
         { "type": "header", "content": "Valor 3" },
         { "type": "image_picker", "id": "image_3", "label": "Imagen" },
         { "type": "text", "id": "caption_3", "label": "Título", "default": "Transparencia" },
-        { "type": "text", "id": "text_3", "label": "Descripción", "default": "Decimos las cosas como son." },
+        { "type": "text", "id": "text_3", "label": "Descripción corta", "default": "Decimos las cosas como son." },
         { "type": "header", "content": "Valor 4" },
         { "type": "image_picker", "id": "image_4", "label": "Imagen" },
         { "type": "text", "id": "caption_4", "label": "Título", "default": "Innovación" },
-        { "type": "text", "id": "text_4", "label": "Descripción", "default": "Tecnología siempre actualizada." },
-        { "type": "header", "content": "Valor 5" },
-        { "type": "image_picker", "id": "image_5", "label": "Imagen" },
-        { "type": "text", "id": "caption_5", "label": "Título", "default": "Sostenibilidad" },
-        { "type": "text", "id": "text_5", "label": "Descripción", "default": "Belleza responsable con el planeta." }
-      ]
-    },
-    {
-      "type": "marcas",
-      "name": "Marcas y convenios (imagen + texto)",
-      "limit": 1,
-      "settings": [
-        { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "marcas-convenios" },
-        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 03" },
-        { "type": "text", "id": "title", "label": "Título", "default": "Nuestras marcas y convenios" },
-        { "type": "richtext", "id": "body", "label": "Contenido", "default": "<p>Trabajamos con marcas líderes en electro-belleza y mantenemos convenios con profesionales que validan cada uno de nuestros productos.</p>" },
-        { "type": "image_picker", "id": "image", "label": "Imagen" },
-        { "type": "url", "id": "video_url", "label": "URL de video (opcional)" },
-        { "type": "text", "id": "emoji", "label": "Emoji fallback", "default": "🤝" },
-        {
-          "type": "select",
-          "id": "image_focus",
-          "label": "Posición focal de la imagen",
-          "info": "Define qué zona se mantiene visible al recortar la imagen.",
-          "options": [
-            { "value": "top", "label": "Arriba (recomendado para rostros)" },
-            { "value": "center", "label": "Centro" },
-            { "value": "bottom", "label": "Abajo" },
-            { "value": "left", "label": "Izquierda" },
-            { "value": "right", "label": "Derecha" }
-          ],
-          "default": "top"
-        },
-        {
-          "type": "select",
-          "id": "layout",
-          "label": "Disposición",
-          "options": [
-            { "value": "image-left", "label": "Imagen a la izquierda" },
-            { "value": "image-right", "label": "Imagen a la derecha" },
-            { "value": "no-image", "label": "Sin imagen (solo texto)" }
-          ],
-          "default": "image-right"
-        },
-        { "type": "text", "id": "cta_text", "label": "Texto CTA (opcional)" },
-        { "type": "url", "id": "cta_url", "label": "URL CTA (opcional)" }
+        { "type": "text", "id": "text_4", "label": "Descripción corta", "default": "Tecnología siempre actualizada." }
       ]
     },
     {
@@ -325,7 +244,7 @@
       "limit": 1,
       "settings": [
         { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "servicio-al-cliente" },
-        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 04" },
+        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CAPÍTULO 03" },
         { "type": "text", "id": "title", "label": "Título", "default": "Servicio al cliente" },
         { "type": "richtext", "id": "body", "label": "Introducción", "default": "<p>Te acompañamos antes, durante y después de tu compra. Garantía, soporte y asesoría personalizada para tu rutina de belleza.</p>" },
         { "type": "text", "id": "cta_text", "label": "Texto CTA secundario (opcional)" },
@@ -335,73 +254,21 @@
         { "type": "text", "id": "card_title_1", "label": "Título", "default": "Garantía" },
         { "type": "text", "id": "card_desc_1", "label": "Descripción corta", "default": "Respaldo en cada compra." },
         { "type": "url", "id": "card_url_1", "label": "URL al hacer clic" },
-        {
-          "type": "select",
-          "id": "card_focus_1",
-          "label": "Posición focal",
-          "options": [
-            { "value": "top", "label": "Arriba" },
-            { "value": "center", "label": "Centro" },
-            { "value": "bottom", "label": "Abajo" },
-            { "value": "left", "label": "Izquierda" },
-            { "value": "right", "label": "Derecha" }
-          ],
-          "default": "center"
-        },
         { "type": "header", "content": "Tarjeta 2" },
         { "type": "image_picker", "id": "card_image_2", "label": "Imagen" },
         { "type": "text", "id": "card_title_2", "label": "Título", "default": "Envíos" },
         { "type": "text", "id": "card_desc_2", "label": "Descripción corta", "default": "Llevamos tu pedido a todo el país." },
         { "type": "url", "id": "card_url_2", "label": "URL al hacer clic" },
-        {
-          "type": "select",
-          "id": "card_focus_2",
-          "label": "Posición focal",
-          "options": [
-            { "value": "top", "label": "Arriba" },
-            { "value": "center", "label": "Centro" },
-            { "value": "bottom", "label": "Abajo" },
-            { "value": "left", "label": "Izquierda" },
-            { "value": "right", "label": "Derecha" }
-          ],
-          "default": "center"
-        },
         { "type": "header", "content": "Tarjeta 3" },
         { "type": "image_picker", "id": "card_image_3", "label": "Imagen" },
         { "type": "text", "id": "card_title_3", "label": "Título", "default": "Asesoría personalizada" },
         { "type": "text", "id": "card_desc_3", "label": "Descripción corta", "default": "Te ayudamos a elegir." },
         { "type": "url", "id": "card_url_3", "label": "URL al hacer clic" },
-        {
-          "type": "select",
-          "id": "card_focus_3",
-          "label": "Posición focal",
-          "options": [
-            { "value": "top", "label": "Arriba" },
-            { "value": "center", "label": "Centro" },
-            { "value": "bottom", "label": "Abajo" },
-            { "value": "left", "label": "Izquierda" },
-            { "value": "right", "label": "Derecha" }
-          ],
-          "default": "center"
-        },
         { "type": "header", "content": "Tarjeta 4" },
         { "type": "image_picker", "id": "card_image_4", "label": "Imagen" },
         { "type": "text", "id": "card_title_4", "label": "Título", "default": "Contacto" },
         { "type": "text", "id": "card_desc_4", "label": "Descripción corta", "default": "Escríbenos cuando quieras." },
-        { "type": "url", "id": "card_url_4", "label": "URL al hacer clic" },
-        {
-          "type": "select",
-          "id": "card_focus_4",
-          "label": "Posición focal",
-          "options": [
-            { "value": "top", "label": "Arriba" },
-            { "value": "center", "label": "Centro" },
-            { "value": "bottom", "label": "Abajo" },
-            { "value": "left", "label": "Izquierda" },
-            { "value": "right", "label": "Derecha" }
-          ],
-          "default": "center"
-        }
+        { "type": "url", "id": "card_url_4", "label": "URL al hacer clic" }
       ]
     }
   ],
@@ -411,7 +278,6 @@
       "blocks": [
         { "type": "historia" },
         { "type": "valores" },
-        { "type": "marcas" },
         { "type": "servicio" }
       ]
     }
