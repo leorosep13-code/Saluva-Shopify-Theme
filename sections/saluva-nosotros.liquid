@@ -1,0 +1,254 @@
+{%- comment -%}
+  Nosotros — reusa al pie de la letra:
+  - Historia → .featured-product (imagen cuadrada + texto con label, título, descripción y CTA)
+  - Valores → .why-us con 4 .why-us__card
+  - Contacto → .why-us con 4 .why-us__card clicables
+{%- endcomment -%}
+
+<div id="nosotros" class="nosotros-page">
+  {% for block in section.blocks %}
+    {%- assign anchor = block.settings.anchor_id | default: block.id -%}
+
+    {% case block.type %}
+
+    {%- comment -%} ─── HISTORIA (estilo featured-product) ─── {%- endcomment -%}
+    {% when 'historia' %}
+      {%- assign reverse_mod = '' -%}
+      {% if block.settings.layout == 'image-right' %}{%- assign reverse_mod = ' about-featured__inner--reverse' -%}{% endif %}
+      <section id="{{ anchor }}" class="featured-product nosotros-historia" {{ block.shopify_attributes }}>
+        <div class="container">
+          <div class="featured-product__inner about-featured__inner{{ reverse_mod }}">
+            <div class="about-featured__media">
+              {% if block.settings.image != blank %}
+                <img src="{{ block.settings.image | image_url: width: 900 }}"
+                     alt="{{ block.settings.title }}"
+                     class="about-featured__img"
+                     loading="lazy">
+              {% else %}
+                <div class="about-featured__placeholder">{{ block.settings.emoji | default: '🌿' }}</div>
+              {% endif %}
+            </div>
+            <div class="featured-product__info">
+              {% if block.settings.label != blank %}
+                <span class="featured-product__label">{{ block.settings.label }}</span>
+              {% endif %}
+              <h2 class="featured-product__title">{{ block.settings.title }}</h2>
+              <div class="featured-product__desc">{{ block.settings.body }}</div>
+              {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
+                <a href="{{ block.settings.cta_url }}" class="btn btn--primary btn--md">{{ block.settings.cta_text }}</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </section>
+
+    {%- comment -%} ─── VALORES (estilo why-us con 4 tarjetas) ─── {%- endcomment -%}
+    {% when 'valores' %}
+      <section id="{{ anchor }}" class="why-us aurora-bg nosotros-valores" {{ block.shopify_attributes }}>
+        <div class="container">
+          <div class="section-header section-header--center">
+            {% if block.settings.label != blank %}
+              <span class="section-header__label">{{ block.settings.label }}</span>
+            {% endif %}
+            <h2 class="section-header__title">{{ block.settings.title }}</h2>
+            {% if block.settings.body != blank %}
+              <p class="section-header__desc">{{ block.settings.body | strip_html }}</p>
+            {% endif %}
+          </div>
+          <div class="why-us__grid">
+            {% for i in (1..4) %}
+              {%- assign img_key   = 'image_'   | append: i -%}
+              {%- assign title_key = 'caption_' | append: i -%}
+              {%- assign desc_key  = 'text_'    | append: i -%}
+              {%- assign card_img   = block.settings[img_key] -%}
+              {%- assign card_title = block.settings[title_key] -%}
+              {%- assign card_desc  = block.settings[desc_key] -%}
+              <div class="why-us__card">
+                <div class="why-us__card-media">
+                  {% if card_img != blank %}
+                    <img src="{{ card_img | image_url: width: 600 }}"
+                         alt="{{ card_title | default: 'Valor misoji' }}"
+                         class="why-us__card-img"
+                         loading="lazy">
+                  {% else %}
+                    <div class="why-us__card-placeholder">{{ forloop.index }}</div>
+                  {% endif %}
+                </div>
+                <div class="why-us__card-body">
+                  <h3 class="why-us__card-label">{{ card_title | default: 'Valor' }}</h3>
+                  {% if card_desc != blank %}
+                    <p class="why-us__card-subtitle">{{ card_desc }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+    {%- comment -%} ─── CONTACTO (estilo why-us con 4 tarjetas clicables) ─── {%- endcomment -%}
+    {% when 'contacto' %}
+      <section id="{{ anchor }}" class="why-us aurora-bg nosotros-contacto" {{ block.shopify_attributes }}>
+        <div class="container">
+          <div class="section-header section-header--center">
+            {% if block.settings.label != blank %}
+              <span class="section-header__label">{{ block.settings.label }}</span>
+            {% endif %}
+            <h2 class="section-header__title">{{ block.settings.title }}</h2>
+            {% if block.settings.body != blank %}
+              <p class="section-header__desc">{{ block.settings.body | strip_html }}</p>
+            {% endif %}
+          </div>
+          <div class="why-us__grid">
+            {% for i in (1..4) %}
+              {%- assign img_key   = 'card_image_' | append: i -%}
+              {%- assign title_key = 'card_title_' | append: i -%}
+              {%- assign desc_key  = 'card_desc_'  | append: i -%}
+              {%- assign url_key   = 'card_url_'   | append: i -%}
+              {%- assign card_img   = block.settings[img_key] -%}
+              {%- assign card_title = block.settings[title_key] -%}
+              {%- assign card_desc  = block.settings[desc_key] -%}
+              {%- assign card_url   = block.settings[url_key] -%}
+              {%- assign tag = 'div' -%}
+              {%- assign link_mod = '' -%}
+              {% if card_url != blank %}
+                {%- assign tag = 'a' -%}
+                {%- assign link_mod = ' why-us__card--link' -%}
+              {% endif %}
+              <{{ tag }}
+                {% if card_url != blank %}href="{{ card_url }}"{% endif %}
+                class="why-us__card{{ link_mod }}">
+                <div class="why-us__card-media">
+                  {% if card_img != blank %}
+                    <img src="{{ card_img | image_url: width: 600 }}"
+                         alt="{{ card_title | default: 'Opción de contacto' }}"
+                         class="why-us__card-img"
+                         loading="lazy">
+                  {% else %}
+                    <div class="why-us__card-placeholder">{{ forloop.index }}</div>
+                  {% endif %}
+                </div>
+                <div class="why-us__card-body">
+                  <h3 class="why-us__card-label">{{ card_title | default: 'Opción' }}</h3>
+                  {% if card_desc != blank %}
+                    <p class="why-us__card-subtitle">{{ card_desc }}</p>
+                  {% endif %}
+                </div>
+              </{{ tag }}>
+            {% endfor %}
+          </div>
+          {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
+            <div class="about-section-cta">
+              <a href="{{ block.settings.cta_url }}" class="btn btn--primary btn--md">{{ block.settings.cta_text }}</a>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+
+    {% endcase %}
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Nosotros",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "historia",
+      "name": "Nuestra historia",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "nuestra-historia" },
+        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "NUESTRA HISTORIA" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Nuestra historia" },
+        { "type": "richtext", "id": "body", "label": "Contenido", "default": "<p>Cuenta aquí la historia de tu marca: cómo nació, qué te inspiró y a dónde quieren llegar.</p>" },
+        { "type": "image_picker", "id": "image", "label": "Imagen (cuadrada recomendada)" },
+        { "type": "text", "id": "emoji", "label": "Emoji fallback", "default": "🌿" },
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Disposición",
+          "options": [
+            { "value": "image-left", "label": "Imagen a la izquierda" },
+            { "value": "image-right", "label": "Imagen a la derecha" }
+          ],
+          "default": "image-left"
+        },
+        { "type": "text", "id": "cta_text", "label": "Texto CTA (opcional)" },
+        { "type": "url", "id": "cta_url", "label": "URL CTA (opcional)" }
+      ]
+    },
+    {
+      "type": "valores",
+      "name": "Nuestros valores (4 tarjetas)",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "nuestros-valores" },
+        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "NUESTROS VALORES" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Lo que nos mueve" },
+        { "type": "textarea", "id": "body", "label": "Introducción", "default": "Lo que nos guía cada día y nos hace ser diferentes." },
+        { "type": "header", "content": "Valor 1" },
+        { "type": "image_picker", "id": "image_1", "label": "Imagen" },
+        { "type": "text", "id": "caption_1", "label": "Título", "default": "Calidad" },
+        { "type": "text", "id": "text_1", "label": "Descripción corta", "default": "Cada dispositivo pasa rigurosos controles." },
+        { "type": "header", "content": "Valor 2" },
+        { "type": "image_picker", "id": "image_2", "label": "Imagen" },
+        { "type": "text", "id": "caption_2", "label": "Título", "default": "Cercanía" },
+        { "type": "text", "id": "text_2", "label": "Descripción corta", "default": "Acompañamos en cada paso." },
+        { "type": "header", "content": "Valor 3" },
+        { "type": "image_picker", "id": "image_3", "label": "Imagen" },
+        { "type": "text", "id": "caption_3", "label": "Título", "default": "Transparencia" },
+        { "type": "text", "id": "text_3", "label": "Descripción corta", "default": "Decimos las cosas como son." },
+        { "type": "header", "content": "Valor 4" },
+        { "type": "image_picker", "id": "image_4", "label": "Imagen" },
+        { "type": "text", "id": "caption_4", "label": "Título", "default": "Innovación" },
+        { "type": "text", "id": "text_4", "label": "Descripción corta", "default": "Tecnología siempre actualizada." }
+      ]
+    },
+    {
+      "type": "contacto",
+      "name": "Contacto (4 tarjetas)",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "anchor_id", "label": "ID ancla (sin #)", "default": "contacto" },
+        { "type": "text", "id": "label", "label": "Etiqueta pequeña", "default": "CONTÁCTANOS" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Estamos para ayudarte" },
+        { "type": "textarea", "id": "body", "label": "Introducción", "default": "Te acompañamos antes, durante y después de tu compra. Elige el canal que prefieras." },
+        { "type": "text", "id": "cta_text", "label": "Texto CTA secundario (opcional)" },
+        { "type": "url", "id": "cta_url", "label": "URL CTA secundario (opcional)" },
+        { "type": "header", "content": "Tarjeta 1" },
+        { "type": "image_picker", "id": "card_image_1", "label": "Imagen" },
+        { "type": "text", "id": "card_title_1", "label": "Título", "default": "WhatsApp" },
+        { "type": "text", "id": "card_desc_1", "label": "Descripción corta", "default": "Chatea con nosotras." },
+        { "type": "url", "id": "card_url_1", "label": "URL al hacer clic" },
+        { "type": "header", "content": "Tarjeta 2" },
+        { "type": "image_picker", "id": "card_image_2", "label": "Imagen" },
+        { "type": "text", "id": "card_title_2", "label": "Título", "default": "Instagram" },
+        { "type": "text", "id": "card_desc_2", "label": "Descripción corta", "default": "Síguenos @misoji." },
+        { "type": "url", "id": "card_url_2", "label": "URL al hacer clic" },
+        { "type": "header", "content": "Tarjeta 3" },
+        { "type": "image_picker", "id": "card_image_3", "label": "Imagen" },
+        { "type": "text", "id": "card_title_3", "label": "Título", "default": "Email" },
+        { "type": "text", "id": "card_desc_3", "label": "Descripción corta", "default": "Escríbenos a hola@misoji.com" },
+        { "type": "url", "id": "card_url_3", "label": "URL al hacer clic" },
+        { "type": "header", "content": "Tarjeta 4" },
+        { "type": "image_picker", "id": "card_image_4", "label": "Imagen" },
+        { "type": "text", "id": "card_title_4", "label": "Título", "default": "Soporte" },
+        { "type": "text", "id": "card_desc_4", "label": "Descripción corta", "default": "Resolvemos tus dudas." },
+        { "type": "url", "id": "card_url_4", "label": "URL al hacer clic" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nosotros",
+      "blocks": [
+        { "type": "historia" },
+        { "type": "valores" },
+        { "type": "contacto" }
+      ]
+    }
+  ]
+}
+{% endschema %}
