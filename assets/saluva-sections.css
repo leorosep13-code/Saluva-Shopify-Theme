@@ -2792,6 +2792,29 @@
   color: var(--color-primary);
 }
 
+/* Botón de opción con imagen de variante */
+.pdp__option-btn--image {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 6px;
+  border-radius: var(--radius-pill);
+}
+
+.pdp__option-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+  background: var(--color-border);
+}
+
+.pdp__option-btn--image.active .pdp__option-img {
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
 /* Cantidad + Agregar */
 .pdp__add-row {
   display: flex;

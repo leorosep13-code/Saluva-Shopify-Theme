@@ -1450,6 +1450,19 @@ function initPdpVariants() {
             addBtn.textContent = 'Agotado';
           }
         });
+
+        /* Sincronizar galería con la imagen de la variante */
+        const media = match.featured_media || match.featured_image;
+        if (media && media.position) {
+          const slideIndex = media.position - 1;
+          const dot = document.querySelector('.pdp__carousel-dot[data-index="' + slideIndex + '"]');
+          if (dot) {
+            dot.click();
+          } else {
+            const thumb = document.querySelector('.pdp__thumb[data-index="' + slideIndex + '"]');
+            if (thumb) thumb.click();
+          }
+        }
       }
     });
   });

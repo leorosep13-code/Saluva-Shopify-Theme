@@ -124,15 +124,30 @@
     <!-- Variantes -->
     {% if product.variants.size > 1 %}
       {% for option in product.options_with_values %}
+        {%- assign option_index = forloop.index0 -%}
         <div class="pdp__option">
-          <label class="pdp__option-label">{{ option.name }}: <strong id="pdp-option-{{ forloop.index0 }}-selected">{{ option.selected_value }}</strong></label>
+          <label class="pdp__option-label">{{ option.name }}: <strong id="pdp-option-{{ option_index }}-selected">{{ option.selected_value }}</strong></label>
           <div class="pdp__option-values">
             {% for value in option.values %}
+              {%- comment -%} Buscar la imagen de la variante asociada a este valor {%- endcomment -%}
+              {%- assign value_image = null -%}
+              {%- for variant in product.variants -%}
+                {%- if variant.options[option_index] == value and variant.image != blank -%}
+                  {%- assign value_image = variant.image -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
               <button
-                class="pdp__option-btn{% if value == option.selected_value %} active{% endif %}"
-                data-option-index="{{ forloop.parentloop.index0 }}"
+                class="pdp__option-btn{% if value_image %} pdp__option-btn--image{% endif %}{% if value == option.selected_value %} active{% endif %}"
+                data-option-index="{{ option_index }}"
                 data-value="{{ value }}"
-              >{{ value }}</button>
+                title="{{ value | escape }}"
+              >
+                {%- if value_image -%}
+                  <img class="pdp__option-img" src="{{ value_image | image_url: width: 120 }}" alt="{{ value | escape }}" loading="lazy" width="60" height="60">
+                {%- endif -%}
+                <span class="pdp__option-text">{{ value }}</span>
+              </button>
             {% endfor %}
           </div>
         </div>
