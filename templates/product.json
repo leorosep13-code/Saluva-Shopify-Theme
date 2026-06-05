@@ -13,7 +13,8 @@
       "type": "main-product",
       "settings": {
         "whatsapp_number": "573127862532",
-        "whatsapp_message": "Hola, estoy interesada en"
+        "whatsapp_label": "Comprar contraentrega",
+        "whatsapp_message": "Hola!! quiero comprar contra entrega su producto,"
       }
     }
   },
