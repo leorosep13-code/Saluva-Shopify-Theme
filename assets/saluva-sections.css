@@ -3270,9 +3270,20 @@
     border-radius: 0;
   }
 
+  /* Marco a todo el ancho, pero 20% más bajo que el cuadrado (5:4)
+     para dejar ver título, estrellas, precio y botón al cargar.
+     contain = sin recorte (franjas laterales suaves con el degradado). */
   .pdp__carousel-slide {
-    /* aspect-ratio 1/1 heredado → cuadrado a todo el ancho de la pantalla */
-    padding: 10px;
+    aspect-ratio: 5 / 4;
+    padding: 0;
+  }
+  .pdp__carousel-slide img {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    object-fit: contain;
   }
 
   /* Galería: tira horizontal de miniaturas (como la referencia) */
