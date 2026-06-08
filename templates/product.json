@@ -23,6 +23,34 @@
         "whatsapp_message": "Hola!! quiero comprar contra entrega su producto,"
       }
     },
+    "hero_ugc": {
+      "type": "saluva-hero-ugc",
+      "blocks": {
+        "badge_1": { "type": "badge", "settings": { "emoji": "❄️", "text": "Enfriamiento" } },
+        "badge_2": { "type": "badge", "settings": { "emoji": "⚡", "text": "Doble pulso" } },
+        "badge_3": { "type": "badge", "settings": { "emoji": "✨", "text": "Sin dolor" } },
+        "creator_1": { "type": "creador", "settings": { "handle": "@creadora1", "is_video": true } },
+        "creator_2": { "type": "creador", "settings": { "handle": "@creadora2", "is_video": true } },
+        "creator_3": { "type": "creador", "settings": { "handle": "@creadora3", "is_video": true } },
+        "creator_4": { "type": "creador", "settings": { "handle": "@creadora4", "is_video": true } },
+        "creator_5": { "type": "creador", "settings": { "handle": "@creadora5", "is_video": true } }
+      },
+      "block_order": ["badge_1", "badge_2", "badge_3", "creator_1", "creator_2", "creator_3", "creator_4", "creator_5"],
+      "settings": {
+        "overlay": 45,
+        "height": 85,
+        "theme": "dark",
+        "text_align": "left",
+        "eyebrow": "BEAUTY TECHNOLOGY",
+        "headline": "Calidad profesional, en casa.",
+        "subheadline": "Rápido, fácil y sin dolor. Tu rutina de belleza, reinventada.",
+        "cta_text": "Comprar ahora",
+        "cta_link": "#product-page",
+        "cta2_text": "Ver reseñas",
+        "cta2_link": "#pdp-reviews",
+        "ugc_title": "Amado por nuestra comunidad"
+      }
+    },
     "before_after": {
       "type": "saluva-before-after",
       "blocks": {
@@ -71,6 +99,30 @@
         "bg_aurora": false
       }
     },
+    "comparison": {
+      "type": "saluva-comparison",
+      "blocks": {
+        "row_1": { "type": "fila", "settings": { "feature": "Sin dolor", "us_value": "yes", "alt1_value": "text", "alt1_text": "A veces", "alt2_value": "no" } },
+        "row_2": { "type": "fila", "settings": { "feature": "Uso en casa", "us_value": "yes", "alt1_value": "no", "alt2_value": "yes" } },
+        "row_3": { "type": "fila", "settings": { "feature": "Privacidad total", "us_value": "yes", "alt1_value": "no", "alt2_value": "yes" } },
+        "row_4": { "type": "fila", "settings": { "feature": "Resultados duraderos", "us_value": "yes", "alt1_value": "yes", "alt2_value": "no" } },
+        "row_5": { "type": "fila", "settings": { "feature": "Costo", "us_value": "text", "us_text": "Pago único", "alt1_value": "text", "alt1_text": "Miles ($$$)", "alt2_value": "text", "alt2_text": "Gasto recurrente" } }
+      },
+      "block_order": ["row_1", "row_2", "row_3", "row_4", "row_5"],
+      "settings": {
+        "label": "¿POR QUÉ MISOJI?",
+        "title": "Compara y decide",
+        "description": "Resultados duraderos, en casa y sin gastar una fortuna.",
+        "us_name": "misoji",
+        "us_badge": "Recomendado",
+        "alt1_name": "Clínica estética",
+        "alt2_name": "Métodos manuales",
+        "alt3_name": "",
+        "cta_text": "Quiero el mío",
+        "cta_link": "#product-page",
+        "bg_aurora": false
+      }
+    },
     "faq": {
       "type": "saluva-faq",
       "blocks": {
@@ -90,9 +142,11 @@
   "order": [
     "breadcrumbs",
     "main",
+    "hero_ugc",
     "before_after",
     "stats",
     "steps",
+    "comparison",
     "faq"
   ]
 }

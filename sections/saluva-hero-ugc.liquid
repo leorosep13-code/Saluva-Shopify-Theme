@@ -1,0 +1,164 @@
+{%- comment -%}
+  MISOJI — Hero Lifestyle / UGC (PROTAGONISTA)
+  Sección full-bleed con imagen o video de fondo, titular grande,
+  badges de tecnología y tira de creadoras (prueba social UGC).
+  Bloques: 'badge' (tecnología) y 'creador' (UGC).
+  JS opcional → initHeroUgc() (arrastrar tira de creadoras).
+{%- endcomment -%}
+
+{%- assign t_align = section.settings.text_align | default: 'left' -%}
+<section
+  class="saluva-hero-ugc saluva-hero-ugc--{{ t_align }} {% if section.settings.theme == 'light' %}is-light{% else %}is-dark{% endif %}"
+  id="saluva-hero-ugc-{{ section.id }}"
+  style="--hero-min-h: {{ section.settings.height }}vh; --hero-overlay: {{ section.settings.overlay | divided_by: 100.0 }};"
+>
+  <div class="saluva-hero-ugc__bg">
+    {%- if section.settings.background_video != blank -%}
+      {{ section.settings.background_video | video_tag: image_size: '1600x', autoplay: true, loop: true, muted: true, controls: false, class: 'saluva-hero-ugc__media' }}
+    {%- elsif section.settings.background_image != blank -%}
+      <img
+        class="saluva-hero-ugc__media"
+        src="{{ section.settings.background_image | image_url: width: 1800 }}"
+        srcset="{{ section.settings.background_image | image_url: width: 800 }} 800w, {{ section.settings.background_image | image_url: width: 1400 }} 1400w, {{ section.settings.background_image | image_url: width: 1800 }} 1800w"
+        sizes="100vw"
+        alt="{{ section.settings.background_image.alt | default: section.settings.headline | escape }}"
+        loading="eager"
+        fetchpriority="high"
+        width="1800" height="1012"
+      >
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'saluva-hero-ugc__media saluva-hero-ugc__placeholder' }}
+    {%- endif -%}
+    <span class="saluva-hero-ugc__scrim" aria-hidden="true"></span>
+  </div>
+
+  <div class="container saluva-hero-ugc__inner">
+    <div class="saluva-hero-ugc__content anim-fade">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="saluva-hero-ugc__eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      {%- if section.settings.headline != blank -%}
+        <h2 class="saluva-hero-ugc__headline">{{ section.settings.headline }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subheadline != blank -%}
+        <p class="saluva-hero-ugc__sub">{{ section.settings.subheadline }}</p>
+      {%- endif -%}
+
+      {%- assign badges = section.blocks | where: 'type', 'badge' -%}
+      {%- if badges.size > 0 -%}
+        <ul class="saluva-hero-ugc__badges">
+          {%- for block in badges -%}
+            <li class="saluva-hero-ugc__badge" {{ block.shopify_attributes }}>
+              {%- if block.settings.emoji != blank -%}<span class="saluva-hero-ugc__badge-ico">{{ block.settings.emoji }}</span>{%- endif -%}
+              <span>{{ block.settings.text }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if section.settings.cta_text != blank -%}
+        <div class="saluva-hero-ugc__actions">
+          <a href="{{ section.settings.cta_link | default: '#product-page' }}" class="btn btn--primary btn--lg">{{ section.settings.cta_text }}</a>
+          {%- if section.settings.cta2_text != blank -%}
+            <a href="{{ section.settings.cta2_link | default: '#pdp-reviews' }}" class="saluva-hero-ugc__link">{{ section.settings.cta2_text }}</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- assign creators = section.blocks | where: 'type', 'creador' -%}
+    {%- if creators.size > 0 -%}
+      <div class="saluva-hero-ugc__ugc">
+        {%- if section.settings.ugc_title != blank -%}
+          <span class="saluva-hero-ugc__ugc-title">{{ section.settings.ugc_title }}</span>
+        {%- endif -%}
+        <div class="saluva-hero-ugc__creators" data-ugc-track>
+          {%- for block in creators -%}
+            {%- capture card_tag -%}{% if block.settings.link != blank %}a{% else %}div{% endif %}{%- endcapture -%}
+            <{{ card_tag }}
+              class="saluva-hero-ugc__creator"
+              {% if block.settings.link != blank %}href="{{ block.settings.link }}" target="_blank" rel="noopener noreferrer"{% endif %}
+              {{ block.shopify_attributes }}
+            >
+              <div class="saluva-hero-ugc__creator-media">
+                {%- if block.settings.image != blank -%}
+                  <img src="{{ block.settings.image | image_url: width: 360 }}" alt="{{ block.settings.handle | escape }}" loading="lazy" width="180" height="240">
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'saluva-hero-ugc__creator-ph' }}
+                {%- endif -%}
+                {%- if block.settings.is_video -%}
+                  <span class="saluva-hero-ugc__creator-play" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><polygon points="6 4 20 12 6 20"/></svg>
+                  </span>
+                {%- endif -%}
+              </div>
+              {%- if block.settings.handle != blank -%}
+                <span class="saluva-hero-ugc__creator-handle">{{ block.settings.handle }}</span>
+              {%- endif -%}
+            </{{ card_tag }}>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Lifestyle / UGC",
+  "settings": [
+    { "type": "header", "content": "Fondo" },
+    { "type": "image_picker", "id": "background_image", "label": "Imagen de fondo" },
+    { "type": "video", "id": "background_video", "label": "Video de fondo (opcional)", "info": "Si lo agregas, reemplaza la imagen. Se reproduce en bucle y silenciado." },
+    { "type": "range", "id": "overlay", "label": "Oscurecer fondo", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 45 },
+    { "type": "range", "id": "height", "label": "Altura", "min": 50, "max": 100, "step": 5, "unit": "vh", "default": 85 },
+    { "type": "select", "id": "theme", "label": "Color de texto", "default": "dark", "options": [ { "value": "dark", "label": "Claro (sobre fondo oscuro)" }, { "value": "light", "label": "Oscuro (sobre fondo claro)" } ] },
+    { "type": "select", "id": "text_align", "label": "Alineación", "default": "left", "options": [ { "value": "left", "label": "Izquierda" }, { "value": "center", "label": "Centro" } ] },
+    { "type": "header", "content": "Texto" },
+    { "type": "text", "id": "eyebrow", "label": "Etiqueta superior", "default": "BEAUTY TECHNOLOGY" },
+    { "type": "textarea", "id": "headline", "label": "Titular", "default": "Calidad profesional, en casa." },
+    { "type": "textarea", "id": "subheadline", "label": "Subtítulo", "default": "Rápido, fácil y sin dolor. Tu rutina de belleza, reinventada." },
+    { "type": "header", "content": "Botones" },
+    { "type": "text", "id": "cta_text", "label": "Botón principal", "default": "Comprar ahora" },
+    { "type": "url", "id": "cta_link", "label": "Enlace botón principal" },
+    { "type": "text", "id": "cta2_text", "label": "Enlace secundario (opcional)", "default": "Ver reseñas" },
+    { "type": "url", "id": "cta2_link", "label": "Enlace secundario" },
+    { "type": "header", "content": "Prueba social (UGC)" },
+    { "type": "text", "id": "ugc_title", "label": "Título de la tira", "default": "Amado por nuestra comunidad" }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge de tecnología",
+      "settings": [
+        { "type": "text", "id": "emoji", "label": "Emoji/ícono", "default": "❄️" },
+        { "type": "text", "id": "text", "label": "Texto", "default": "Enfriamiento" }
+      ]
+    },
+    {
+      "type": "creador",
+      "name": "Creador (UGC)",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Foto / miniatura" },
+        { "type": "text", "id": "handle", "label": "Usuario", "default": "@usuario" },
+        { "type": "checkbox", "id": "is_video", "label": "Mostrar ícono de play", "default": true },
+        { "type": "url", "id": "link", "label": "Enlace (opcional)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Lifestyle / UGC",
+      "blocks": [
+        { "type": "badge", "settings": { "emoji": "❄️", "text": "Enfriamiento" } },
+        { "type": "badge", "settings": { "emoji": "⚡", "text": "Doble pulso" } },
+        { "type": "badge", "settings": { "emoji": "✨", "text": "Sin dolor" } },
+        { "type": "creador", "settings": { "handle": "@creadora1" } },
+        { "type": "creador", "settings": { "handle": "@creadora2" } },
+        { "type": "creador", "settings": { "handle": "@creadora3" } },
+        { "type": "creador", "settings": { "handle": "@creadora4" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

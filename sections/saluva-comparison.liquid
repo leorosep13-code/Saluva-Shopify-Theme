@@ -1,0 +1,127 @@
+{%- comment -%}
+  MISOJI — Tabla comparativa
+  misoji vs alternativas (clínica, otros equipos, métodos manuales).
+  Justifica el precio y la decisión de compra.
+  Columna misoji destacada. Cada fila es un bloque.
+{%- endcomment -%}
+
+{%- assign show_a = section.settings.alt1_name | strip | size -%}
+{%- assign show_b = section.settings.alt2_name | strip | size -%}
+{%- assign show_c = section.settings.alt3_name | strip | size -%}
+
+<section class="saluva-comp {% if section.settings.bg_aurora %}aurora-bg{% endif %}" id="saluva-comp-{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.title != blank or section.settings.label != blank -%}
+      <div class="section-header section-header--center anim-flip">
+        {%- if section.settings.label != blank -%}
+          <span class="section-header__label">{{ section.settings.label }}</span>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="section-header__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <p class="section-header__desc">{{ section.settings.description }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="saluva-comp__scroll">
+      <table class="saluva-comp__table">
+        <thead>
+          <tr>
+            <th class="saluva-comp__corner" scope="col"><span class="visually-hidden">Característica</span></th>
+            <th class="saluva-comp__head saluva-comp__head--us" scope="col">
+              {%- if section.settings.us_badge != blank -%}
+                <span class="saluva-comp__head-badge">{{ section.settings.us_badge }}</span>
+              {%- endif -%}
+              <span class="saluva-comp__head-name">{{ section.settings.us_name }}</span>
+            </th>
+            {%- if show_a > 0 -%}<th class="saluva-comp__head" scope="col">{{ section.settings.alt1_name }}</th>{%- endif -%}
+            {%- if show_b > 0 -%}<th class="saluva-comp__head" scope="col">{{ section.settings.alt2_name }}</th>{%- endif -%}
+            {%- if show_c > 0 -%}<th class="saluva-comp__head" scope="col">{{ section.settings.alt3_name }}</th>{%- endif -%}
+          </tr>
+        </thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            <tr {{ block.shopify_attributes }}>
+              <th class="saluva-comp__feature" scope="row">{{ block.settings.feature }}</th>
+              <td class="saluva-comp__cell saluva-comp__cell--us">
+                {%- render 'saluva-comparison-cell', value: block.settings.us_value, text: block.settings.us_text -%}
+              </td>
+              {%- if show_a > 0 -%}
+                <td class="saluva-comp__cell">{%- render 'saluva-comparison-cell', value: block.settings.alt1_value, text: block.settings.alt1_text -%}</td>
+              {%- endif -%}
+              {%- if show_b > 0 -%}
+                <td class="saluva-comp__cell">{%- render 'saluva-comparison-cell', value: block.settings.alt2_value, text: block.settings.alt2_text -%}</td>
+              {%- endif -%}
+              {%- if show_c > 0 -%}
+                <td class="saluva-comp__cell">{%- render 'saluva-comparison-cell', value: block.settings.alt3_value, text: block.settings.alt3_text -%}</td>
+              {%- endif -%}
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+
+    {%- if section.settings.cta_text != blank -%}
+      <div class="saluva-comp__cta">
+        <a href="{{ section.settings.cta_link | default: '#product-page' }}" class="btn btn--primary btn--lg">{{ section.settings.cta_text }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Tabla comparativa",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "¿POR QUÉ MISOJI?" },
+    { "type": "text", "id": "title", "label": "Título", "default": "Compara y decide" },
+    { "type": "textarea", "id": "description", "label": "Descripción (opcional)", "default": "Resultados duraderos, en casa y sin gastar una fortuna." },
+    { "type": "header", "content": "Columnas" },
+    { "type": "text", "id": "us_name", "label": "Tu marca", "default": "misoji" },
+    { "type": "text", "id": "us_badge", "label": "Insignia de tu columna (opcional)", "default": "Recomendado" },
+    { "type": "text", "id": "alt1_name", "label": "Alternativa 1", "default": "Clínica estética" },
+    { "type": "text", "id": "alt2_name", "label": "Alternativa 2", "default": "Métodos manuales" },
+    { "type": "text", "id": "alt3_name", "label": "Alternativa 3 (vacío = oculta)", "default": "" },
+    { "type": "header", "content": "Llamado a la acción" },
+    { "type": "text", "id": "cta_text", "label": "Texto del botón (vacío = oculto)", "default": "Quiero el mío" },
+    { "type": "url", "id": "cta_link", "label": "Enlace del botón" },
+    { "type": "checkbox", "id": "bg_aurora", "label": "Fondo Aurora", "default": false }
+  ],
+  "max_blocks": 12,
+  "blocks": [
+    {
+      "type": "fila",
+      "name": "Fila",
+      "settings": [
+        { "type": "text", "id": "feature", "label": "Característica", "default": "Sin dolor" },
+        { "type": "header", "content": "misoji" },
+        { "type": "select", "id": "us_value", "label": "Valor", "default": "yes", "options": [ { "value": "yes", "label": "Sí (✓)" }, { "value": "no", "label": "No (✗)" }, { "value": "text", "label": "Texto" } ] },
+        { "type": "text", "id": "us_text", "label": "Texto (si elegiste «Texto»)" },
+        { "type": "header", "content": "Alternativa 1" },
+        { "type": "select", "id": "alt1_value", "label": "Valor", "default": "no", "options": [ { "value": "yes", "label": "Sí (✓)" }, { "value": "no", "label": "No (✗)" }, { "value": "text", "label": "Texto" } ] },
+        { "type": "text", "id": "alt1_text", "label": "Texto (si elegiste «Texto»)" },
+        { "type": "header", "content": "Alternativa 2" },
+        { "type": "select", "id": "alt2_value", "label": "Valor", "default": "no", "options": [ { "value": "yes", "label": "Sí (✓)" }, { "value": "no", "label": "No (✗)" }, { "value": "text", "label": "Texto" } ] },
+        { "type": "text", "id": "alt2_text", "label": "Texto (si elegiste «Texto»)" },
+        { "type": "header", "content": "Alternativa 3" },
+        { "type": "select", "id": "alt3_value", "label": "Valor", "default": "no", "options": [ { "value": "yes", "label": "Sí (✓)" }, { "value": "no", "label": "No (✗)" }, { "value": "text", "label": "Texto" } ] },
+        { "type": "text", "id": "alt3_text", "label": "Texto (si elegiste «Texto»)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabla comparativa",
+      "blocks": [
+        { "type": "fila", "settings": { "feature": "Sin dolor", "us_value": "yes", "alt1_value": "text", "alt1_text": "A veces", "alt2_value": "no" } },
+        { "type": "fila", "settings": { "feature": "Uso en casa", "us_value": "yes", "alt1_value": "no", "alt2_value": "yes" } },
+        { "type": "fila", "settings": { "feature": "Privacidad total", "us_value": "yes", "alt1_value": "no", "alt2_value": "yes" } },
+        { "type": "fila", "settings": { "feature": "Resultados duraderos", "us_value": "yes", "alt1_value": "yes", "alt2_value": "no" } },
+        { "type": "fila", "settings": { "feature": "Costo", "us_value": "text", "us_text": "Pago único", "alt1_value": "text", "alt1_text": "Miles ($$$)", "alt2_value": "text", "alt2_text": "Gasto mensual" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
