@@ -1294,10 +1294,15 @@ function initPdpCarousel() {
     track.style.transform = 'translateX(-' + (current * 100) + '%)';
     dots.forEach((d, i) => d.classList.toggle('active', i === current));
     thumbs.forEach((t, i) => t.classList.toggle('active', i === current));
-    /* Centra la miniatura activa dentro de la tira (sin mover la página) */
+    /* Centra la miniatura activa SOLO dentro de su tira (scrollLeft propio,
+       nunca mueve la página ni en horizontal ni en vertical). */
     const activeThumb = thumbs[current];
-    if (activeThumb && activeThumb.scrollIntoView) {
-      activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    if (activeThumb) {
+      const strip = activeThumb.parentElement;
+      if (strip && strip.scrollWidth > strip.clientWidth) {
+        const left = activeThumb.offsetLeft - (strip.clientWidth - activeThumb.clientWidth) / 2;
+        strip.scrollTo({ left: left, behavior: 'smooth' });
+      }
     }
   }
 

@@ -2898,7 +2898,7 @@
   z-index: 99;
   height: 56px;
   padding: 0 22px 0 18px;
-  background: #25D366;
+  background: linear-gradient(135deg, #C8B7FF 0%, #5D4EFF 100%);
   border-radius: var(--radius-pill, 999px);
   display: flex;
   align-items: center;
@@ -2908,13 +2908,13 @@
   font-weight: 700;
   font-size: 15px;
   white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+  box-shadow: 0 6px 20px rgba(93, 78, 255, 0.35);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .pdp__whatsapp:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 24px rgba(37, 211, 102, 0.5);
+  box-shadow: 0 8px 26px rgba(93, 78, 255, 0.45);
 }
 
 .pdp__whatsapp svg {
@@ -3269,13 +3269,15 @@
   }
 
 
-  /* Galería: tira horizontal de miniaturas (como la referencia) */
+  /* Galería: tira horizontal de miniaturas con scroll PROPIO
+     (overscroll-behavior-x: contain → no arrastra la página). */
   .pdp__thumbs {
     display: flex;
     gap: 8px;
     margin-top: 0;
     padding: 12px 16px 0;
     overflow-x: auto;
+    overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
