@@ -1,0 +1,79 @@
+{%- comment -%}
+  MISOJI — Tutorial "Fácil como 1, 2, 3"
+  Pasos numerados con imagen + título + descripción. Reduce la fricción de uso.
+{%- endcomment -%}
+
+<section class="saluva-steps {% if section.settings.bg_aurora %}aurora-bg{% endif %}" id="saluva-steps-{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.title != blank or section.settings.label != blank -%}
+      <div class="section-header section-header--center anim-flip">
+        {%- if section.settings.label != blank -%}
+          <span class="section-header__label">{{ section.settings.label }}</span>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="section-header__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <p class="section-header__desc">{{ section.settings.description }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="saluva-steps__grid anim-stagger">
+      {%- for block in section.blocks -%}
+        <div class="saluva-steps__card" {{ block.shopify_attributes }}>
+          <div class="saluva-steps__media">
+            {%- if block.settings.image != blank -%}
+              <img src="{{ block.settings.image | image_url: width: 600 }}"
+                   alt="{{ block.settings.title | escape }}"
+                   class="saluva-steps__img" loading="lazy" width="600" height="600">
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'saluva-steps__placeholder' }}
+            {%- endif -%}
+            <span class="saluva-steps__num">{{ forloop.index }}</span>
+          </div>
+          <div class="saluva-steps__body">
+            <h3 class="saluva-steps__title">{{ block.settings.title }}</h3>
+            {%- if block.settings.text != blank -%}
+              <p class="saluva-steps__text">{{ block.settings.text }}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Tutorial 1-2-3",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "MODO DE USO" },
+    { "type": "text", "id": "title", "label": "Título", "default": "Fácil como 1, 2, 3" },
+    { "type": "textarea", "id": "description", "label": "Descripción (opcional)", "default": "Resultados profesionales en casa, sin complicaciones." },
+    { "type": "checkbox", "id": "bg_aurora", "label": "Fondo Aurora", "default": false }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Paso",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Imagen" },
+        { "type": "text", "id": "title", "label": "Título del paso", "default": "Prepara la zona" },
+        { "type": "textarea", "id": "text", "label": "Descripción", "default": "Limpia y seca la zona a tratar antes de comenzar." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tutorial 1-2-3",
+      "blocks": [
+        { "type": "step", "settings": { "title": "Prepara la zona", "text": "Limpia y seca bien el área antes de comenzar para mejores resultados." } },
+        { "type": "step", "settings": { "title": "Enciende y elige el nivel", "text": "Selecciona la intensidad según la zona y tu nivel de comodidad." } },
+        { "type": "step", "settings": { "title": "Trata el área", "text": "Apoya el dispositivo sobre la piel y desliza lentamente para completar el tratamiento." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

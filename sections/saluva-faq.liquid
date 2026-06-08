@@ -1,0 +1,69 @@
+{%- comment -%}
+  MISOJI — Preguntas frecuentes (acordeón)
+  Resuelve objeciones de compra. Usa <details>/<summary> (accesible, sin JS).
+{%- endcomment -%}
+
+<section class="saluva-faq {% if section.settings.bg_aurora %}aurora-bg{% endif %}" id="saluva-faq-{{ section.id }}">
+  <div class="container saluva-faq__container">
+    {%- if section.settings.title != blank or section.settings.label != blank -%}
+      <div class="section-header section-header--center anim-flip">
+        {%- if section.settings.label != blank -%}
+          <span class="section-header__label">{{ section.settings.label }}</span>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="section-header__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <p class="section-header__desc">{{ section.settings.description }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="saluva-faq__list anim-stagger">
+      {%- for block in section.blocks -%}
+        <details class="saluva-faq__item"{% if block.settings.open %} open{% endif %} {{ block.shopify_attributes }}>
+          <summary class="saluva-faq__q">
+            <span>{{ block.settings.question }}</span>
+            <svg class="saluva-faq__chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+          <div class="saluva-faq__a rte">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Preguntas frecuentes",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "DUDAS RESUELTAS" },
+    { "type": "text", "id": "title", "label": "Título", "default": "Preguntas frecuentes" },
+    { "type": "textarea", "id": "description", "label": "Descripción (opcional)" },
+    { "type": "checkbox", "id": "bg_aurora", "label": "Fondo Aurora", "default": false }
+  ],
+  "max_blocks": 20,
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "Pregunta",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Pregunta", "default": "¿En cuánto tiempo veo resultados?" },
+        { "type": "richtext", "id": "answer", "label": "Respuesta", "default": "<p>La mayoría de las personas nota mejoras visibles a partir de la segunda o tercera semana de uso constante.</p>" },
+        { "type": "checkbox", "id": "open", "label": "Abierta por defecto", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Preguntas frecuentes",
+      "blocks": [
+        { "type": "faq", "settings": { "question": "¿En cuánto tiempo veo resultados?", "open": true } },
+        { "type": "faq", "settings": { "question": "¿Es seguro para todo tipo de piel?" } },
+        { "type": "faq", "settings": { "question": "¿Cómo y cuándo recibo mi pedido?" } },
+        { "type": "faq", "settings": { "question": "¿Tiene garantía y devolución?" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

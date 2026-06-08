@@ -9,6 +9,12 @@
  */
 {
   "sections": {
+    "breadcrumbs": {
+      "type": "saluva-breadcrumbs",
+      "settings": {
+        "home_label": "Inicio"
+      }
+    },
     "main": {
       "type": "main-product",
       "settings": {
@@ -16,9 +22,77 @@
         "whatsapp_label": "Comprar contraentrega",
         "whatsapp_message": "Hola!! quiero comprar contra entrega su producto,"
       }
+    },
+    "before_after": {
+      "type": "saluva-before-after",
+      "blocks": {
+        "zona_1": { "type": "zona", "settings": { "zone_name": "Piernas", "note": "*Uso recomendado 3 veces por semana" } },
+        "zona_2": { "type": "zona", "settings": { "zone_name": "Axilas", "note": "*Uso recomendado 3 veces por semana" } },
+        "zona_3": { "type": "zona", "settings": { "zone_name": "Rostro", "note": "*Uso recomendado 3 veces por semana" } }
+      },
+      "block_order": ["zona_1", "zona_2", "zona_3"],
+      "settings": {
+        "label": "RESULTADOS REALES",
+        "title": "Piel más suave en pocas semanas",
+        "description": "Arrastra el control para ver el antes y el después en cada zona.",
+        "before_label": "Antes",
+        "after_label": "Después",
+        "bg_aurora": false
+      }
+    },
+    "stats": {
+      "type": "saluva-stats",
+      "blocks": {
+        "stat_1": { "type": "stat", "settings": { "number": "97", "suffix": "%", "label": "Reducción de vello", "sublabel": "en solo 2 semanas" } },
+        "stat_2": { "type": "stat", "settings": { "number": "3", "suffix": "", "label": "Modos personalizados", "sublabel": "rostro · cuerpo · bikini" } },
+        "stat_3": { "type": "stat", "settings": { "number": "0", "suffix": "", "label": "Dolor", "sublabel": "tecnología de enfriamiento" } },
+        "stat_4": { "type": "stat", "settings": { "number": "30", "suffix": " días", "label": "Garantía", "sublabel": "devolución sin complicaciones" } }
+      },
+      "block_order": ["stat_1", "stat_2", "stat_3", "stat_4"],
+      "settings": {
+        "label": "RESPALDADO POR DATOS",
+        "title": "Resultados que puedes medir",
+        "footnote": "*Resultados según uso constante. Pueden variar según cada persona.",
+        "bg_aurora": true
+      }
+    },
+    "steps": {
+      "type": "saluva-how-steps",
+      "blocks": {
+        "step_1": { "type": "step", "settings": { "title": "Prepara la zona", "text": "Limpia y seca bien el área antes de comenzar para mejores resultados." } },
+        "step_2": { "type": "step", "settings": { "title": "Enciende y elige el nivel", "text": "Selecciona la intensidad según la zona y tu nivel de comodidad." } },
+        "step_3": { "type": "step", "settings": { "title": "Trata el área", "text": "Apoya el dispositivo sobre la piel y desliza lentamente para completar el tratamiento." } }
+      },
+      "block_order": ["step_1", "step_2", "step_3"],
+      "settings": {
+        "label": "MODO DE USO",
+        "title": "Fácil como 1, 2, 3",
+        "description": "Resultados profesionales en casa, sin complicaciones.",
+        "bg_aurora": false
+      }
+    },
+    "faq": {
+      "type": "saluva-faq",
+      "blocks": {
+        "faq_1": { "type": "faq", "settings": { "question": "¿En cuánto tiempo veo resultados?", "answer": "<p>La mayoría de las personas nota mejoras visibles a partir de la segunda o tercera semana de uso constante.</p>", "open": true } },
+        "faq_2": { "type": "faq", "settings": { "question": "¿Es seguro para todo tipo de piel?", "answer": "<p>Sí. Cuenta con distintos niveles de intensidad para adaptarse a cada zona y sensibilidad. Te recomendamos hacer una prueba en un área pequeña antes del primer uso completo.</p>" } },
+        "faq_3": { "type": "faq", "settings": { "question": "¿Cómo y cuándo recibo mi pedido?", "answer": "<p>Realizamos envíos a todo el país. El tiempo estimado de entrega es de 2 a 5 días hábiles según tu ciudad.</p>" } },
+        "faq_4": { "type": "faq", "settings": { "question": "¿Tiene garantía y devolución?", "answer": "<p>Sí. Tienes 30 días para devoluciones sin complicaciones y garantía del fabricante ante cualquier defecto.</p>" } }
+      },
+      "block_order": ["faq_1", "faq_2", "faq_3", "faq_4"],
+      "settings": {
+        "label": "DUDAS RESUELTAS",
+        "title": "Preguntas frecuentes",
+        "bg_aurora": false
+      }
     }
   },
   "order": [
-    "main"
+    "breadcrumbs",
+    "main",
+    "before_after",
+    "stats",
+    "steps",
+    "faq"
   ]
 }

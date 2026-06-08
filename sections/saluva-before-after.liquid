@@ -1,0 +1,125 @@
+{%- comment -%}
+  MISOJI — Antes / Después
+  Comparador de imágenes arrastrable por zona del cuerpo.
+  Inspirado en la sección de resultados reales (UGC) de referencias de electro-belleza.
+  JS → initBeforeAfter() en saluva-scripts.js
+{%- endcomment -%}
+
+<section class="saluva-ba {% if section.settings.bg_aurora %}aurora-bg{% endif %}" id="saluva-ba-{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.title != blank or section.settings.label != blank -%}
+      <div class="section-header section-header--center anim-flip">
+        {%- if section.settings.label != blank -%}
+          <span class="section-header__label">{{ section.settings.label }}</span>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="section-header__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <p class="section-header__desc">{{ section.settings.description }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- assign zones = section.blocks -%}
+    {%- if zones.size > 0 -%}
+      <div class="saluva-ba__wrap" data-ba-root>
+
+        {%- if zones.size > 1 -%}
+          <div class="saluva-ba__tabs" role="tablist" aria-label="Zonas de tratamiento">
+            {%- for block in zones -%}
+              <button
+                type="button"
+                class="saluva-ba__tab{% if forloop.first %} active{% endif %}"
+                data-ba-tab="{{ forloop.index0 }}"
+                role="tab"
+                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              >{{ block.settings.zone_name }}</button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <div class="saluva-ba__stages">
+          {%- for block in zones -%}
+            <div
+              class="saluva-ba__stage{% if forloop.first %} active{% endif %}"
+              data-ba-panel="{{ forloop.index0 }}"
+              {{ block.shopify_attributes }}
+            >
+              <div class="saluva-ba__compare" data-ba-compare>
+                <div class="saluva-ba__img saluva-ba__img--after">
+                  {%- if block.settings.image_after != blank -%}
+                    <img src="{{ block.settings.image_after | image_url: width: 900 }}"
+                         alt="{{ block.settings.zone_name | escape }} — después"
+                         loading="lazy" draggable="false" width="900" height="900">
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'saluva-ba__placeholder' }}
+                  {%- endif -%}
+                  <span class="saluva-ba__badge saluva-ba__badge--after">{{ section.settings.after_label | default: 'Después' }}</span>
+                </div>
+                <div class="saluva-ba__img saluva-ba__img--before" data-ba-before>
+                  {%- if block.settings.image_before != blank -%}
+                    <img src="{{ block.settings.image_before | image_url: width: 900 }}"
+                         alt="{{ block.settings.zone_name | escape }} — antes"
+                         loading="lazy" draggable="false" width="900" height="900">
+                  {%- else -%}
+                    {{ 'product-2' | placeholder_svg_tag: 'saluva-ba__placeholder' }}
+                  {%- endif -%}
+                  <span class="saluva-ba__badge saluva-ba__badge--before">{{ section.settings.before_label | default: 'Antes' }}</span>
+                </div>
+                <div class="saluva-ba__handle" data-ba-handle aria-hidden="true">
+                  <span class="saluva-ba__handle-line"></span>
+                  <span class="saluva-ba__handle-grip">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/><polyline points="9 18 15 12 9 6" transform="translate(0 0)"/></svg>
+                  </span>
+                </div>
+                <input type="range" min="0" max="100" value="50" class="saluva-ba__range" data-ba-range
+                       aria-label="Arrastra para comparar antes y después">
+              </div>
+              {%- if block.settings.note != blank -%}
+                <p class="saluva-ba__note">{{ block.settings.note }}</p>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Antes / Después",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "RESULTADOS REALES" },
+    { "type": "text", "id": "title", "label": "Título", "default": "Piel más suave en pocas semanas" },
+    { "type": "textarea", "id": "description", "label": "Descripción (opcional)", "default": "Arrastra el control para ver el antes y el después en cada zona." },
+    { "type": "text", "id": "before_label", "label": "Etiqueta «Antes»", "default": "Antes" },
+    { "type": "text", "id": "after_label", "label": "Etiqueta «Después»", "default": "Después" },
+    { "type": "checkbox", "id": "bg_aurora", "label": "Fondo Aurora", "default": false }
+  ],
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "zona",
+      "name": "Zona",
+      "settings": [
+        { "type": "text", "id": "zone_name", "label": "Nombre de la zona", "default": "Piernas" },
+        { "type": "image_picker", "id": "image_before", "label": "Imagen ANTES" },
+        { "type": "image_picker", "id": "image_after", "label": "Imagen DESPUÉS" },
+        { "type": "text", "id": "note", "label": "Nota al pie (opcional)", "default": "*Uso recomendado 3 veces por semana" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Antes / Después",
+      "blocks": [
+        { "type": "zona", "settings": { "zone_name": "Piernas" } },
+        { "type": "zona", "settings": { "zone_name": "Axilas" } },
+        { "type": "zona", "settings": { "zone_name": "Rostro" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

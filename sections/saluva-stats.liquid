@@ -1,0 +1,81 @@
+{%- comment -%}
+  MISOJI — Números clínicos
+  Banda de datos/estadísticas para aportar autoridad (ej: "97% reducción de vello").
+  Animación count-up al entrar en viewport → initStats() en saluva-scripts.js
+{%- endcomment -%}
+
+<section class="saluva-stats {% if section.settings.bg_aurora %}aurora-bg{% endif %}" id="saluva-stats-{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.title != blank or section.settings.label != blank -%}
+      <div class="section-header section-header--center anim-flip">
+        {%- if section.settings.label != blank -%}
+          <span class="section-header__label">{{ section.settings.label }}</span>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="section-header__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <p class="section-header__desc">{{ section.settings.description }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="saluva-stats__grid anim-stagger">
+      {%- for block in section.blocks -%}
+        <div class="saluva-stats__item" {{ block.shopify_attributes }}>
+          <div class="saluva-stats__value">
+            <span class="saluva-stats__number"
+                  data-stat-target="{{ block.settings.number }}"
+                  data-stat-decimals="{{ block.settings.decimals }}">{{ block.settings.number }}</span><span class="saluva-stats__suffix">{{ block.settings.suffix }}</span>
+          </div>
+          <p class="saluva-stats__label">{{ block.settings.label }}</p>
+          {%- if block.settings.sublabel != blank -%}
+            <p class="saluva-stats__sublabel">{{ block.settings.sublabel }}</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.footnote != blank -%}
+      <p class="saluva-stats__footnote">{{ section.settings.footnote }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Números clínicos",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "RESPALDADO POR DATOS" },
+    { "type": "text", "id": "title", "label": "Título", "default": "Resultados que puedes medir" },
+    { "type": "textarea", "id": "description", "label": "Descripción (opcional)" },
+    { "type": "text", "id": "footnote", "label": "Nota al pie (opcional)", "default": "*Resultados según uso constante. Pueden variar según cada persona." },
+    { "type": "checkbox", "id": "bg_aurora", "label": "Fondo Aurora", "default": true }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Dato",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Número", "default": "97", "info": "Solo el valor numérico. Usa punto para decimales (ej: 97.3)" },
+        { "type": "range", "id": "decimals", "label": "Decimales", "min": 0, "max": 2, "step": 1, "default": 0 },
+        { "type": "text", "id": "suffix", "label": "Sufijo", "default": "%" },
+        { "type": "text", "id": "label", "label": "Texto principal", "default": "Reducción de vello" },
+        { "type": "text", "id": "sublabel", "label": "Texto secundario (opcional)", "default": "en solo 2 semanas" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Números clínicos",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "97", "suffix": "%", "label": "Reducción de vello", "sublabel": "en solo 2 semanas" } },
+        { "type": "stat", "settings": { "number": "3", "suffix": "", "label": "Modos personalizados", "sublabel": "rostro · cuerpo · bikini" } },
+        { "type": "stat", "settings": { "number": "0", "suffix": "", "label": "Dolor", "sublabel": "tecnología de enfriamiento" } },
+        { "type": "stat", "settings": { "number": "30", "suffix": " días", "label": "Garantía", "sublabel": "devolución sin complicaciones" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

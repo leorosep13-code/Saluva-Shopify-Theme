@@ -5713,3 +5713,311 @@ body.cart-drawer-open { overflow: hidden; }
   .pdp-desc__hero::after,
   .pdp-desc__closer::after { animation: none !important; }
 }
+
+/* ═══════════════════════════════════════════
+   PDP — Secciones de contenido / confianza
+   (Migas · Antes/Después · Números · Pasos · FAQ)
+   ═══════════════════════════════════════════ */
+
+/* ── Migas de pan ── */
+.saluva-breadcrumbs { padding: 16px 0 4px; }
+.saluva-breadcrumbs__list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+}
+.saluva-breadcrumbs__item a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.saluva-breadcrumbs__item a:hover { color: var(--color-primary-dark); }
+.saluva-breadcrumbs__item--current { color: var(--color-text); font-weight: 600; }
+.saluva-breadcrumbs__sep { color: var(--color-text-light); user-select: none; }
+
+/* ── Antes / Después ── */
+.saluva-ba { padding: 64px 0; }
+.saluva-ba__wrap { max-width: 720px; margin: 0 auto; }
+.saluva-ba__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.saluva-ba__tab {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.saluva-ba__tab:hover { border-color: var(--color-primary); color: var(--color-primary-dark); }
+.saluva-ba__tab.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 4px 16px var(--color-primary-40);
+}
+.saluva-ba__stage { display: none; }
+.saluva-ba__stage.active { display: block; animation: ba-fade 0.4s ease; }
+@keyframes ba-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.saluva-ba__compare {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  user-select: none;
+  touch-action: pan-y;
+  background: var(--color-bg-soft);
+}
+.saluva-ba__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.saluva-ba__img img,
+.saluva-ba__placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* La imagen "antes" se recorta con clip-path según el control (sin deformar) */
+.saluva-ba__img--before {
+  z-index: 2;
+  clip-path: inset(0 50% 0 0);
+  will-change: clip-path;
+}
+.saluva-ba__badge {
+  position: absolute;
+  top: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  color: #fff;
+  z-index: 3;
+}
+.saluva-ba__badge--before { left: 14px; background: rgba(30,31,37,0.72); }
+.saluva-ba__badge--after { right: 14px; background: var(--color-primary-dark); }
+.saluva-ba__handle {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  width: 0;
+  transform: translateX(-50%);
+  z-index: 4;
+  pointer-events: none;
+}
+.saluva-ba__handle-line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 3px;
+  height: 100%;
+  transform: translateX(-50%);
+  background: #fff;
+}
+.saluva-ba__handle-grip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--color-primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+}
+.saluva-ba__range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  z-index: 5;
+}
+.saluva-ba__note {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-light);
+  margin-top: 14px;
+}
+
+/* ── Números clínicos ── */
+.saluva-stats { padding: 64px 0; }
+.saluva-stats__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.saluva-stats__item {
+  text-align: center;
+  padding: 28px 18px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+.saluva-stats__value {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 46px;
+  line-height: 1;
+  color: var(--color-primary-dark);
+  letter-spacing: -1px;
+}
+.saluva-stats__suffix { font-size: 28px; }
+.saluva-stats__label {
+  margin: 12px 0 0;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--color-text);
+}
+.saluva-stats__sublabel {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+.saluva-stats__footnote {
+  text-align: center;
+  font-size: 12px;
+  color: var(--color-text-light);
+  margin-top: 24px;
+}
+
+/* ── Tutorial 1-2-3 ── */
+.saluva-steps { padding: 64px 0; }
+.saluva-steps__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.saluva-steps__card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.saluva-steps__card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.saluva-steps__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--color-bg-soft);
+}
+.saluva-steps__img,
+.saluva-steps__placeholder { width: 100%; height: 100%; object-fit: cover; }
+.saluva-steps__num {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px var(--color-primary-40);
+}
+.saluva-steps__body { padding: 20px 22px 24px; }
+.saluva-steps__title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
+.saluva-steps__text { font-size: 14px; color: var(--color-text-muted); margin: 0; line-height: 1.55; }
+
+/* ── FAQ acordeón ── */
+.saluva-faq { padding: 64px 0; }
+.saluva-faq__container { max-width: 760px; }
+.saluva-faq__list { display: flex; flex-direction: column; gap: 12px; }
+.saluva-faq__item {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  overflow: hidden;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.saluva-faq__item[open] { border-color: var(--color-primary); box-shadow: var(--shadow-sm); }
+.saluva-faq__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--color-text);
+  cursor: pointer;
+  list-style: none;
+}
+.saluva-faq__q::-webkit-details-marker { display: none; }
+.saluva-faq__chevron {
+  flex-shrink: 0;
+  color: var(--color-primary-dark);
+  transition: transform var(--transition);
+}
+.saluva-faq__item[open] .saluva-faq__chevron { transform: rotate(180deg); }
+.saluva-faq__a {
+  padding: 0 20px 20px;
+  font-size: 14.5px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+.saluva-faq__a p { margin: 0 0 10px; }
+.saluva-faq__a p:last-child { margin-bottom: 0; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .saluva-stats__grid { grid-template-columns: repeat(2, 1fr); }
+  .saluva-steps__grid { grid-template-columns: 1fr; max-width: 420px; margin-inline: auto; }
+}
+@media (max-width: 768px) {
+  .saluva-ba, .saluva-stats, .saluva-steps, .saluva-faq { padding: 44px 0; }
+  .saluva-stats__value { font-size: 38px; }
+  .saluva-stats__suffix { font-size: 22px; }
+}
+@media (max-width: 480px) {
+  .saluva-stats__grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .saluva-stats__item { padding: 20px 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saluva-ba__stage.active,
+  .saluva-faq__chevron,
+  .saluva-steps__card { animation: none !important; transition: none !important; }
+}

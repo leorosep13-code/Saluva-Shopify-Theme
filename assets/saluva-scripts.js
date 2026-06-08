@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initPdpShare();
   initReelsCarousel();
   initOfertasRail();
+  initBeforeAfter();
+  initStats();
 });
 
 /* ── Ofertas rail (scroll horizontal con navegación) ── */
@@ -1109,6 +1111,103 @@ function updateFloatingCheckout(count) {
 document.addEventListener('DOMContentLoaded', () => {
   updateFloatingCheckout();
 });
+
+/* ── PDP Antes/Después (tabs + comparador con clip-path) ── */
+function initBeforeAfter() {
+  document.querySelectorAll('[data-ba-root]').forEach((root) => {
+    /* Tabs de zona */
+    const tabs = root.querySelectorAll('[data-ba-tab]');
+    const panels = root.querySelectorAll('[data-ba-panel]');
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const idx = tab.dataset.baTab;
+        tabs.forEach((t) => {
+          const on = t.dataset.baTab === idx;
+          t.classList.toggle('active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        panels.forEach((p) => p.classList.toggle('active', p.dataset.baPanel === idx));
+      });
+    });
+
+    /* Comparador de cada panel */
+    root.querySelectorAll('[data-ba-compare]').forEach((compare) => {
+      const before = compare.querySelector('[data-ba-before]');
+      const handle = compare.querySelector('[data-ba-handle]');
+      const range  = compare.querySelector('[data-ba-range]');
+      if (!before || !handle || !range) return;
+
+      function setPos(pct) {
+        const v = Math.max(0, Math.min(100, pct));
+        before.style.clipPath = 'inset(0 ' + (100 - v) + '% 0 0)';
+        handle.style.left = v + '%';
+      }
+      range.addEventListener('input', () => setPos(parseFloat(range.value)));
+
+      /* Permite arrastrar tocando cualquier punto del comparador */
+      function pointerToPct(clientX) {
+        const rect = compare.getBoundingClientRect();
+        return ((clientX - rect.left) / rect.width) * 100;
+      }
+      let dragging = false;
+      compare.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        const pct = pointerToPct(e.clientX);
+        range.value = pct;
+        setPos(pct);
+      });
+      window.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const pct = pointerToPct(e.clientX);
+        range.value = pct;
+        setPos(pct);
+      });
+      window.addEventListener('pointerup', () => { dragging = false; });
+
+      setPos(50);
+    });
+  });
+}
+
+/* ── Números clínicos (count-up al entrar en viewport) ── */
+function initStats() {
+  const nums = document.querySelectorAll('.saluva-stats__number[data-stat-target]');
+  if (!nums.length) return;
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function animate(el) {
+    const target   = parseFloat(el.dataset.statTarget);
+    const decimals = parseInt(el.dataset.statDecimals || '0', 10);
+    if (isNaN(target)) return;
+    if (reduce) { el.textContent = target.toFixed(decimals); return; }
+
+    const duration = 1400;
+    const start = performance.now();
+    function tick(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3); /* easeOutCubic */
+      el.textContent = (target * eased).toFixed(decimals);
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = target.toFixed(decimals);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    nums.forEach(animate);
+    return;
+  }
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        animate(entry.target);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  nums.forEach((n) => io.observe(n));
+}
 
 /* ── Toast Helper ── */
 function showToast(message, type) {

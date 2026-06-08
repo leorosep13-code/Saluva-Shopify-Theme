@@ -1,0 +1,70 @@
+{%- comment -%}
+  MISOJI — Migas de pan (breadcrumbs)
+  Orienta al cliente: Inicio › Colección › Producto.
+  Pensada para la plantilla de producto, pero sirve en cualquier página.
+{%- endcomment -%}
+
+<nav class="saluva-breadcrumbs" aria-label="Ruta de navegación">
+  <div class="container">
+    <ol class="saluva-breadcrumbs__list">
+      <li class="saluva-breadcrumbs__item">
+        <a href="{{ routes.root_url }}">{{ section.settings.home_label | default: 'Inicio' }}</a>
+      </li>
+
+      {%- if template contains 'product' -%}
+        {%- assign crumb_collection = collection | default: product.collections.first -%}
+        {%- if crumb_collection -%}
+          <li class="saluva-breadcrumbs__sep" aria-hidden="true">›</li>
+          <li class="saluva-breadcrumbs__item">
+            <a href="{{ crumb_collection.url }}">{{ crumb_collection.title }}</a>
+          </li>
+        {%- endif -%}
+        <li class="saluva-breadcrumbs__sep" aria-hidden="true">›</li>
+        <li class="saluva-breadcrumbs__item saluva-breadcrumbs__item--current" aria-current="page">
+          {{ product.title }}
+        </li>
+
+      {%- elsif template contains 'collection' and collection -%}
+        <li class="saluva-breadcrumbs__sep" aria-hidden="true">›</li>
+        <li class="saluva-breadcrumbs__item saluva-breadcrumbs__item--current" aria-current="page">
+          {{ collection.title }}
+        </li>
+
+      {%- elsif template contains 'page' and page -%}
+        <li class="saluva-breadcrumbs__sep" aria-hidden="true">›</li>
+        <li class="saluva-breadcrumbs__item saluva-breadcrumbs__item--current" aria-current="page">
+          {{ page.title }}
+        </li>
+
+      {%- elsif template contains 'article' and article -%}
+        {%- if blog -%}
+          <li class="saluva-breadcrumbs__sep" aria-hidden="true">›</li>
+          <li class="saluva-breadcrumbs__item">
+            <a href="{{ blog.url }}">{{ blog.title }}</a>
+          </li>
+        {%- endif -%}
+        <li class="saluva-breadcrumbs__sep" aria-hidden="true">›</li>
+        <li class="saluva-breadcrumbs__item saluva-breadcrumbs__item--current" aria-current="page">
+          {{ article.title }}
+        </li>
+      {%- endif -%}
+    </ol>
+  </div>
+</nav>
+
+{% schema %}
+{
+  "name": "Migas de pan",
+  "settings": [
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Texto de inicio",
+      "default": "Inicio"
+    }
+  ],
+  "presets": [
+    { "name": "Migas de pan" }
+  ]
+}
+{% endschema %}
