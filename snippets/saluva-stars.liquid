@@ -1,0 +1,21 @@
+{%- comment -%}
+  MISOJI — Estrellas de valoración (relleno fraccional, sin apps)
+  Params:
+    rating: número 0–5 (acepta decimales)
+    size:   tamaño en px (opcional, default 16)
+{%- endcomment -%}
+{%- liquid
+  assign r = rating | default: 0 | times: 1.0
+  if r < 0
+    assign r = 0
+  endif
+  if r > 5
+    assign r = 5
+  endif
+  assign fill_pct = r | times: 20
+  assign sz = size | default: 16
+-%}
+<span class="saluva-stars" style="--star-size: {{ sz }}px; --star-fill: {{ fill_pct }}%;" role="img" aria-label="{{ r | round: 1 }} de 5 estrellas">
+  <span class="saluva-stars__track" aria-hidden="true">★★★★★</span>
+  <span class="saluva-stars__fill" aria-hidden="true">★★★★★</span>
+</span>

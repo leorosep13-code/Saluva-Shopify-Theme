@@ -58,21 +58,28 @@
   </a>
 
   <div class="product-card__info">
-    <div class="product-card__rating">
-      <!-- Start of Judge.me code -->
-      <div class='jdgm-widget jdgm-preview-badge'
-           data-id='{{ product.id }}'
-           data-product-id='{{ product.id }}'
-           data-template='product'
-           data-auto-install='false'
-           data-entry-point='preview_badge.js'
-           data-entry-key='preview-badge/main.js'>
-        {% if product.metafields.judgeme.badge != blank %}
-          <div class='jdgm-prev-badge__legacy-content' style='display: none;'>{{ product.metafields.judgeme.badge }}</div>
-        {% endif %}
-      </div>
-      <!-- End of Judge.me code -->
-    </div>
+    {%- comment -%} Rating local (metaobjetos en custom.resenas) {%- endcomment -%}
+    {%- liquid
+      assign card_reviews = product.metafields.custom.resenas.value
+      assign card_count = 0
+      assign card_total = 0
+      if card_reviews
+        assign card_count = card_reviews.size
+        for cr in card_reviews
+          assign card_total = card_total | plus: cr.estrellas.value | default: 0
+        endfor
+      endif
+      assign card_avg = 0
+      if card_count > 0
+        assign card_avg = card_total | times: 1.0 | divided_by: card_count
+      endif
+    -%}
+    {%- if card_count > 0 -%}
+      <a href="{{ product.url }}#pdp-reviews" class="product-card__rating">
+        {%- render 'saluva-stars', rating: card_avg, size: 14 -%}
+        <span class="product-card__review-count">({{ card_count }})</span>
+      </a>
+    {%- endif -%}
 
     <p class="product-card__type">{{ product.type }}</p>
     <h3 class="product-card__title">

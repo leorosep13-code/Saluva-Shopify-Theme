@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initOfertasRail();
   initBeforeAfter();
   initStats();
+  initReviewImages();
 });
 
 /* ── Ofertas rail (scroll horizontal con navegación) ── */
@@ -1209,6 +1210,41 @@ function initStats() {
   nums.forEach((n) => io.observe(n));
 }
 
+/* ── Reseñas locales: ampliar imagen en lightbox ── */
+function initReviewImages() {
+  const items = document.querySelectorAll('[data-review-img]');
+  if (!items.length) return;
+
+  let lightbox = null;
+  function open(src) {
+    lightbox = document.createElement('div');
+    lightbox.className = 'pdp-review-lightbox';
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    lightbox.appendChild(img);
+    document.body.appendChild(lightbox);
+    document.body.style.overflow = 'hidden';
+    lightbox.addEventListener('click', close);
+  }
+  function close() {
+    if (!lightbox) return;
+    lightbox.remove();
+    lightbox = null;
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+  items.forEach((el) => {
+    const src = el.dataset.reviewImg;
+    if (!src) return;
+    el.addEventListener('click', () => open(src));
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(src); }
+    });
+  });
+}
+
 /* ── Toast Helper ── */
 function showToast(message, type) {
   const container = document.getElementById('toast-container');
@@ -1258,6 +1294,11 @@ function initPdpCarousel() {
     track.style.transform = 'translateX(-' + (current * 100) + '%)';
     dots.forEach((d, i) => d.classList.toggle('active', i === current));
     thumbs.forEach((t, i) => t.classList.toggle('active', i === current));
+    /* Centra la miniatura activa dentro de la tira (sin mover la página) */
+    const activeThumb = thumbs[current];
+    if (activeThumb && activeThumb.scrollIntoView) {
+      activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
   }
 
   dots.forEach(dot => dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index))));
