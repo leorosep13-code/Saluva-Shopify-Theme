@@ -51,12 +51,16 @@
               {%- assign img_before = item.imagen_antes.value -%}
               {%- assign img_after = item.imagen_despues.value -%}
               {%- assign note = item.nota.value -%}
+              {%- assign stage_title = item.titulo.value -%}
+              {%- assign stage_desc = item.descripcion.value -%}
               {%- assign attrs = '' -%}
             {%- else -%}
               {%- assign zona = item.settings.zone_name -%}
               {%- assign img_before = item.settings.image_before -%}
               {%- assign img_after = item.settings.image_after -%}
               {%- assign note = item.settings.note -%}
+              {%- assign stage_title = '' -%}
+              {%- assign stage_desc = '' -%}
               {%- assign attrs = item.shopify_attributes -%}
             {%- endif -%}
             <div
@@ -64,6 +68,12 @@
               data-ba-panel="{{ forloop.index0 }}"
               {{ attrs }}
             >
+              {%- if stage_title != blank or stage_desc != blank -%}
+                <div class="saluva-ba__stage-head">
+                  {%- if stage_title != blank -%}<h3 class="saluva-ba__stage-title">{{ stage_title }}</h3>{%- endif -%}
+                  {%- if stage_desc != blank -%}<p class="saluva-ba__stage-desc">{{ stage_desc }}</p>{%- endif -%}
+                </div>
+              {%- endif -%}
               <div class="saluva-ba__compare" data-ba-compare>
                 <div class="saluva-ba__img saluva-ba__img--after">
                   {%- if img_after != blank -%}
@@ -109,7 +119,7 @@
 {
   "name": "Antes / Después",
   "settings": [
-    { "type": "paragraph", "content": "Las comparaciones se toman del metafield del producto «custom.antes_despues» (lista de metaobjetos «ba_comparacion» con campos zona, imagen_antes, imagen_despues, nota). Si el producto no tiene, se usan los bloques de abajo como respaldo." },
+    { "type": "paragraph", "content": "Las comparaciones se toman del metafield del producto «custom.antes_despues» (lista de metaobjetos «ba_comparacion» con campos zona, titulo, descripcion, imagen_antes, imagen_despues, nota). El título y la descripción se muestran encima de cada comparación. Si el producto no tiene, se usan los bloques de abajo como respaldo." },
     { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "RESULTADOS REALES" },
     { "type": "text", "id": "title", "label": "Título", "default": "Piel más suave en pocas semanas" },
     { "type": "textarea", "id": "description", "label": "Descripción (opcional)", "default": "Arrastra el control para ver el antes y el después en cada zona." },
