@@ -4617,6 +4617,58 @@ body.cart-drawer-open { overflow: hidden; }
 .pdp__short-desc p:last-child { margin-bottom: 0; }
 .pdp__short-desc strong { color: var(--color-text); }
 
+/* ── Acordeones de información del producto (Datos curiosos / Descripción / Especificaciones / Qué incluye) ── */
+.pdp__accordion {
+  margin: 6px 0 18px;
+  border-top: 1px solid var(--color-border);
+}
+.pdp__acc-item { border-bottom: 1px solid var(--color-border); }
+.pdp__acc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 17px 2px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text);
+  -webkit-user-select: none;
+  user-select: none;
+}
+.pdp__acc-head::-webkit-details-marker { display: none; }
+.pdp__acc-head::marker { content: ''; }
+.pdp__acc-title { letter-spacing: -0.01em; }
+.pdp__acc-chevron {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  transition: transform .25s ease, color .25s ease;
+}
+.pdp__acc-item[open] .pdp__acc-chevron {
+  transform: rotate(180deg);
+  color: var(--color-primary);
+}
+.pdp__acc-body {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--color-text-muted);
+  padding: 0 2px 20px;
+  animation: pdpAccFade .25s ease;
+}
+.pdp__acc-body > :first-child { margin-top: 0; }
+.pdp__acc-body p { margin-bottom: 10px; }
+.pdp__acc-body p:last-child { margin-bottom: 0; }
+.pdp__acc-body ul,
+.pdp__acc-body ol { margin: 0 0 10px 18px; padding: 0; }
+.pdp__acc-body li { margin-bottom: 6px; }
+.pdp__acc-body strong { color: var(--color-text); }
+.pdp__acc-body img { max-width: 100%; height: auto; border-radius: 8px; }
+@keyframes pdpAccFade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ── Beneficios (sección full-width 2x2, mismo patrón que Contiene) ── */
 .saluva-benefits {
   padding: 60px 0;

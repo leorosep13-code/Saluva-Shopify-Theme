@@ -198,12 +198,29 @@
       {% endform %}
     </div>
 
-    {%- comment -%} Pequeña descripción debajo del precio (texto del producto en Shopify Admin) {%- endcomment -%}
-    {% if product.description != blank %}
-      <div class="pdp__short-desc rte">
-        {{ product.description }}
-      </div>
-    {% endif %}
+    {%- comment -%} ── Acordeones de información del producto (metafields namespace "custom") ── {%- endcomment -%}
+    {%- liquid
+      assign acc_titles = 'Datos curiosos,Descripción,Especificaciones,Qué incluye' | split: ','
+      assign acc_keys = 'datos_curiosos,descripcion,especificaciones,que_incluye' | split: ','
+    -%}
+    <div class="pdp__accordion" id="pdp-accordion">
+      {%- for i in (0..3) -%}
+        {%- assign acc_key = acc_keys[i] -%}
+        {%- assign acc_content = product.metafields.custom[acc_key] -%}
+        {%- if acc_key == 'descripcion' and acc_content == blank -%}
+          {%- assign acc_content = product.description -%}
+        {%- endif -%}
+        {%- if acc_content != blank -%}
+          <details class="pdp__acc-item"{% if i == 0 %} open{% endif %}>
+            <summary class="pdp__acc-head">
+              <span class="pdp__acc-title">{{ acc_titles[i] }}</span>
+              <svg class="pdp__acc-chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="pdp__acc-body rte">{{ acc_content }}</div>
+          </details>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
 
   </div>
 </section>
