@@ -1793,3 +1793,107 @@ function initCartDrawer() {
 }
 
 document.addEventListener('DOMContentLoaded', initCartDrawer);
+
+/* ───────────────────────────────────────────
+   Reels de video nativos (PDP) — controles propios
+   play/pausa, mute, barra de avance (seek), autoplay al ver
+   ─────────────────────────────────────────── */
+function initVideoReels() {
+  const reels = document.querySelectorAll('[data-vreel]');
+  if (!reels.length) return;
+
+  reels.forEach((reel) => {
+    const video = reel.querySelector('.vreel__video');
+    const toggleBtn = reel.querySelector('[data-vreel-toggle]');
+    const muteBtn = reel.querySelector('[data-vreel-mute]');
+    const media = reel.querySelector('.vreel__media');
+    const progress = reel.querySelector('[data-vreel-progress]');
+    const fill = reel.querySelector('[data-vreel-fill]');
+    if (!video) return;
+
+    // Estado inicial: silenciado (requisito para autoplay)
+    video.muted = true;
+
+    const playVideo = () => {
+      const p = video.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    };
+
+    video.addEventListener('play', () => reel.classList.add('is-playing'));
+    video.addEventListener('pause', () => reel.classList.remove('is-playing'));
+
+    // Play / Pausa (botón central y tap sobre el video)
+    const togglePlay = (e) => {
+      if (e) e.stopPropagation();
+      if (video.paused) playVideo(); else video.pause();
+    };
+    if (toggleBtn) toggleBtn.addEventListener('click', togglePlay);
+    if (media) {
+      media.addEventListener('click', (e) => {
+        // Ignora clics sobre los controles (mute / barra)
+        if (e.target.closest('[data-vreel-mute]') || e.target.closest('[data-vreel-progress]') || e.target.closest('[data-vreel-toggle]')) return;
+        togglePlay();
+      });
+    }
+
+    // Mute / unmute
+    if (muteBtn) {
+      muteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        video.muted = !video.muted;
+        reel.classList.toggle('is-unmuted', !video.muted);
+      });
+    }
+
+    // Barra de progreso
+    video.addEventListener('timeupdate', () => {
+      if (!video.duration || !isFinite(video.duration)) return;
+      if (fill) fill.style.width = ((video.currentTime / video.duration) * 100) + '%';
+    });
+
+    // Seek (click + arrastre) sobre la barra
+    if (progress) {
+      let seeking = false;
+      const seekTo = (clientX) => {
+        const rect = progress.getBoundingClientRect();
+        const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+        if (video.duration && isFinite(video.duration)) {
+          video.currentTime = ratio * video.duration;
+          if (fill) fill.style.width = (ratio * 100) + '%';
+        }
+      };
+      progress.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        seeking = true;
+        reel.classList.add('is-seeking');
+        progress.setPointerCapture(e.pointerId);
+        seekTo(e.clientX);
+      });
+      progress.addEventListener('pointermove', (e) => {
+        if (seeking) seekTo(e.clientX);
+      });
+      const endSeek = () => { seeking = false; reel.classList.remove('is-seeking'); };
+      progress.addEventListener('pointerup', endSeek);
+      progress.addEventListener('pointercancel', endSeek);
+    }
+  });
+
+  // Autoplay (silenciado) del reel visible; pausa los que salen de vista
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target.querySelector('.vreel__video');
+        if (!video) return;
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+          const p = video.play();
+          if (p && typeof p.catch === 'function') p.catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: [0, 0.6, 1] });
+    reels.forEach((reel) => io.observe(reel));
+  }
+}
+
+document.addEventListener('DOMContentLoaded', initVideoReels);

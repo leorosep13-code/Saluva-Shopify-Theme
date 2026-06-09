@@ -4669,6 +4669,179 @@ body.cart-drawer-open { overflow: hidden; }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ═══════════════════════════════════════════
+   MISOJI — Reels de video nativos (PDP)
+   ═══════════════════════════════════════════ */
+.vreels { padding: 44px 0 48px; }
+.vreels__track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 2px 14px;
+  scrollbar-width: none;
+}
+.vreels__track::-webkit-scrollbar { display: none; }
+
+.vreel {
+  flex: 0 0 auto;
+  width: 78vw;
+  max-width: 290px;
+  scroll-snap-align: center;
+}
+.vreel__media {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #1a1320;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  cursor: pointer;
+}
+.vreel__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Overlay superior: degradado + usuario + título */
+.vreel__overlay-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  padding: 14px 14px 30px;
+  background: linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+.vreel__handle {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(255,255,255,.18);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  padding: 5px 11px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+.vreel__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0,0,0,.45);
+  max-width: 90%;
+}
+
+/* Botón central play/pausa */
+.vreel__center-btn {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px; height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,.42);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  cursor: pointer;
+  z-index: 3;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.vreel__center-btn:active { transform: translate(-50%, -50%) scale(.92); }
+.vreel__icon-play { margin-left: 3px; }
+.vreel__icon-pause { display: none; }
+/* Cuando reproduce: oculta el botón salvo al pasar/tocar */
+.vreel.is-playing .vreel__center-btn { opacity: 0; }
+.vreel.is-playing .vreel__media:hover .vreel__center-btn { opacity: 1; }
+.vreel.is-playing .vreel__icon-play { display: none; }
+.vreel.is-playing .vreel__icon-pause { display: block; }
+
+/* Botón mute */
+.vreel__mute-btn {
+  position: absolute;
+  right: 12px; bottom: 22px;
+  width: 38px; height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,.42);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  cursor: pointer;
+  z-index: 3;
+  transition: transform .2s ease;
+}
+.vreel__mute-btn:active { transform: scale(.9); }
+.vreel__icon-unmuted { display: none; }
+.vreel.is-unmuted .vreel__icon-muted { display: none; }
+.vreel.is-unmuted .vreel__icon-unmuted { display: block; }
+
+/* Barra de progreso (seekable) */
+.vreel__progress {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 16px;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 2px 4px;
+  z-index: 3;
+  cursor: pointer;
+}
+.vreel__progress::before {
+  content: '';
+  position: absolute;
+  left: 8px; right: 8px; bottom: 8px;
+  height: 3.5px;
+  border-radius: 99px;
+  background: rgba(255,255,255,.32);
+}
+.vreel__progress-fill {
+  position: relative;
+  height: 3.5px;
+  width: 0%;
+  margin: 0 8px 8px;
+  border-radius: 99px;
+  background: var(--color-primary);
+  transition: width .1s linear;
+}
+.vreel__progress-fill::after {
+  content: '';
+  position: absolute;
+  right: -5px; top: 50%;
+  transform: translateY(-50%);
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.4);
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.vreel__media:hover .vreel__progress-fill::after,
+.vreel.is-seeking .vreel__progress-fill::after { opacity: 1; }
+
+@media (min-width: 750px) {
+  .vreel { width: 260px; max-width: 260px; }
+  .vreels__track {
+    justify-content: flex-start;
+    scroll-snap-type: none;
+  }
+}
+
 /* ── Beneficios (sección full-width 2x2, mismo patrón que Contiene) ── */
 .saluva-benefits {
   padding: 60px 0;

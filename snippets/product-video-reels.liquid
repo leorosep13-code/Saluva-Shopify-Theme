@@ -1,0 +1,97 @@
+{%- comment -%}
+  MISOJI — Reels de video nativos (estilo Instagram) en la PDP.
+  Carrusel horizontal deslizable de videos verticales 9:16 con controles propios
+  (play/pausa, mute, barra de avance). NO abre en pantalla completa (playsinline).
+
+  Configuración por producto — metafield (multi_line_text):
+    custom.video_reels   (o saluva.video_reels)
+
+  Una línea por reel, con campos separados por " | ":
+    URL_DEL_VIDEO | @usuario | Título del reel
+
+  Ejemplo:
+    https://cdn.shopify.com/.../demo.mp4 | @jennyabroad | Demostración de penetración
+    https://cdn.shopify.com/.../uso.mp4  | @lauu_kz    | Cómo se usa en casa
+
+  Sólo la URL es obligatoria; el usuario y el título son opcionales.
+  El video se sube en Shopify Admin → Contenido → Archivos, y se copia su enlace.
+{%- endcomment -%}
+
+{%- assign mf_s = product.metafields.saluva -%}
+{%- assign mf_c = product.metafields.custom -%}
+{%- assign raw_reels = mf_s.video_reels.value | default: mf_s.video_reels | default: mf_c.video_reels.value | default: mf_c.video_reels | default: '' -%}
+{%- assign newline_char = "
+" -%}
+{%- assign reel_lines = raw_reels | split: newline_char -%}
+
+{%- assign reel_count = 0 -%}
+{%- for raw in reel_lines -%}
+  {%- assign line = raw | strip -%}
+  {%- if line != blank -%}{%- assign reel_count = reel_count | plus: 1 -%}{%- endif -%}
+{%- endfor -%}
+
+{%- if reel_count > 0 -%}
+<section class="vreels">
+  <div class="container">
+    <div class="saluva-block-header">
+      <span class="saluva-block-header__chip">Reels</span>
+      <h2 class="saluva-block-header__title">Míralo en acción</h2>
+      <p class="saluva-block-header__sub">Desliza para ver más clips de nuestra comunidad</p>
+    </div>
+
+    <div class="vreels__track" id="vreels-track">
+      {%- for raw in reel_lines -%}
+        {%- assign line = raw | strip -%}
+        {%- if line == blank -%}{%- continue -%}{%- endif -%}
+
+        {%- assign parts = line | split: '|' -%}
+        {%- assign v_url = parts[0] | strip -%}
+        {%- assign v_handle = parts[1] | strip -%}
+        {%- assign v_title = parts[2] | strip -%}
+        {%- if v_url == blank -%}{%- continue -%}{%- endif -%}
+
+        <article class="vreel" data-vreel>
+          <div class="vreel__media">
+            <video
+              class="vreel__video"
+              src="{{ v_url }}"
+              playsinline
+              webkit-playsinline
+              muted
+              loop
+              preload="metadata"
+              disablepictureinpicture
+              controlslist="nodownload noplaybackrate noremoteplayback"
+            ></video>
+
+            {%- if v_handle != blank or v_title != blank -%}
+              <div class="vreel__overlay-top">
+                {%- if v_handle != blank -%}
+                  <span class="vreel__handle">{% unless v_handle contains '@' %}@{% endunless %}{{ v_handle }}</span>
+                {%- endif -%}
+                {%- if v_title != blank -%}
+                  <h3 class="vreel__title">{{ v_title }}</h3>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            <button class="vreel__center-btn" type="button" aria-label="Reproducir / Pausar" data-vreel-toggle>
+              <svg class="vreel__icon-play" viewBox="0 0 24 24" width="34" height="34" fill="currentColor" aria-hidden="true"><polygon points="7 4 20 12 7 20"/></svg>
+              <svg class="vreel__icon-pause" viewBox="0 0 24 24" width="34" height="34" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1.2"/><rect x="14" y="4" width="4" height="16" rx="1.2"/></svg>
+            </button>
+
+            <button class="vreel__mute-btn" type="button" aria-label="Silenciar / Activar sonido" data-vreel-mute>
+              <svg class="vreel__icon-muted" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+              <svg class="vreel__icon-unmuted" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            </button>
+
+            <div class="vreel__progress" data-vreel-progress>
+              <div class="vreel__progress-fill" data-vreel-fill></div>
+            </div>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
