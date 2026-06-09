@@ -4748,6 +4748,12 @@ body.cart-drawer-open { overflow: hidden; }
   height: 100%;
   object-fit: cover;
   display: block;
+  /* Forzar render en SDR: la presencia de un filtro CSS hace que el
+     navegador (Safari/iOS) deje de aplicar el boost de brillo HDR,
+     que hacía "parpadear" el brillo de la pantalla. Valor casi
+     imperceptible para no alterar la imagen. */
+  filter: brightness(1.001);
+  -webkit-filter: brightness(1.001);
 }
 
 /* Overlay superior: degradado + usuario + título */
