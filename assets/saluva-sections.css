@@ -6204,13 +6204,17 @@ body.cart-drawer-open { overflow: hidden; }
   font-size: clamp(46px, 8vw, 68px);
   line-height: 1;
   letter-spacing: -2px;
-  /* Relleno con gradiente de marca para mayor impacto */
+  filter: drop-shadow(0 4px 16px var(--color-primary-40));
+}
+/* El gradiente y el recorte van en el propio número (el texto real),
+   si no, el span hijo hereda el color transparente y se vuelve invisible */
+.saluva-stats__value--xl .saluva-stats__number {
+  display: inline-block;
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 60%, var(--color-primary) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: var(--color-primary-dark);
-  filter: drop-shadow(0 4px 16px var(--color-primary-40));
 }
 /* Mientras cuenta: ligero desenfoque que se va aclarando */
 .saluva-stats__item.is-counting .saluva-stats__value--xl .saluva-stats__number {
