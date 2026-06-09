@@ -1,0 +1,102 @@
+{%- comment -%}
+  MISOJI — Sección de Unboxing (video nativo dedicado).
+  Parametrizable por producto mediante METAOBJETO:
+
+    Metaobjeto "Unboxing" (handle de tipo: unboxing) con campos:
+      - video       → Referencia de archivo (acepta video)   [obligatorio]
+      - titulo      → Texto de una línea                      [opcional]
+      - descripcion → Texto de una línea / varias líneas      [opcional]
+
+    Metafield de producto:
+      custom.unboxing → Referencia de metaobjeto (a "Unboxing")
+
+  Controles propios (play/pausa, mute, barra de avance). No abre en
+  pantalla completa (playsinline). Si el producto no tiene unboxing,
+  la sección no aparece.
+{%- endcomment -%}
+
+{%- assign ub = product.metafields.custom.unboxing.value | default: product.metafields.saluva.unboxing.value -%}
+
+{%- if ub != blank -%}
+  {%- assign v_media = ub.video.value -%}
+  {%- if v_media != blank -%}
+    {%- assign u_title = ub.titulo.value | strip -%}
+    {%- assign u_desc = ub.descripcion.value | strip -%}
+    {%- assign u_poster = v_media.preview_image -%}
+
+    <section class="saluva-unboxing {% if section.settings.bg_aurora %}aurora-bg{% endif %}" id="saluva-unboxing-{{ section.id }}">
+      <div class="container">
+        {%- if section.settings.label != blank or u_title != blank or u_desc != blank -%}
+          <div class="section-header section-header--center anim-flip">
+            {%- if section.settings.label != blank -%}
+              <span class="section-header__label">{{ section.settings.label }}</span>
+            {%- endif -%}
+            {%- if u_title != blank -%}
+              <h2 class="section-header__title">{{ u_title }}</h2>
+            {%- endif -%}
+            {%- if u_desc != blank -%}
+              <p class="section-header__desc">{{ u_desc }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <div class="saluva-unboxing__player">
+          <article class="vreel" data-vreel>
+            <div class="vreel__media">
+              <video
+                class="vreel__video"
+                playsinline
+                webkit-playsinline
+                muted
+                loop
+                preload="metadata"
+                disablepictureinpicture
+                controlslist="nodownload noplaybackrate noremoteplayback"
+                {% if u_poster %}poster="{{ u_poster | image_url: width: 800 }}"{% endif %}
+              >
+                {%- if v_media.sources and v_media.sources.size > 0 -%}
+                  {%- for s in v_media.sources -%}
+                    <source src="{{ s.url }}"{% if s.mime_type %} type="{{ s.mime_type }}"{% endif %}>
+                  {%- endfor -%}
+                {%- elsif v_media.url -%}
+                  <source src="{{ v_media.url }}">
+                {%- endif -%}
+              </video>
+
+              <button class="vreel__center-btn" type="button" aria-label="Reproducir / Pausar" data-vreel-toggle>
+                <svg class="vreel__icon-play" viewBox="0 0 24 24" width="34" height="34" fill="currentColor" aria-hidden="true"><polygon points="7 4 20 12 7 20"/></svg>
+                <svg class="vreel__icon-pause" viewBox="0 0 24 24" width="34" height="34" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1.2"/><rect x="14" y="4" width="4" height="16" rx="1.2"/></svg>
+              </button>
+
+              <button class="vreel__mute-btn" type="button" aria-label="Silenciar / Activar sonido" data-vreel-mute>
+                <svg class="vreel__icon-muted" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                <svg class="vreel__icon-unmuted" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+              </button>
+
+              <div class="vreel__progress" data-vreel-progress>
+                <div class="vreel__progress-fill" data-vreel-fill></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Unboxing",
+  "settings": [
+    { "type": "paragraph", "content": "El video, título y descripción se toman del metafield del producto «custom.unboxing» (metaobjeto «unboxing» con campos video, titulo, descripcion). Si el producto no tiene unboxing, la sección no aparece." },
+    { "type": "text", "id": "label", "label": "Etiqueta superior (igual para todos)", "default": "UNBOXING" },
+    { "type": "checkbox", "id": "bg_aurora", "label": "Fondo Aurora", "default": false }
+  ],
+  "presets": [
+    { "name": "Unboxing" }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

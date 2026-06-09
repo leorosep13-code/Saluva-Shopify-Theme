@@ -6331,6 +6331,23 @@ body.cart-drawer-open { overflow: hidden; }
 }
 .saluva-steps__text { font-size: 14px; color: var(--color-text-muted); margin: 0; line-height: 1.55; }
 
+/* ── Unboxing (video nativo dedicado, reutiliza los controles .vreel) ── */
+.saluva-unboxing { padding: 8px 0 52px; }
+.saluva-unboxing__player {
+  display: flex;
+  justify-content: center;
+}
+.saluva-unboxing .vreel {
+  width: 100%;
+  max-width: 400px;
+}
+.saluva-unboxing .vreel__media {
+  border-radius: 24px;
+}
+@media (max-width: 749px) {
+  .saluva-unboxing .vreel { max-width: 320px; }
+}
+
 /* ── Promesas (Envíos · Servicio · Garantía) ── */
 .saluva-promesas { padding: 48px 0; }
 .saluva-promesas__grid {

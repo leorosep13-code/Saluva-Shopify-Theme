@@ -54,6 +54,13 @@
         "bg_aurora": false
       }
     },
+    "unboxing": {
+      "type": "saluva-unboxing",
+      "settings": {
+        "label": "UNBOXING",
+        "bg_aurora": false
+      }
+    },
     "stats": {
       "type": "saluva-stats",
       "blocks": {
@@ -114,6 +121,7 @@
     "main",
     "promesas",
     "before_after",
+    "unboxing",
     "stats",
     "steps",
     "faq",
