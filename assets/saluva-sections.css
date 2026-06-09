@@ -2736,6 +2736,21 @@
   text-decoration: line-through;
 }
 
+/* ── Unificación tipográfica del PDP: títulos con la fuente de la página
+   (Space Grotesk = var(--font-heading)), igual que el resto de secciones.
+   El texto de párrafos sigue en Outfit (var(--font-family)). ── */
+.pdp__title,
+.pdp__price,
+.pdp__compare,
+.pdp__price-current,
+.pdp__price-sale,
+.pdp__acc-title,
+.pdp-reviews__title,
+.pdp-review-card__name,
+.pdp-related__card-title {
+  font-family: var(--font-heading);
+}
+
 .pdp__savings {
   display: inline-flex;
   align-items: center;
