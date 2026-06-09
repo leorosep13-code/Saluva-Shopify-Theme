@@ -19,13 +19,29 @@
       </div>
     {%- endif -%}
 
+    {%- comment -%} Preferimos metaobjetos del producto (custom.pasos); si no hay, usamos bloques del editor {%- endcomment -%}
+    {%- assign mo_steps = product.metafields.custom.pasos.value | default: product.metafields.saluva.pasos.value -%}
+    {%- assign use_mo = false -%}
+    {%- if mo_steps != blank and mo_steps.size > 0 -%}{%- assign use_mo = true -%}{%- assign steps = mo_steps -%}{%- else -%}{%- assign steps = section.blocks -%}{%- endif -%}
+
     <div class="saluva-steps__grid anim-stagger">
-      {%- for block in section.blocks -%}
-        <div class="saluva-steps__card" {{ block.shopify_attributes }}>
+      {%- for item in steps -%}
+        {%- if use_mo -%}
+          {%- assign s_img = item.imagen.value -%}
+          {%- assign s_title = item.titulo.value -%}
+          {%- assign s_text = item.descripcion.value -%}
+          {%- assign attrs = '' -%}
+        {%- else -%}
+          {%- assign s_img = item.settings.image -%}
+          {%- assign s_title = item.settings.title -%}
+          {%- assign s_text = item.settings.text -%}
+          {%- assign attrs = item.shopify_attributes -%}
+        {%- endif -%}
+        <div class="saluva-steps__card" {{ attrs }}>
           <div class="saluva-steps__media">
-            {%- if block.settings.image != blank -%}
-              <img src="{{ block.settings.image | image_url: width: 600 }}"
-                   alt="{{ block.settings.title | escape }}"
+            {%- if s_img != blank -%}
+              <img src="{{ s_img | image_url: width: 600 }}"
+                   alt="{{ s_title | escape }}"
                    class="saluva-steps__img" loading="lazy" width="600" height="600">
             {%- else -%}
               {{ 'lifestyle-1' | placeholder_svg_tag: 'saluva-steps__placeholder' }}
@@ -33,9 +49,9 @@
             <span class="saluva-steps__num">{{ forloop.index }}</span>
           </div>
           <div class="saluva-steps__body">
-            <h3 class="saluva-steps__title">{{ block.settings.title }}</h3>
-            {%- if block.settings.text != blank -%}
-              <p class="saluva-steps__text">{{ block.settings.text }}</p>
+            <h3 class="saluva-steps__title">{{ s_title }}</h3>
+            {%- if s_text != blank -%}
+              <p class="saluva-steps__text">{{ s_text }}</p>
             {%- endif -%}
           </div>
         </div>
@@ -48,6 +64,7 @@
 {
   "name": "Tutorial 1-2-3",
   "settings": [
+    { "type": "paragraph", "content": "Los pasos se toman del metafield del producto «custom.pasos» (lista de metaobjetos «paso» con campos imagen, titulo, descripcion). Si el producto no tiene, se usan los bloques de abajo como respaldo." },
     { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "MODO DE USO" },
     { "type": "text", "id": "title", "label": "Título", "default": "Fácil como 1, 2, 3" },
     { "type": "textarea", "id": "description", "label": "Descripción (opcional)", "default": "Resultados profesionales en casa, sin complicaciones." },

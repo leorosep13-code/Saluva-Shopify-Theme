@@ -20,21 +20,47 @@
       </div>
     {%- endif -%}
 
-    <div class="saluva-stats__grid anim-stagger">
-      {%- for block in section.blocks -%}
-        <div class="saluva-stats__item" {{ block.shopify_attributes }}>
-          <div class="saluva-stats__value">
-            <span class="saluva-stats__number"
-                  data-stat-target="{{ block.settings.number }}"
-                  data-stat-decimals="{{ block.settings.decimals }}">{{ block.settings.number }}</span><span class="saluva-stats__suffix">{{ block.settings.suffix }}</span>
+    {%- comment -%} Preferimos metaobjetos del producto (custom.indicadores); si no hay, usamos bloques del editor {%- endcomment -%}
+    {%- assign mo_stats = product.metafields.custom.indicadores.value | default: product.metafields.saluva.indicadores.value -%}
+
+    {%- if mo_stats != blank and mo_stats.size > 0 -%}
+      <div class="saluva-stats__grid saluva-stats__grid--mo anim-stagger">
+        {%- for item in mo_stats -%}
+          {%- assign s_img = item.imagen.value -%}
+          {%- assign s_val = item.valor.value | strip -%}
+          {%- assign s_desc = item.descripcion.value -%}
+          <div class="saluva-stats__item saluva-stats__item--mo">
+            {%- if s_img != blank -%}
+              <div class="saluva-stats__media">
+                <img src="{{ s_img | image_url: width: 320 }}" alt="{{ s_desc | escape }}" loading="lazy" width="160" height="160">
+              </div>
+            {%- endif -%}
+            <div class="saluva-stats__value saluva-stats__value--xl">
+              <span class="saluva-stats__number" data-stat-raw="{{ s_val | escape }}">{{ s_val }}</span>
+            </div>
+            {%- if s_desc != blank -%}
+              <p class="saluva-stats__label">{{ s_desc }}</p>
+            {%- endif -%}
           </div>
-          <p class="saluva-stats__label">{{ block.settings.label }}</p>
-          {%- if block.settings.sublabel != blank -%}
-            <p class="saluva-stats__sublabel">{{ block.settings.sublabel }}</p>
-          {%- endif -%}
-        </div>
-      {%- endfor -%}
-    </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="saluva-stats__grid anim-stagger">
+        {%- for block in section.blocks -%}
+          <div class="saluva-stats__item" {{ block.shopify_attributes }}>
+            <div class="saluva-stats__value">
+              <span class="saluva-stats__number"
+                    data-stat-target="{{ block.settings.number }}"
+                    data-stat-decimals="{{ block.settings.decimals }}">{{ block.settings.number }}</span><span class="saluva-stats__suffix">{{ block.settings.suffix }}</span>
+            </div>
+            <p class="saluva-stats__label">{{ block.settings.label }}</p>
+            {%- if block.settings.sublabel != blank -%}
+              <p class="saluva-stats__sublabel">{{ block.settings.sublabel }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
 
     {%- if section.settings.footnote != blank -%}
       <p class="saluva-stats__footnote">{{ section.settings.footnote }}</p>
@@ -46,6 +72,7 @@
 {
   "name": "Números clínicos",
   "settings": [
+    { "type": "paragraph", "content": "Los indicadores se toman del metafield del producto «custom.indicadores» (lista de metaobjetos «indicador» con campos imagen, valor y descripcion). El valor (ej. «97%») se anima con conteo ascendente. Si el producto no tiene, se usan los bloques de abajo como respaldo." },
     { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "RESPALDADO POR DATOS" },
     { "type": "text", "id": "title", "label": "Título", "default": "Resultados que puedes medir" },
     { "type": "textarea", "id": "description", "label": "Descripción (opcional)" },

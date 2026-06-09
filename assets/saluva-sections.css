@@ -4673,6 +4673,33 @@ body.cart-drawer-open { overflow: hidden; }
    MISOJI — Reels de video nativos (PDP)
    ═══════════════════════════════════════════ */
 .vreels { padding: 44px 0 48px; }
+
+/* Encabezado de gran impacto para "Míralo en acción" */
+.vreels__header { margin-bottom: 26px; }
+.vreels__chip {
+  font-size: 12px;
+  letter-spacing: 2.5px;
+}
+.vreels__title-xl {
+  font-family: var(--font-heading);
+  font-size: clamp(34px, 7vw, 58px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  background: linear-gradient(100deg, var(--color-primary-dark) 0%, var(--color-primary) 45%, var(--color-primary-dark) 90%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--color-primary-dark);
+  animation: vreelsShine 5s linear infinite;
+}
+@keyframes vreelsShine {
+  to { background-position: 220% center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vreels__title-xl { animation: none; }
+}
 .vreels__track {
   display: flex;
   gap: 14px;
@@ -6149,6 +6176,63 @@ body.cart-drawer-open { overflow: hidden; }
   font-size: 12px;
   color: var(--color-text-light);
   margin-top: 24px;
+}
+
+/* ── Indicadores desde metaobjeto (imagen + valor animado de gran impacto) ── */
+.saluva-stats__item--mo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 30px 18px 28px;
+}
+.saluva-stats__media {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 10px;
+  background: var(--color-bg-soft);
+  border: 2px solid var(--color-primary-40);
+  box-shadow: 0 6px 18px var(--color-primary-40);
+}
+.saluva-stats__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.saluva-stats__value--xl {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(46px, 8vw, 68px);
+  line-height: 1;
+  letter-spacing: -2px;
+  /* Relleno con gradiente de marca para mayor impacto */
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 60%, var(--color-primary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--color-primary-dark);
+  filter: drop-shadow(0 4px 16px var(--color-primary-40));
+}
+/* Mientras cuenta: ligero desenfoque que se va aclarando */
+.saluva-stats__item.is-counting .saluva-stats__value--xl .saluva-stats__number {
+  display: inline-block;
+  animation: statBlurIn 1.6s ease-out both;
+}
+@keyframes statBlurIn {
+  0%   { filter: blur(10px); opacity: .45; transform: translateY(8px) scale(.94); }
+  100% { filter: blur(0);    opacity: 1;   transform: translateY(0) scale(1); }
+}
+/* Pop al terminar el conteo */
+.saluva-stats__number.pop {
+  display: inline-block;
+  animation: statPop .55s cubic-bezier(.22,1.4,.36,1) both;
+}
+@keyframes statPop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+@media (max-width: 480px) {
+  .saluva-stats__media { width: 60px; height: 60px; }
 }
 
 /* ── Tutorial 1-2-3 ── */

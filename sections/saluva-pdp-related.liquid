@@ -1,0 +1,61 @@
+{%- comment -%}
+  MISOJI — Productos recomendados.
+  Extraída de main-product para poder ordenarla libremente en product.json.
+{%- endcomment -%}
+
+{% assign current_product = product %}
+{% assign related_products_list = recommendations.products %}
+{% if related_products_list == blank or related_products_list.size == 0 %}
+  {% assign related_products_list = collections.all.products %}
+{% endif %}
+
+<section class="pdp-related" id="related-products">
+  <div class="container">
+    <div class="section-header section-header--center">
+      <span class="section-header__label">Descubre más</span>
+      <h2 class="section-header__title">Productos que te pueden interesar</h2>
+    </div>
+    <div class="pdp-related__grid">
+      {% assign shown = 0 %}
+      {% for p in related_products_list %}
+        {% if p.id != current_product.id and shown < 4 and p.available %}
+          <a href="{{ p.url }}" class="pdp-related__card">
+            <div class="pdp-related__card-img">
+              {% if p.featured_image %}
+                <img src="{{ p.featured_image | image_url: width: 400 }}" alt="{{ p.featured_image.alt | default: p.title }}" loading="lazy">
+              {% endif %}
+            </div>
+            <div class="pdp-related__card-info">
+              {% if p.type != blank %}
+                <span class="pdp-related__card-type">{{ p.type }}</span>
+              {% endif %}
+              <h3 class="pdp-related__card-title">{{ p.title }}</h3>
+              <div class="pdp-related__card-price">
+                <span>{{ p.price | money }}</span>
+                {% if p.compare_at_price > p.price %}
+                  <span class="pdp-related__card-compare">{{ p.compare_at_price | money }}</span>
+                {% endif %}
+              </div>
+            </div>
+          </a>
+          {% assign shown = shown | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Productos recomendados",
+  "settings": [
+    { "type": "paragraph", "content": "Muestra hasta 4 productos recomendados (recommendations.products) con respaldo a la colección «all»." }
+  ],
+  "presets": [
+    { "name": "Productos recomendados" }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

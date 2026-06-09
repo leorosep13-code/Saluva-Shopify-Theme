@@ -6,38 +6,20 @@
 
 {%- assign current_variant = product.selected_or_first_available_variant -%}
 
-{%- comment -%} ── Reseñas locales (metaobjetos en product.metafields.custom.resenas) ── {%- endcomment -%}
+{%- comment -%} ── Resumen de rating para la cabecera (reseñas en product.metafields.custom.resenas) ── {%- endcomment -%}
 {%- liquid
   assign reviews = product.metafields.custom.resenas.value
   assign reviews_count = 0
-  assign reviews_total = 0
-  assign star5 = 0
-  assign star4 = 0
-  assign star3 = 0
-  assign star2 = 0
-  assign star1 = 0
+  assign reviews_avg = 0
   if reviews
     assign reviews_count = reviews.size
+    assign reviews_total = 0
     for r in reviews
-      assign rv = r.estrellas.value | default: 0 | round
-      assign reviews_total = reviews_total | plus: rv
-      case rv
-        when 5
-          assign star5 = star5 | plus: 1
-        when 4
-          assign star4 = star4 | plus: 1
-        when 3
-          assign star3 = star3 | plus: 1
-        when 2
-          assign star2 = star2 | plus: 1
-        else
-          assign star1 = star1 | plus: 1
-      endcase
+      assign reviews_total = reviews_total | plus: r.estrellas.value | default: 0
     endfor
-  endif
-  assign reviews_avg = 0
-  if reviews_count > 0
-    assign reviews_avg = reviews_total | times: 1.0 | divided_by: reviews_count
+    if reviews_count > 0
+      assign reviews_avg = reviews_total | times: 1.0 | divided_by: reviews_count
+    endif
   endif
 -%}
 
@@ -230,114 +212,6 @@
 
 {%- comment -%} ── Reels de video nativos (estilo Instagram), configurables por metafield ── {%- endcomment -%}
 {%- render 'product-video-reels', product: product -%}
-
-{%- comment -%}
-  Vista de producto simplificada:
-  - Bloques ¿Por qué elegirla? / ¿Qué contiene? / ¿Cómo tomarla? removidos
-  - Los reels de video ahora viven en la sección "saluva-product-reels"
-    (configurable desde templates/product.json)
-{%- endcomment -%}
-
-<!-- ═══ SECCIÓN DE VALORACIONES Y COMENTARIOS (locales) ═══ -->
-<section class="pdp-reviews" id="pdp-reviews">
-  <div class="container">
-    <div class="pdp-reviews__header">
-      <h2 class="pdp-reviews__title">Reseñas de clientes</h2>
-    </div>
-
-    {%- if reviews_count > 0 -%}
-      <div class="pdp-reviews__summary">
-        <div class="pdp-reviews__avg">
-          <span class="pdp-reviews__avg-num">{{ reviews_avg | round: 1 }}</span>
-          {%- render 'saluva-stars', rating: reviews_avg, size: 22 -%}
-          <span class="pdp-reviews__avg-count">{{ reviews_count }} {% if reviews_count == 1 %}reseña{% else %}reseñas{% endif %}</span>
-        </div>
-        <div class="pdp-reviews__dist">
-          {%- assign dist_counts = star5 | append: '|' | append: star4 | append: '|' | append: star3 | append: '|' | append: star2 | append: '|' | append: star1 | split: '|' -%}
-          {%- for n in (1..5) reversed -%}
-            {%- assign di = 5 | minus: n -%}
-            {%- assign dc = dist_counts[di] | times: 1 -%}
-            {%- assign dpct = dc | times: 100 | divided_by: reviews_count -%}
-            <div class="pdp-reviews__dist-row">
-              <span class="pdp-reviews__dist-label">{{ n }}★</span>
-              <span class="pdp-reviews__dist-track"><span class="pdp-reviews__dist-bar" style="width: {{ dpct }}%;"></span></span>
-              <span class="pdp-reviews__dist-num">{{ dc }}</span>
-            </div>
-          {%- endfor -%}
-        </div>
-      </div>
-
-      <div class="pdp-reviews__list">
-        {%- for r in reviews -%}
-          {%- assign rrating = r.estrellas.value | default: 0 -%}
-          {%- assign rimg = r.foto.value -%}
-          {%- assign rverified = r.verificado.value -%}
-          <article class="pdp-review-card{% if rverified %} pdp-review-card--owner{% endif %}">
-            <div class="pdp-review-card__header">
-              <span class="pdp-review-card__name">
-                {{ r.autor.value | default: 'Cliente' }}
-                {%- if rverified -%}<span class="pdp-review-card__badge">✓ Verificado</span>{%- endif -%}
-              </span>
-              {%- if r.fecha.value -%}<span class="pdp-review-card__date">{{ r.fecha.value | date: '%d %b %Y' }}</span>{%- endif -%}
-            </div>
-            <div class="pdp-review-card__stars">{%- render 'saluva-stars', rating: rrating, size: 15 -%}</div>
-            {%- if r.texto.value != blank -%}<p class="pdp-review-card__text">{{ r.texto.value }}</p>{%- endif -%}
-            {%- if rimg -%}
-              <div class="pdp-review-card__image" data-review-img="{{ rimg | image_url: width: 1200 }}" role="button" tabindex="0" aria-label="Ampliar imagen de la reseña">
-                <img src="{{ rimg | image_url: width: 400 }}" alt="Foto de {{ r.autor.value | default: 'cliente' | escape }}" loading="lazy">
-              </div>
-            {%- endif -%}
-          </article>
-        {%- endfor -%}
-      </div>
-    {%- else -%}
-      <p class="pdp-reviews__empty">Aún no hay reseñas para este producto.</p>
-    {%- endif -%}
-  </div>
-</section>
-
-<!-- ═══ PRODUCTOS RECOMENDADOS ═══ -->
-{% assign current_product = product %}
-{% assign related_products_list = recommendations.products %}
-{% if related_products_list == blank or related_products_list.size == 0 %}
-  {% assign related_products_list = collections.all.products %}
-{% endif %}
-
-<section class="pdp-related" id="related-products">
-  <div class="container">
-    <div class="section-header section-header--center">
-      <span class="section-header__label">Descubre más</span>
-      <h2 class="section-header__title">Productos que te pueden interesar</h2>
-    </div>
-    <div class="pdp-related__grid">
-      {% assign shown = 0 %}
-      {% for p in related_products_list %}
-        {% if p.id != current_product.id and shown < 4 and p.available %}
-          <a href="{{ p.url }}" class="pdp-related__card">
-            <div class="pdp-related__card-img">
-              {% if p.featured_image %}
-                <img src="{{ p.featured_image | image_url: width: 400 }}" alt="{{ p.featured_image.alt | default: p.title }}" loading="lazy">
-              {% endif %}
-            </div>
-            <div class="pdp-related__card-info">
-              {% if p.type != blank %}
-                <span class="pdp-related__card-type">{{ p.type }}</span>
-              {% endif %}
-              <h3 class="pdp-related__card-title">{{ p.title }}</h3>
-              <div class="pdp-related__card-price">
-                <span>{{ p.price | money }}</span>
-                {% if p.compare_at_price > p.price %}
-                  <span class="pdp-related__card-compare">{{ p.compare_at_price | money }}</span>
-                {% endif %}
-              </div>
-            </div>
-          </a>
-          {% assign shown = shown | plus: 1 %}
-        {% endif %}
-      {% endfor %}
-    </div>
-  </div>
-</section>
 
 <!-- ═══ BARRA STICKY MOBILE: Cantidad + Agregar + Pagar ═══ -->
 <div class="pdp__sticky-bar" id="pdp-sticky-bar">

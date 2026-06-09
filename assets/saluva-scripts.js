@@ -1172,25 +1172,61 @@ function initBeforeAfter() {
 
 /* ── Números clínicos (count-up al entrar en viewport) ── */
 function initStats() {
-  const nums = document.querySelectorAll('.saluva-stats__number[data-stat-target]');
+  const nums = document.querySelectorAll('.saluva-stats__number[data-stat-target], .saluva-stats__number[data-stat-raw]');
   if (!nums.length) return;
 
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function animate(el) {
-    const target   = parseFloat(el.dataset.statTarget);
-    const decimals = parseInt(el.dataset.statDecimals || '0', 10);
-    if (isNaN(target)) return;
-    if (reduce) { el.textContent = target.toFixed(decimals); return; }
+  // Extrae prefijo, número, decimales y sufijo de un valor tipo "97%", "30 días", "1.5x"
+  function parseRaw(el) {
+    if (el.dataset.statRaw != null) {
+      const raw = el.dataset.statRaw;
+      const m = raw.match(/-?\d+(?:[.,]\d+)?/);
+      if (!m) return null;
+      const numStr = m[0].replace(',', '.');
+      const decimals = numStr.indexOf('.') >= 0 ? numStr.split('.')[1].length : 0;
+      return {
+        target: parseFloat(numStr),
+        decimals,
+        prefix: raw.slice(0, m.index),
+        suffix: raw.slice(m.index + m[0].length)
+      };
+    }
+    return {
+      target: parseFloat(el.dataset.statTarget),
+      decimals: parseInt(el.dataset.statDecimals || '0', 10),
+      prefix: '',
+      suffix: ''
+    };
+  }
 
-    const duration = 1400;
+  function animate(el) {
+    const cfg = parseRaw(el);
+    if (!cfg || isNaN(cfg.target)) return;
+    const render = (v) => { el.textContent = cfg.prefix + v.toFixed(cfg.decimals) + cfg.suffix; };
+
+    if (reduce) { render(cfg.target); return; }
+
+    const item = el.closest('.saluva-stats__item') || el;
+    item.classList.add('is-counting');
+
+    const duration = 1600;
     const start = performance.now();
     function tick(now) {
       const p = Math.min((now - start) / duration, 1);
       const eased = 1 - Math.pow(1 - p, 3); /* easeOutCubic */
-      el.textContent = (target * eased).toFixed(decimals);
-      if (p < 1) requestAnimationFrame(tick);
-      else el.textContent = target.toFixed(decimals);
+      render(cfg.target * eased);
+      if (p < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        render(cfg.target);
+        item.classList.remove('is-counting');
+        item.classList.add('is-done');
+        /* el "pop" se reinicia para poder reproducirlo */
+        el.classList.remove('pop');
+        void el.offsetWidth;
+        el.classList.add('pop');
+      }
     }
     requestAnimationFrame(tick);
   }

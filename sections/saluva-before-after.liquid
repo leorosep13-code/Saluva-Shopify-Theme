@@ -21,36 +21,54 @@
       </div>
     {%- endif -%}
 
-    {%- assign zones = section.blocks -%}
+    {%- comment -%} Preferimos metaobjetos del producto (custom.antes_despues); si no hay, usamos bloques del editor {%- endcomment -%}
+    {%- assign mo_zones = product.metafields.custom.antes_despues.value | default: product.metafields.saluva.antes_despues.value -%}
+    {%- assign use_mo = false -%}
+    {%- if mo_zones != blank and mo_zones.size > 0 -%}{%- assign use_mo = true -%}{%- assign zones = mo_zones -%}{%- else -%}{%- assign zones = section.blocks -%}{%- endif -%}
+
     {%- if zones.size > 0 -%}
       <div class="saluva-ba__wrap" data-ba-root>
 
         {%- if zones.size > 1 -%}
           <div class="saluva-ba__tabs" role="tablist" aria-label="Zonas de tratamiento">
-            {%- for block in zones -%}
+            {%- for item in zones -%}
+              {%- if use_mo -%}{%- assign zona = item.zona.value -%}{%- else -%}{%- assign zona = item.settings.zone_name -%}{%- endif -%}
               <button
                 type="button"
                 class="saluva-ba__tab{% if forloop.first %} active{% endif %}"
                 data-ba-tab="{{ forloop.index0 }}"
                 role="tab"
                 aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-              >{{ block.settings.zone_name }}</button>
+              >{{ zona }}</button>
             {%- endfor -%}
           </div>
         {%- endif -%}
 
         <div class="saluva-ba__stages">
-          {%- for block in zones -%}
+          {%- for item in zones -%}
+            {%- if use_mo -%}
+              {%- assign zona = item.zona.value -%}
+              {%- assign img_before = item.imagen_antes.value -%}
+              {%- assign img_after = item.imagen_despues.value -%}
+              {%- assign note = item.nota.value -%}
+              {%- assign attrs = '' -%}
+            {%- else -%}
+              {%- assign zona = item.settings.zone_name -%}
+              {%- assign img_before = item.settings.image_before -%}
+              {%- assign img_after = item.settings.image_after -%}
+              {%- assign note = item.settings.note -%}
+              {%- assign attrs = item.shopify_attributes -%}
+            {%- endif -%}
             <div
               class="saluva-ba__stage{% if forloop.first %} active{% endif %}"
               data-ba-panel="{{ forloop.index0 }}"
-              {{ block.shopify_attributes }}
+              {{ attrs }}
             >
               <div class="saluva-ba__compare" data-ba-compare>
                 <div class="saluva-ba__img saluva-ba__img--after">
-                  {%- if block.settings.image_after != blank -%}
-                    <img src="{{ block.settings.image_after | image_url: width: 900 }}"
-                         alt="{{ block.settings.zone_name | escape }} — después"
+                  {%- if img_after != blank -%}
+                    <img src="{{ img_after | image_url: width: 900 }}"
+                         alt="{{ zona | escape }} — después"
                          loading="lazy" draggable="false" width="900" height="900">
                   {%- else -%}
                     {{ 'product-1' | placeholder_svg_tag: 'saluva-ba__placeholder' }}
@@ -58,9 +76,9 @@
                   <span class="saluva-ba__badge saluva-ba__badge--after">{{ section.settings.after_label | default: 'Después' }}</span>
                 </div>
                 <div class="saluva-ba__img saluva-ba__img--before" data-ba-before>
-                  {%- if block.settings.image_before != blank -%}
-                    <img src="{{ block.settings.image_before | image_url: width: 900 }}"
-                         alt="{{ block.settings.zone_name | escape }} — antes"
+                  {%- if img_before != blank -%}
+                    <img src="{{ img_before | image_url: width: 900 }}"
+                         alt="{{ zona | escape }} — antes"
                          loading="lazy" draggable="false" width="900" height="900">
                   {%- else -%}
                     {{ 'product-2' | placeholder_svg_tag: 'saluva-ba__placeholder' }}
@@ -76,8 +94,8 @@
                 <input type="range" min="0" max="100" value="50" class="saluva-ba__range" data-ba-range
                        aria-label="Arrastra para comparar antes y después">
               </div>
-              {%- if block.settings.note != blank -%}
-                <p class="saluva-ba__note">{{ block.settings.note }}</p>
+              {%- if note != blank -%}
+                <p class="saluva-ba__note">{{ note }}</p>
               {%- endif -%}
             </div>
           {%- endfor -%}
@@ -91,6 +109,7 @@
 {
   "name": "Antes / Después",
   "settings": [
+    { "type": "paragraph", "content": "Las comparaciones se toman del metafield del producto «custom.antes_despues» (lista de metaobjetos «ba_comparacion» con campos zona, imagen_antes, imagen_despues, nota). Si el producto no tiene, se usan los bloques de abajo como respaldo." },
     { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "RESULTADOS REALES" },
     { "type": "text", "id": "title", "label": "Título", "default": "Piel más suave en pocas semanas" },
     { "type": "textarea", "id": "description", "label": "Descripción (opcional)", "default": "Arrastra el control para ver el antes y el después en cada zona." },
