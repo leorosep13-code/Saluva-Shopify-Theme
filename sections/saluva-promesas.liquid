@@ -1,0 +1,98 @@
+{%- comment -%}
+  MISOJI — Promesas (Envíos · Servicio · Garantía)
+  Apartado de confianza, igual para todos los productos (se edita desde el
+  personalizador del tema). Cada bloque: ícono + título + descripción.
+{%- endcomment -%}
+
+<section class="saluva-promesas {% if section.settings.bg_aurora %}aurora-bg{% endif %}" id="saluva-promesas-{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.title != blank or section.settings.label != blank -%}
+      <div class="section-header section-header--center anim-flip">
+        {%- if section.settings.label != blank -%}
+          <span class="section-header__label">{{ section.settings.label }}</span>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="section-header__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="saluva-promesas__grid anim-stagger">
+      {%- for block in section.blocks -%}
+        <div class="saluva-promesas__item" {{ block.shopify_attributes }}>
+          <span class="saluva-promesas__icon" aria-hidden="true">
+            {%- case block.settings.icon -%}
+              {%- when 'envio' -%}
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="13" height="11" rx="1.5"/><path d="M14 9h4l3 3v5h-7z"/><circle cx="6" cy="18.5" r="1.8"/><circle cx="17.5" cy="18.5" r="1.8"/></svg>
+              {%- when 'garantia' -%}
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5z"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg>
+              {%- when 'servicio' -%}
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="2.5" y="13" width="4" height="6" rx="1.5"/><rect x="17.5" y="13" width="4" height="6" rx="1.5"/><path d="M20 19a4 4 0 0 1-4 3h-2"/></svg>
+              {%- when 'devolucion' -%}
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 7 3 12 8 12"/><path d="M3.5 12a8.5 8.5 0 1 1 2.4 6"/></svg>
+              {%- when 'pago' -%}
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="7" y1="15" x2="11" y2="15"/></svg>
+              {%- when 'calidad' -%}
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 14.5 8.5 20.5 9.2 16 13.3 17.3 19 12 16 6.7 19 8 13.3 3.5 9.2 9.5 8.5"/></svg>
+              {%- else -%}
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5z"/></svg>
+            {%- endcase -%}
+          </span>
+          <h3 class="saluva-promesas__title">{{ block.settings.title }}</h3>
+          {%- if block.settings.text != blank -%}
+            <p class="saluva-promesas__text">{{ block.settings.text }}</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Promesas (Envíos/Garantía)",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Etiqueta superior (opcional)" },
+    { "type": "text", "id": "title", "label": "Título (opcional)" },
+    { "type": "checkbox", "id": "bg_aurora", "label": "Fondo Aurora", "default": false }
+  ],
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "promesa",
+      "name": "Promesa",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Ícono",
+          "default": "envio",
+          "options": [
+            { "value": "envio", "label": "Envío (camión)" },
+            { "value": "servicio", "label": "Servicio (soporte)" },
+            { "value": "garantia", "label": "Garantía (escudo)" },
+            { "value": "devolucion", "label": "Devolución" },
+            { "value": "pago", "label": "Pago seguro" },
+            { "value": "calidad", "label": "Calidad (estrella)" }
+          ]
+        },
+        { "type": "text", "id": "title", "label": "Título", "default": "Envíos a todo el país" },
+        { "type": "textarea", "id": "text", "label": "Descripción", "default": "Recíbelo en 2 a 5 días hábiles." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promesas (Envíos/Garantía)",
+      "blocks": [
+        { "type": "promesa", "settings": { "icon": "envio", "title": "Envíos a todo el país", "text": "Recíbelo en 2 a 5 días hábiles." } },
+        { "type": "promesa", "settings": { "icon": "servicio", "title": "Servicio cercano", "text": "Te asesoramos antes y después de tu compra." } },
+        { "type": "promesa", "settings": { "icon": "garantia", "title": "Garantía incluida", "text": "30 días de garantía y devolución sin líos." } }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

@@ -23,6 +23,20 @@
         "whatsapp_message": "Hola!! quiero comprar contra entrega su producto,"
       }
     },
+    "promesas": {
+      "type": "saluva-promesas",
+      "blocks": {
+        "p1": { "type": "promesa", "settings": { "icon": "envio", "title": "Envíos a todo el país", "text": "Recíbelo en 2 a 5 días hábiles." } },
+        "p2": { "type": "promesa", "settings": { "icon": "servicio", "title": "Servicio cercano", "text": "Te asesoramos antes y después de tu compra." } },
+        "p3": { "type": "promesa", "settings": { "icon": "garantia", "title": "Garantía incluida", "text": "30 días de garantía y devolución sin líos." } }
+      },
+      "block_order": ["p1", "p2", "p3"],
+      "settings": {
+        "label": "",
+        "title": "",
+        "bg_aurora": false
+      }
+    },
     "before_after": {
       "type": "saluva-before-after",
       "blocks": {
@@ -98,6 +112,7 @@
   "order": [
     "breadcrumbs",
     "main",
+    "promesas",
     "before_after",
     "stats",
     "steps",

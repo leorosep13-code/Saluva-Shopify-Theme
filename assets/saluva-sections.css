@@ -6331,6 +6331,64 @@ body.cart-drawer-open { overflow: hidden; }
 }
 .saluva-steps__text { font-size: 14px; color: var(--color-text-muted); margin: 0; line-height: 1.55; }
 
+/* ── Promesas (Envíos · Servicio · Garantía) ── */
+.saluva-promesas { padding: 48px 0; }
+.saluva-promesas__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.saluva-promesas__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 28px 20px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.saluva-promesas__item:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.saluva-promesas__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin-bottom: 6px;
+  color: var(--color-primary-dark);
+  background: color-mix(in srgb, var(--color-primary) 16%, transparent);
+}
+.saluva-promesas__title {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+.saluva-promesas__text {
+  font-family: var(--font-family);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+@media (max-width: 749px) {
+  .saluva-promesas__grid { grid-template-columns: 1fr; gap: 12px; max-width: 460px; margin-inline: auto; }
+  .saluva-promesas__item {
+    flex-direction: row;
+    text-align: left;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 18px;
+  }
+  .saluva-promesas__icon { margin-bottom: 0; flex-shrink: 0; width: 48px; height: 48px; }
+}
+
 /* ── FAQ acordeón ── */
 .saluva-faq { padding: 64px 0; }
 .saluva-faq__container { max-width: 760px; }
