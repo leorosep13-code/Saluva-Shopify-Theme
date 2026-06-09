@@ -19,16 +19,33 @@
       </div>
     {%- endif -%}
 
+    {%- comment -%} Preferimos metaobjetos del producto (custom.faqs); si no hay, usamos los bloques del editor {%- endcomment -%}
+    {%- assign faqs = product.metafields.custom.faqs.value | default: product.metafields.saluva.faqs.value -%}
+
     <div class="saluva-faq__list anim-stagger">
-      {%- for block in section.blocks -%}
-        <details class="saluva-faq__item"{% if block.settings.open %} open{% endif %} {{ block.shopify_attributes }}>
-          <summary class="saluva-faq__q">
-            <span>{{ block.settings.question }}</span>
-            <svg class="saluva-faq__chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-          </summary>
-          <div class="saluva-faq__a rte">{{ block.settings.answer }}</div>
-        </details>
-      {%- endfor -%}
+      {%- if faqs != blank and faqs.size > 0 -%}
+        {%- for faq in faqs -%}
+          {%- assign q = faq.pregunta.value -%}
+          {%- if q == blank -%}{%- continue -%}{%- endif -%}
+          <details class="saluva-faq__item"{% if forloop.first %} open{% endif %}>
+            <summary class="saluva-faq__q">
+              <span>{{ q }}</span>
+              <svg class="saluva-faq__chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="saluva-faq__a rte">{{ faq.respuesta | metafield_tag }}</div>
+          </details>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          <details class="saluva-faq__item"{% if block.settings.open %} open{% endif %} {{ block.shopify_attributes }}>
+            <summary class="saluva-faq__q">
+              <span>{{ block.settings.question }}</span>
+              <svg class="saluva-faq__chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="saluva-faq__a rte">{{ block.settings.answer }}</div>
+          </details>
+        {%- endfor -%}
+      {%- endif -%}
     </div>
   </div>
 </section>
@@ -37,6 +54,7 @@
 {
   "name": "Preguntas frecuentes",
   "settings": [
+    { "type": "paragraph", "content": "Las preguntas se toman del metafield del producto «custom.faqs» (lista de metaobjetos «faq» con campos pregunta y respuesta). Si un producto no tiene FAQs asignadas, se muestran los bloques de abajo como respaldo." },
     { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "DUDAS RESUELTAS" },
     { "type": "text", "id": "title", "label": "Título", "default": "Preguntas frecuentes" },
     { "type": "textarea", "id": "description", "label": "Descripción (opcional)" },
