@@ -6136,27 +6136,31 @@ body.cart-drawer-open { overflow: hidden; }
   margin-top: 14px;
 }
 
-/* Título + descripción por comparación (desde el metaobjeto) */
+/* Título + descripción por comparación (desde el metaobjeto).
+   Adopta el tamaño/disposición del encabezado de sección. */
 .saluva-ba__stage-head {
   text-align: center;
-  max-width: 560px;
-  margin: 0 auto 18px;
+  margin: 0 auto 40px;
 }
 .saluva-ba__stage-title {
   font-family: var(--font-heading);
-  font-size: clamp(20px, 3.4vw, 26px);
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
   color: var(--color-text);
-  margin: 0 0 6px;
+  margin: 0;
 }
 .saluva-ba__stage-desc {
   font-family: var(--font-family);
-  font-size: 14.5px;
+  font-size: 16px;
   line-height: 1.6;
   color: var(--color-text-muted);
-  margin: 0;
+  max-width: 520px;
+  margin: 12px auto 0;
+}
+@media (max-width: 768px) {
+  .saluva-ba__stage-title { font-size: 28px; }
 }
 
 /* ── Números clínicos ── */

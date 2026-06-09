@@ -7,24 +7,27 @@
 
 <section class="saluva-ba {% if section.settings.bg_aurora %}aurora-bg{% endif %}" id="saluva-ba-{{ section.id }}">
   <div class="container">
-    {%- if section.settings.title != blank or section.settings.label != blank -%}
-      <div class="section-header section-header--center anim-flip">
-        {%- if section.settings.label != blank -%}
-          <span class="section-header__label">{{ section.settings.label }}</span>
-        {%- endif -%}
-        {%- if section.settings.title != blank -%}
-          <h2 class="section-header__title">{{ section.settings.title }}</h2>
-        {%- endif -%}
-        {%- if section.settings.description != blank -%}
-          <p class="section-header__desc">{{ section.settings.description }}</p>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-
     {%- comment -%} Preferimos metaobjetos del producto (custom.antes_despues); si no hay, usamos bloques del editor {%- endcomment -%}
     {%- assign mo_zones = product.metafields.custom.antes_despues.value | default: product.metafields.saluva.antes_despues.value -%}
     {%- assign use_mo = false -%}
     {%- if mo_zones != blank and mo_zones.size > 0 -%}{%- assign use_mo = true -%}{%- assign zones = mo_zones -%}{%- else -%}{%- assign zones = section.blocks -%}{%- endif -%}
+
+    {%- comment -%} El encabezado de sección solo se usa con bloques; con metaobjetos el título/descripción vienen por comparación {%- endcomment -%}
+    {%- unless use_mo -%}
+      {%- if section.settings.title != blank or section.settings.label != blank -%}
+        <div class="section-header section-header--center anim-flip">
+          {%- if section.settings.label != blank -%}
+            <span class="section-header__label">{{ section.settings.label }}</span>
+          {%- endif -%}
+          {%- if section.settings.title != blank -%}
+            <h2 class="section-header__title">{{ section.settings.title }}</h2>
+          {%- endif -%}
+          {%- if section.settings.description != blank -%}
+            <p class="section-header__desc">{{ section.settings.description }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endunless -%}
 
     {%- if zones.size > 0 -%}
       <div class="saluva-ba__wrap" data-ba-root>
