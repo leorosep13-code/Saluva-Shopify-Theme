@@ -206,17 +206,20 @@
     <div class="pdp__accordion" id="pdp-accordion">
       {%- for i in (0..3) -%}
         {%- assign acc_key = acc_keys[i] -%}
-        {%- assign acc_content = product.metafields.custom[acc_key] -%}
-        {%- if acc_key == 'descripcion' and acc_content == blank -%}
-          {%- assign acc_content = product.description -%}
+        {%- assign acc_mf = product.metafields.custom[acc_key] -%}
+        {%- assign use_desc_fallback = false -%}
+        {%- if acc_key == 'descripcion' and acc_mf == blank and product.description != blank -%}
+          {%- assign use_desc_fallback = true -%}
         {%- endif -%}
-        {%- if acc_content != blank -%}
+        {%- if acc_mf != blank or use_desc_fallback -%}
           <details class="pdp__acc-item"{% if i == 0 %} open{% endif %}>
             <summary class="pdp__acc-head">
               <span class="pdp__acc-title">{{ acc_titles[i] }}</span>
               <svg class="pdp__acc-chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
             </summary>
-            <div class="pdp__acc-body rte">{{ acc_content }}</div>
+            <div class="pdp__acc-body rte">
+              {%- if use_desc_fallback -%}{{ product.description }}{%- else -%}{{ acc_mf | metafield_tag }}{%- endif -%}
+            </div>
           </details>
         {%- endif -%}
       {%- endfor -%}
