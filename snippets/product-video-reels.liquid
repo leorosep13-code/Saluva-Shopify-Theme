@@ -3,34 +3,24 @@
   Carrusel horizontal deslizable de videos verticales 9:16 con controles propios
   (play/pausa, mute, barra de avance). NO abre en pantalla completa (playsinline).
 
-  Configuración por producto — metafield (multi_line_text):
-    custom.video_reels   (o saluva.video_reels)
+  Configuración por producto mediante METAOBJETOS (cada reel = una entrada con
+  sus propios campos, igual que las reseñas):
 
-  Una línea por reel, con campos separados por " | ":
-    URL_DEL_VIDEO | @usuario | Título del reel
+    1) Metaobjeto "Reel de video" (handle de tipo: reel_video) con campos:
+         - video    → Referencia de archivo (acepta video)   [obligatorio]
+         - usuario  → Texto de una línea  (ej. @jennyabroad)  [opcional]
+         - titulo   → Texto de una línea  (título del clip)   [opcional]
 
-  Ejemplo:
-    https://cdn.shopify.com/.../demo.mp4 | @jennyabroad | Demostración de penetración
-    https://cdn.shopify.com/.../uso.mp4  | @lauu_kz    | Cómo se usa en casa
+    2) Metafield de producto:
+         custom.video_reels → Lista de referencias de metaobjeto (a "Reel de video")
 
-  Sólo la URL es obligatoria; el usuario y el título son opcionales.
-  El video se sube en Shopify Admin → Contenido → Archivos, y se copia su enlace.
+  Cada reel se edita con campos separados en el admin; no hay que recordar
+  ningún formato de texto. El video se sube en Contenido → Archivos.
 {%- endcomment -%}
 
-{%- assign mf_s = product.metafields.saluva -%}
-{%- assign mf_c = product.metafields.custom -%}
-{%- assign raw_reels = mf_s.video_reels.value | default: mf_s.video_reels | default: mf_c.video_reels.value | default: mf_c.video_reels | default: '' -%}
-{%- assign newline_char = "
-" -%}
-{%- assign reel_lines = raw_reels | split: newline_char -%}
+{%- assign reels = product.metafields.custom.video_reels.value | default: product.metafields.saluva.video_reels.value -%}
 
-{%- assign reel_count = 0 -%}
-{%- for raw in reel_lines -%}
-  {%- assign line = raw | strip -%}
-  {%- if line != blank -%}{%- assign reel_count = reel_count | plus: 1 -%}{%- endif -%}
-{%- endfor -%}
-
-{%- if reel_count > 0 -%}
+{%- if reels != blank and reels.size > 0 -%}
 <section class="vreels">
   <div class="container">
     <div class="saluva-block-header">
@@ -40,21 +30,17 @@
     </div>
 
     <div class="vreels__track" id="vreels-track">
-      {%- for raw in reel_lines -%}
-        {%- assign line = raw | strip -%}
-        {%- if line == blank -%}{%- continue -%}{%- endif -%}
-
-        {%- assign parts = line | split: '|' -%}
-        {%- assign v_url = parts[0] | strip -%}
-        {%- assign v_handle = parts[1] | strip -%}
-        {%- assign v_title = parts[2] | strip -%}
-        {%- if v_url == blank -%}{%- continue -%}{%- endif -%}
+      {%- for reel in reels -%}
+        {%- assign v_media = reel.video.value -%}
+        {%- if v_media == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign v_handle = reel.usuario.value | strip -%}
+        {%- assign v_title = reel.titulo.value | strip -%}
+        {%- assign v_poster = v_media.preview_image -%}
 
         <article class="vreel" data-vreel>
           <div class="vreel__media">
             <video
               class="vreel__video"
-              src="{{ v_url }}"
               playsinline
               webkit-playsinline
               muted
@@ -62,7 +48,16 @@
               preload="metadata"
               disablepictureinpicture
               controlslist="nodownload noplaybackrate noremoteplayback"
-            ></video>
+              {% if v_poster %}poster="{{ v_poster | image_url: width: 600 }}"{% endif %}
+            >
+              {%- if v_media.sources and v_media.sources.size > 0 -%}
+                {%- for s in v_media.sources -%}
+                  <source src="{{ s.url }}"{% if s.mime_type %} type="{{ s.mime_type }}"{% endif %}>
+                {%- endfor -%}
+              {%- elsif v_media.url -%}
+                <source src="{{ v_media.url }}">
+              {%- endif -%}
+            </video>
 
             {%- if v_handle != blank or v_title != blank -%}
               <div class="vreel__overlay-top">
