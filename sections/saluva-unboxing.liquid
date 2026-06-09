@@ -16,6 +16,10 @@
 {%- endcomment -%}
 
 {%- assign ub = product.metafields.custom.unboxing.value | default: product.metafields.saluva.unboxing.value -%}
+{%- comment -%} Soporta metafield como referencia simple o como lista (toma el primero) {%- endcomment -%}
+{%- if ub.first != blank -%}
+  {%- assign ub = ub.first -%}
+{%- endif -%}
 
 {%- if ub != blank -%}
   {%- assign v_media = ub.video.value -%}
