@@ -4690,7 +4690,7 @@ body.cart-drawer-open { overflow: hidden; }
   letter-spacing: 2.5px;
 }
 .vreels__title-xl {
-  font-family: var(--font-heading);
+  font-family: var(--font-family);
   font-size: clamp(34px, 7vw, 58px);
   font-weight: 800;
   letter-spacing: -0.02em;
