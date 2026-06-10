@@ -2911,18 +2911,15 @@
   bottom: 90px;
   right: 20px;
   z-index: 99;
+  width: 56px;
   height: 56px;
-  padding: 0 22px 0 18px;
+  padding: 0;
   background: linear-gradient(135deg, #C8B7FF 0%, #5D4EFF 100%);
   border-radius: var(--radius-pill, 999px);
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
   color: #fff;
-  font-family: var(--font-family);
-  font-weight: 700;
-  font-size: 15px;
-  white-space: nowrap;
   box-shadow: 0 6px 20px rgba(93, 78, 255, 0.35);
   transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -2934,10 +2931,6 @@
 
 .pdp__whatsapp svg {
   flex-shrink: 0;
-}
-
-.pdp__whatsapp-text {
-  line-height: 1;
 }
 
 /* ═══ Reviews ═══ */
@@ -3465,10 +3458,9 @@
   .pdp__whatsapp {
     bottom: 160px;
     right: 16px;
+    width: 48px;
     height: 48px;
-    padding: 0 18px 0 14px;
-    font-size: 14px;
-    gap: 8px;
+    padding: 0;
   }
 
   .pdp__whatsapp svg {
