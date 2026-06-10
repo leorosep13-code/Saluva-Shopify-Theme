@@ -2437,6 +2437,24 @@
   pointer-events: auto;
 }
 
+/* Pinch-zoom directo sobre la imagen activa (capa flotante estilo Instagram) */
+.pdp-pinch-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  z-index: 1200;
+  pointer-events: none;
+}
+.pdp-pinch-clone {
+  position: fixed;
+  z-index: 1201;
+  object-fit: cover;
+  pointer-events: none;
+  transform-origin: center center;
+  will-change: transform;
+}
+
 /* La imagen va en posición ABSOLUTA: así nunca puede estirar el alto del
    marco. El slide queda cuadrado exacto (ancho = alto) y la foto lo llena. */
 .pdp__carousel-slide > img {

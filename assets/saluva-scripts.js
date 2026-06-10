@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDigitalProductModals();
   initMegaMenuMobile();
   initPdpCarousel();
+  initPdpPinchZoom();
   initPdpLightbox();
   initPdpVariants();
   initPdpShare();
@@ -1345,8 +1346,9 @@ function initPdpCarousel() {
   dots.forEach(dot => dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index))));
   thumbs.forEach(thumb => thumb.addEventListener('click', () => goTo(parseInt(thumb.dataset.index))));
 
-  /* Swipe táctil */
+  /* Swipe táctil (se ignora con 2+ dedos: eso es pinch-zoom) */
   track.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 1) { isDragging = false; return; }
     startX = e.touches[0].clientX;
     isDragging = true;
   }, { passive: true });
@@ -1360,6 +1362,84 @@ function initPdpCarousel() {
       else goTo(current - 1);
     }
   }, { passive: true });
+}
+
+/* ── PDP Pinch-zoom directo sobre la imagen activa (estilo Instagram) ──
+   Con dos dedos sobre la foto que se está viendo, se amplía sobre una capa
+   flotante siguiendo el pellizco; al soltar, vuelve suavemente a su lugar. */
+function initPdpPinchZoom() {
+  const track = document.getElementById('pdp-carousel-track');
+  if (!track || !('ontouchstart' in window)) return;
+
+  let clone = null, backdrop = null;
+  let startDist = 0, startMidX = 0, startMidY = 0;
+  let pinching = false;
+
+  function distance(t1, t2) {
+    return Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+  }
+
+  track.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 2) return;
+    const slide = track.querySelector('.pdp__carousel-slide--active');
+    const img = slide ? slide.querySelector('img') : null;
+    if (!img) return; // videos u otros: sin pinch
+
+    pinching = true;
+    const rect = img.getBoundingClientRect();
+    startDist = distance(e.touches[0], e.touches[1]);
+    startMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+    startMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+
+    backdrop = document.createElement('div');
+    backdrop.className = 'pdp-pinch-backdrop';
+    document.body.appendChild(backdrop);
+
+    clone = document.createElement('img');
+    clone.src = img.currentSrc || img.src;
+    clone.className = 'pdp-pinch-clone';
+    clone.style.left = rect.left + 'px';
+    clone.style.top = rect.top + 'px';
+    clone.style.width = rect.width + 'px';
+    clone.style.height = rect.height + 'px';
+    document.body.appendChild(clone);
+  }, { passive: true });
+
+  track.addEventListener('touchmove', (e) => {
+    if (!pinching || e.touches.length !== 2 || !clone) return;
+    e.preventDefault(); // evita scroll/zoom del navegador durante el pellizco
+    const d = distance(e.touches[0], e.touches[1]);
+    const scale = Math.max(1, Math.min(d / startDist, 4));
+    const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+    const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+    const dx = midX - startMidX;
+    const dy = midY - startMidY;
+    clone.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ')';
+    backdrop.style.opacity = Math.min((scale - 1) * 0.6, 0.7);
+  }, { passive: false });
+
+  function endPinch() {
+    if (!pinching) return;
+    pinching = false;
+    const c = clone, b = backdrop;
+    if (c) {
+      c.style.transition = 'transform 0.3s ease';
+      c.style.transform = 'translate(0,0) scale(1)';
+    }
+    if (b) {
+      b.style.transition = 'opacity 0.3s ease';
+      b.style.opacity = '0';
+    }
+    setTimeout(() => {
+      if (c && c.parentNode) c.parentNode.removeChild(c);
+      if (b && b.parentNode) b.parentNode.removeChild(b);
+    }, 320);
+    clone = null;
+    backdrop = null;
+  }
+
+  track.addEventListener('touchend', endPinch, { passive: true });
+  track.addEventListener('touchcancel', endPinch, { passive: true });
 }
 
 /* ── PDP Lightbox con zoom ── */
