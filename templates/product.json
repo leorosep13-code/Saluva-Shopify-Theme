@@ -221,11 +221,17 @@
     "pdp_related": {
       "type": "saluva-pdp-related",
       "settings": {}
+    },
+    "saluva_video_reels_QPJhm6": {
+      "type": "saluva-video-reels",
+      "name": "Videos tipo reels",
+      "settings": {}
     }
   },
   "order": [
     "breadcrumbs",
     "main",
+    "saluva_video_reels_QPJhm6",
     "before_after",
     "saluva_unboxing_R8rnYE",
     "stats",
