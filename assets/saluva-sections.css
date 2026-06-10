@@ -2941,14 +2941,16 @@
 
 .pdp-reviews__header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 24px;
 }
 
 .pdp-reviews__title {
+  font-family: var(--font-family);
   font-size: 22px;
   font-weight: 800;
+  text-align: center;
 }
 
 .pdp-reviews__form-wrap {
@@ -6776,17 +6778,18 @@ body.cart-drawer-open { overflow: hidden; }
 
 /* Resumen de reseñas (promedio + distribución) */
 .pdp-reviews__summary {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 56px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 24px;
   padding: 8px 0 32px;
   margin-bottom: 28px;
 }
 .pdp-reviews__avg {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
   gap: 8px;
 }
 .pdp-reviews__avg-top {
@@ -6794,8 +6797,14 @@ body.cart-drawer-open { overflow: hidden; }
   align-items: center;
   gap: 12px;
 }
-.pdp-reviews__avg .saluva-stars,
-.pdp-reviews__dist .saluva-stars { --color-star: var(--color-text); }
+/* Estrellas tornasol (iridiscente) */
+.pdp-reviews__summary .saluva-stars__fill {
+  background: linear-gradient(120deg, #FF8FE0 0%, #B57BFF 35%, #6FA8FF 65%, #79F0D0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
 .pdp-reviews__avg-num {
   font-family: var(--font-family);
   font-size: 18px;
@@ -6804,8 +6813,8 @@ body.cart-drawer-open { overflow: hidden; }
   color: var(--color-text);
   white-space: nowrap;
 }
-.pdp-reviews__avg-count { font-size: 15px; color: var(--color-text-muted); }
-.pdp-reviews__dist { display: flex; flex-direction: column; gap: 9px; max-width: 540px; }
+.pdp-reviews__avg-count { font-family: var(--font-family); font-size: 15px; color: var(--color-text-muted); }
+.pdp-reviews__dist { display: flex; flex-direction: column; gap: 9px; width: 420px; max-width: 100%; }
 .pdp-reviews__dist-row { display: flex; align-items: center; gap: 16px; }
 .pdp-reviews__dist-stars { flex-shrink: 0; line-height: 0; }
 .pdp-reviews__dist-track {
@@ -6818,10 +6827,11 @@ body.cart-drawer-open { overflow: hidden; }
 .pdp-reviews__dist-bar {
   display: block;
   height: 100%;
-  background: #F45BD0;
+  background: linear-gradient(90deg, #C8B7FF 0%, #9D86FF 100%);
   border-radius: 999px;
 }
 .pdp-reviews__dist-num {
+  font-family: var(--font-family);
   font-size: 14px;
   color: var(--color-text-light);
   min-width: 30px;
@@ -6831,6 +6841,5 @@ body.cart-drawer-open { overflow: hidden; }
 .pdp-review-card__name { display: inline-flex; align-items: center; gap: 0; }
 
 @media (max-width: 640px) {
-  .pdp-reviews__summary { grid-template-columns: 1fr; gap: 22px; }
-  .pdp-reviews__dist { max-width: none; }
+  .pdp-reviews__summary { gap: 20px; }
 }
