@@ -1,0 +1,25 @@
+{%- comment -%}
+  MISOJI — Videos tipo reels (nativos, "Míralo en acción").
+  Extraída del main de producto para poder ordenarla libremente en product.json.
+
+  Lee el metafield del producto custom.video_reels (lista de metaobjetos
+  "Reel de video", con campos video / usuario / titulo). Si el producto no
+  tiene reels, la sección no aparece.
+{%- endcomment -%}
+
+{%- render 'product-video-reels', product: product -%}
+
+{% schema %}
+{
+  "name": "Videos tipo reels",
+  "settings": [
+    { "type": "paragraph", "content": "Carrusel \"Míralo en acción\". Los reels se configuran con metaobjetos «Reel de video» en el metafield del producto «custom.video_reels» (campos: video, usuario, titulo). Si el producto no tiene reels, la sección no aparece." }
+  ],
+  "presets": [
+    { "name": "Videos tipo reels" }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
