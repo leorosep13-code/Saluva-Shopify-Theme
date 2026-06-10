@@ -1327,7 +1327,7 @@ function initPdpCarousel() {
 
   function goTo(index) {
     current = Math.max(0, Math.min(index, slides.length - 1));
-    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    slides.forEach((s, i) => s.classList.toggle('pdp__carousel-slide--active', i === current));
     dots.forEach((d, i) => d.classList.toggle('active', i === current));
     thumbs.forEach((t, i) => t.classList.toggle('active', i === current));
     /* Centra la miniatura activa SOLO dentro de su tira (scrollLeft propio,

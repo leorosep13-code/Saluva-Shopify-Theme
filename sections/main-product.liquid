@@ -30,7 +30,7 @@
     <div class="pdp__carousel" id="pdp-carousel">
       <div class="pdp__carousel-track" id="pdp-carousel-track">
         {% for media in product.media %}
-          <div class="pdp__carousel-slide">
+          <div class="pdp__carousel-slide{% if forloop.first %} pdp__carousel-slide--active{% endif %}">
             {% if media.media_type == 'image' %}
               <img
                 src="{{ media | image_url: width: 600 }}"

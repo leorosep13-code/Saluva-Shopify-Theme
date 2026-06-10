@@ -2418,18 +2418,23 @@
 }
 
 .pdp__carousel-track {
-  display: flex;
-  align-items: flex-start;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  aspect-ratio: 1 / 1;
   touch-action: pan-y;
 }
 
 .pdp__carousel-slide {
-  position: relative;
-  min-width: 100%;
-  flex-shrink: 0;
-  aspect-ratio: 1 / 1;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+.pdp__carousel-slide--active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* La imagen va en posición ABSOLUTA: así nunca puede estirar el alto del
