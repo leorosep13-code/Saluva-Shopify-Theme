@@ -62,6 +62,9 @@
             alt="{{ m_title | default: product.title | escape }}"
             camera-controls
             touch-action="pan-y"
+            camera-orbit="0deg 90deg auto"
+            min-camera-orbit="auto 90deg auto"
+            max-camera-orbit="auto 90deg auto"
             auto-rotate
             auto-rotate-delay="500"
             rotation-per-second="22deg"
