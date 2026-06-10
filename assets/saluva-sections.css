@@ -6376,30 +6376,6 @@ body.cart-drawer-open { overflow: hidden; }
   --poster-color: transparent;
   --progress-bar-color: var(--color-primary-dark);
 }
-.saluva-modelo3d__viewer [slot="ar-button"],
-.saluva-modelo3d__ar {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 20px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-  color: #fff;
-  border: none;
-  border-radius: 999px;
-  font-family: var(--font-family);
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.2px;
-  white-space: nowrap;
-  cursor: pointer;
-  box-shadow: 0 8px 22px var(--color-primary-40);
-  z-index: 5;
-}
-.saluva-modelo3d__viewer [slot="ar-button"]:active { transform: translateX(-50%) scale(0.96); }
 .saluva-modelo3d__hint {
   margin: 16px auto 0;
   text-align: center;
