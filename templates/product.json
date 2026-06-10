@@ -23,6 +23,11 @@
         "whatsapp_message": "Hola!! quiero saber más sobre su producto,"
       }
     },
+    "saluva_video_reels_QPJhm6": {
+      "type": "saluva-video-reels",
+      "name": "Videos tipo reels",
+      "settings": {}
+    },
     "before_after": {
       "type": "saluva-before-after",
       "blocks": {
@@ -222,10 +227,14 @@
       "type": "saluva-pdp-related",
       "settings": {}
     },
-    "saluva_video_reels_QPJhm6": {
-      "type": "saluva-video-reels",
-      "name": "Videos tipo reels",
-      "settings": {}
+    "saluva_modelo_3d_dGaLfF": {
+      "type": "saluva-modelo-3d",
+      "name": "Modelo 3D",
+      "settings": {
+        "label": "EXPLÓRALO EN 3D",
+        "hint": "Arrastra para girar · pellizca para acercar",
+        "bg_aurora": false
+      }
     }
   },
   "order": [
@@ -234,6 +243,7 @@
     "saluva_video_reels_QPJhm6",
     "before_after",
     "saluva_unboxing_R8rnYE",
+    "saluva_modelo_3d_dGaLfF",
     "stats",
     "steps",
     "faq",
