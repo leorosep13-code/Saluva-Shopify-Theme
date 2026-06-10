@@ -6390,6 +6390,49 @@ body.cart-drawer-open { overflow: hidden; }
   .saluva-unboxing .vreel { max-width: 320px; }
 }
 
+/* ── Modelo 3D (model-viewer) ── */
+.saluva-modelo3d { padding: 8px 0 56px; }
+.saluva-modelo3d__viewer {
+  max-width: 520px;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-primary-10), var(--color-primary-20));
+}
+.saluva-modelo3d__viewer model-viewer {
+  width: 100%;
+  height: 100%;
+  --poster-color: transparent;
+  --progress-bar-color: var(--color-primary-dark);
+}
+.saluva-modelo3d__ar {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 9px 18px;
+  background: var(--color-primary-dark);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-pill, 999px);
+  font-family: var(--font-family);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px var(--color-primary-40);
+}
+.saluva-modelo3d__hint {
+  margin: 14px auto 0;
+  text-align: center;
+  font-family: var(--font-family);
+  font-size: 13px;
+  color: var(--color-text-light);
+}
+@media (max-width: 749px) {
+  .saluva-modelo3d__viewer { max-width: 380px; }
+}
+
 /* ── Promesas (Envíos · Servicio · Garantía) ── */
 .saluva-promesas { padding: 48px 0; }
 .saluva-promesas__grid {

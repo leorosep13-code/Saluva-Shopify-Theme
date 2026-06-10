@@ -1,0 +1,109 @@
+{%- comment -%}
+  MISOJI — Modelo 3D del producto (interactivo, gira/zoom con el dedo).
+  Configurable por producto mediante METAOBJETO, igual que Unboxing:
+
+    Metaobjeto "Modelo 3D" (handle de tipo: modelo_3d) con campos:
+      - modelo      → Referencia de archivo (acepta .glb / .gltf)  [obligatorio]
+      - titulo      → Texto de una línea                            [opcional]
+      - descripcion → Texto de una/varias líneas                    [opcional]
+      - poster      → Imagen (se muestra mientras carga el 3D)      [opcional]
+
+    Metafield de producto:
+      custom.modelo_3d → Referencia de metaobjeto (a "Modelo 3D")
+
+  Si el producto no tiene modelo 3D, la sección no aparece.
+  Usa el web component <model-viewer> de Google (rotar, zoom, y AR en Android).
+{%- endcomment -%}
+
+{%- assign m3d = product.metafields.custom.modelo_3d.value | default: product.metafields.saluva.modelo_3d.value -%}
+{%- comment -%} Soporta metafield como referencia simple o como lista (toma el primero) {%- endcomment -%}
+{%- if m3d.first != blank -%}
+  {%- assign m3d = m3d.first -%}
+{%- endif -%}
+
+{%- if m3d != blank -%}
+  {%- assign model_file = m3d.modelo.value -%}
+
+  {%- comment -%} Detecta la URL del .glb (archivo 3D devuelve "sources"; archivo genérico devuelve "url") {%- endcomment -%}
+  {%- assign model_url = '' -%}
+  {%- if model_file.sources and model_file.sources.size > 0 -%}
+    {%- for s in model_file.sources -%}
+      {%- if s.format == 'glb' -%}{%- assign model_url = s.url -%}{%- endif -%}
+    {%- endfor -%}
+    {%- if model_url == blank -%}{%- assign model_url = model_file.sources.first.url -%}{%- endif -%}
+  {%- elsif model_file.url -%}
+    {%- assign model_url = model_file.url -%}
+  {%- endif -%}
+
+  {%- if model_url != blank -%}
+    {%- assign m_title = m3d.titulo.value | strip -%}
+    {%- assign m_desc = m3d.descripcion.value | strip -%}
+    {%- assign m_poster = m3d.poster.value -%}
+
+    <section class="saluva-modelo3d {% if section.settings.bg_aurora %}aurora-bg{% endif %}" id="saluva-modelo3d-{{ section.id }}">
+      <div class="container">
+        {%- if section.settings.label != blank or m_title != blank or m_desc != blank -%}
+          <div class="section-header section-header--center anim-flip">
+            {%- if section.settings.label != blank -%}
+              <span class="section-header__label">{{ section.settings.label }}</span>
+            {%- endif -%}
+            {%- if m_title != blank -%}
+              <h2 class="section-header__title">{{ m_title }}</h2>
+            {%- endif -%}
+            {%- if m_desc != blank -%}
+              <p class="section-header__desc">{{ m_desc }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <div class="saluva-modelo3d__viewer">
+          <model-viewer
+            src="{{ model_url }}"
+            alt="{{ m_title | default: product.title | escape }}"
+            camera-controls
+            touch-action="pan-y"
+            auto-rotate
+            auto-rotate-delay="500"
+            rotation-per-second="22deg"
+            interaction-prompt="auto"
+            shadow-intensity="1"
+            exposure="1.1"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            {% if m_poster %}poster="{{ m_poster | image_url: width: 1200 }}"{% endif %}
+            loading="lazy"
+            reveal="auto"
+          >
+            <button class="saluva-modelo3d__ar" slot="ar-button" type="button">
+              Ver en tu espacio
+            </button>
+          </model-viewer>
+        </div>
+
+        {%- if section.settings.hint != blank -%}
+          <p class="saluva-modelo3d__hint">{{ section.settings.hint }}</p>
+        {%- endif -%}
+      </div>
+    </section>
+
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Modelo 3D",
+  "settings": [
+    { "type": "paragraph", "content": "El modelo 3D se toma del metafield del producto «custom.modelo_3d» (metaobjeto «modelo_3d» con campos: modelo = archivo .glb/.gltf, titulo, descripcion, poster). Si el producto no tiene modelo 3D, la sección no aparece." },
+    { "type": "text", "id": "label", "label": "Etiqueta superior (igual para todos)", "default": "EXPLÓRALO EN 3D" },
+    { "type": "text", "id": "hint", "label": "Texto de ayuda bajo el visor", "default": "Arrastra para girar · pellizca para acercar" },
+    { "type": "checkbox", "id": "bg_aurora", "label": "Fondo Aurora", "default": false }
+  ],
+  "presets": [
+    { "name": "Modelo 3D" }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
