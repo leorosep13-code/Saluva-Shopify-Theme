@@ -46,9 +46,11 @@
     {%- if reviews_count > 0 -%}
       <div class="pdp-reviews__summary">
         <div class="pdp-reviews__avg">
-          <span class="pdp-reviews__avg-num">{{ reviews_avg | round: 1 }}</span>
-          {%- render 'saluva-stars', rating: reviews_avg, size: 22 -%}
-          <span class="pdp-reviews__avg-count">{{ reviews_count }} {% if reviews_count == 1 %}reseña{% else %}reseñas{% endif %}</span>
+          <div class="pdp-reviews__avg-top">
+            {%- render 'saluva-stars', rating: reviews_avg, size: 26 -%}
+            <span class="pdp-reviews__avg-num">{{ reviews_avg | round: 2 }} de 5</span>
+          </div>
+          <span class="pdp-reviews__avg-count">Basado en {{ reviews_count }} {% if reviews_count == 1 %}reseña{% else %}reseñas{% endif %}</span>
         </div>
         <div class="pdp-reviews__dist">
           {%- assign dist_counts = star5 | append: '|' | append: star4 | append: '|' | append: star3 | append: '|' | append: star2 | append: '|' | append: star1 | split: '|' -%}
@@ -57,7 +59,7 @@
             {%- assign dc = dist_counts[di] | times: 1 -%}
             {%- assign dpct = dc | times: 100 | divided_by: reviews_count -%}
             <div class="pdp-reviews__dist-row">
-              <span class="pdp-reviews__dist-label">{{ n }}★</span>
+              <span class="pdp-reviews__dist-stars">{%- render 'saluva-stars', rating: n, size: 15 -%}</span>
               <span class="pdp-reviews__dist-track"><span class="pdp-reviews__dist-bar" style="width: {{ dpct }}%;"></span></span>
               <span class="pdp-reviews__dist-num">{{ dc }}</span>
             </div>
