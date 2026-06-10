@@ -6018,6 +6018,7 @@ body.cart-drawer-open { overflow: hidden; }
   gap: 8px;
   margin: 0;
   padding: 0;
+  font-family: var(--font-family);
   font-size: 13px;
 }
 .saluva-breadcrumbs__item a {
