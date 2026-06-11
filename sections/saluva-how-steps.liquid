@@ -3,6 +3,11 @@
   Pasos numerados con imagen + título + descripción. Reduce la fricción de uso.
 {%- endcomment -%}
 
+{%- comment -%} Solo metaobjetos del producto (custom.pasos). Si el producto no tiene, la sección no aparece. {%- endcomment -%}
+{%- assign steps = product.metafields.custom.pasos.value | default: product.metafields.saluva.pasos.value -%}
+
+{%- if steps != blank and steps.size > 0 -%}
+{%- assign use_mo = true -%}
 <section class="saluva-steps {% if section.settings.bg_aurora %}aurora-bg{% endif %}" id="saluva-steps-{{ section.id }}">
   <div class="container">
     {%- if section.settings.title != blank or section.settings.label != blank -%}
@@ -18,11 +23,6 @@
         {%- endif -%}
       </div>
     {%- endif -%}
-
-    {%- comment -%} Preferimos metaobjetos del producto (custom.pasos); si no hay, usamos bloques del editor {%- endcomment -%}
-    {%- assign mo_steps = product.metafields.custom.pasos.value | default: product.metafields.saluva.pasos.value -%}
-    {%- assign use_mo = false -%}
-    {%- if mo_steps != blank and mo_steps.size > 0 -%}{%- assign use_mo = true -%}{%- assign steps = mo_steps -%}{%- else -%}{%- assign steps = section.blocks -%}{%- endif -%}
 
     <div class="saluva-steps__grid anim-stagger">
       {%- for item in steps -%}
@@ -59,6 +59,7 @@
     </div>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {

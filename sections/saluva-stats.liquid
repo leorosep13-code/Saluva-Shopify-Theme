@@ -4,6 +4,10 @@
   Animación count-up al entrar en viewport → initStats() en saluva-scripts.js
 {%- endcomment -%}
 
+{%- comment -%} Solo metaobjetos del producto (custom.indicadores). Si el producto no tiene, la sección no aparece. {%- endcomment -%}
+{%- assign mo_stats = product.metafields.custom.indicadores.value | default: product.metafields.saluva.indicadores.value -%}
+
+{%- if mo_stats != blank and mo_stats.size > 0 -%}
 <section class="saluva-stats {% if section.settings.bg_aurora %}aurora-bg{% endif %}" id="saluva-stats-{{ section.id }}">
   <div class="container">
     {%- if section.settings.title != blank or section.settings.label != blank -%}
@@ -20,11 +24,7 @@
       </div>
     {%- endif -%}
 
-    {%- comment -%} Preferimos metaobjetos del producto (custom.indicadores); si no hay, usamos bloques del editor {%- endcomment -%}
-    {%- assign mo_stats = product.metafields.custom.indicadores.value | default: product.metafields.saluva.indicadores.value -%}
-
-    {%- if mo_stats != blank and mo_stats.size > 0 -%}
-      <div class="saluva-stats__grid saluva-stats__grid--mo anim-stagger">
+    <div class="saluva-stats__grid saluva-stats__grid--mo anim-stagger">
         {%- for item in mo_stats -%}
           {%- assign s_img = item.imagen.value -%}
           {%- assign s_val = item.valor.value | strip -%}
@@ -44,29 +44,13 @@
           </div>
         {%- endfor -%}
       </div>
-    {%- else -%}
-      <div class="saluva-stats__grid anim-stagger">
-        {%- for block in section.blocks -%}
-          <div class="saluva-stats__item" {{ block.shopify_attributes }}>
-            <div class="saluva-stats__value">
-              <span class="saluva-stats__number"
-                    data-stat-target="{{ block.settings.number }}"
-                    data-stat-decimals="{{ block.settings.decimals }}">{{ block.settings.number }}</span><span class="saluva-stats__suffix">{{ block.settings.suffix }}</span>
-            </div>
-            <p class="saluva-stats__label">{{ block.settings.label }}</p>
-            {%- if block.settings.sublabel != blank -%}
-              <p class="saluva-stats__sublabel">{{ block.settings.sublabel }}</p>
-            {%- endif -%}
-          </div>
-        {%- endfor -%}
-      </div>
-    {%- endif -%}
 
     {%- if section.settings.footnote != blank -%}
       <p class="saluva-stats__footnote">{{ section.settings.footnote }}</p>
     {%- endif -%}
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {

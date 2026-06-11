@@ -3,6 +3,10 @@
   Resuelve objeciones de compra. Usa <details>/<summary> (accesible, sin JS).
 {%- endcomment -%}
 
+{%- comment -%} Solo metaobjetos del producto (custom.faqs). Si el producto no tiene, la sección no aparece. {%- endcomment -%}
+{%- assign faqs = product.metafields.custom.faqs.value | default: product.metafields.saluva.faqs.value -%}
+
+{%- if faqs != blank and faqs.size > 0 -%}
 <section class="saluva-faq {% if section.settings.bg_aurora %}aurora-bg{% endif %}" id="saluva-faq-{{ section.id }}">
   <div class="container saluva-faq__container">
     {%- if section.settings.title != blank or section.settings.label != blank -%}
@@ -19,36 +23,22 @@
       </div>
     {%- endif -%}
 
-    {%- comment -%} Preferimos metaobjetos del producto (custom.faqs); si no hay, usamos los bloques del editor {%- endcomment -%}
-    {%- assign faqs = product.metafields.custom.faqs.value | default: product.metafields.saluva.faqs.value -%}
-
     <div class="saluva-faq__list anim-stagger">
-      {%- if faqs != blank and faqs.size > 0 -%}
-        {%- for faq in faqs -%}
-          {%- assign q = faq.pregunta.value -%}
-          {%- if q == blank -%}{%- continue -%}{%- endif -%}
-          <details class="saluva-faq__item"{% if forloop.first %} open{% endif %}>
-            <summary class="saluva-faq__q">
-              <span>{{ q }}</span>
-              <svg class="saluva-faq__chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-            </summary>
-            <div class="saluva-faq__a rte">{{ faq.respuesta | metafield_tag }}</div>
-          </details>
-        {%- endfor -%}
-      {%- else -%}
-        {%- for block in section.blocks -%}
-          <details class="saluva-faq__item"{% if block.settings.open %} open{% endif %} {{ block.shopify_attributes }}>
-            <summary class="saluva-faq__q">
-              <span>{{ block.settings.question }}</span>
-              <svg class="saluva-faq__chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-            </summary>
-            <div class="saluva-faq__a rte">{{ block.settings.answer }}</div>
-          </details>
-        {%- endfor -%}
-      {%- endif -%}
+      {%- for faq in faqs -%}
+        {%- assign q = faq.pregunta.value -%}
+        {%- if q == blank -%}{%- continue -%}{%- endif -%}
+        <details class="saluva-faq__item"{% if forloop.first %} open{% endif %}>
+          <summary class="saluva-faq__q">
+            <span>{{ q }}</span>
+            <svg class="saluva-faq__chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+          <div class="saluva-faq__a rte">{{ faq.respuesta | metafield_tag }}</div>
+        </details>
+      {%- endfor -%}
     </div>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {
