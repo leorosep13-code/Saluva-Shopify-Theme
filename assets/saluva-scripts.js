@@ -2093,15 +2093,26 @@ function initSpinToWin() {
   }
 
   /* Registra al lead como suscriptor de marketing (form de cliente nativo).
-     El teléfono se guarda como tag para que sea visible en el Admin. */
-  function submitLead(name, email, phone) {
+     El nombre va en first_name; el teléfono y el premio se guardan como tags
+     para que sean visibles en el Admin (Clientes → filtrar por tag «ruleta»). */
+  function submitLead(name, email, phone, prize) {
+    const tags = ['ruleta', 'tel:' + phone];
+    if (prize) tags.push('premio:' + String(prize).slice(0, 40));
     const fd = new FormData();
     fd.append('form_type', 'customer');
     fd.append('utf8', '✓');
     fd.append('contact[email]', email);
     fd.append('contact[first_name]', name);
-    fd.append('contact[tags]', 'ruleta, tel:' + phone);
-    fetch('/contact', { method: 'POST', body: fd }).catch(() => {});
+    fd.append('contact[tags]', tags.join(','));
+    fetch('/contact', { method: 'POST', body: fd, headers: { 'Accept': 'text/html' } })
+      .then((r) => {
+        if (r.ok || r.redirected) {
+          console.log('[ruleta] lead guardado:', email);
+        } else {
+          console.warn('[ruleta] Shopify rechazó el lead. Status:', r.status);
+        }
+      })
+      .catch((err) => console.warn('[ruleta] error al guardar lead:', err));
   }
 
   function spinTo(index) {
@@ -2208,10 +2219,10 @@ function initSpinToWin() {
       return;
     }
     errEl.hidden = true;
-    submitLead(name, email, phone);
     btn.disabled = true;
     btn.textContent = 'Girando…';
     const index = weightedPick();
+    submitLead(name, email, phone, prizes[index] && prizes[index].label);
     spinTo(index);
     wheel.addEventListener('transitionend', () => revealPrize(prizes[index]), { once: true });
   });
