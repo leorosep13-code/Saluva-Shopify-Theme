@@ -2033,6 +2033,18 @@ function initSpinToWin() {
   try { prizes = JSON.parse(dataEl.textContent); } catch (e) { return; }
   if (!Array.isArray(prizes) || prizes.length < 2) return;
 
+  /* Oculta el formulario de Shopify Forms (solo lo usamos por detrás para guardar
+     el lead). Lo dejamos fuera de pantalla pero funcional, no display:none. */
+  (function hideLeadForm() {
+    const lc = document.querySelector('shop-lead-capture');
+    if (!lc) return;
+    const form = lc.closest('form');
+    const host = lc.closest('.shopify-section') || (form && form.parentElement) || form;
+    if (host) {
+      host.style.cssText += ';position:absolute!important;left:-9999px!important;top:0!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important;';
+    }
+  })();
+
   const wheel = document.getElementById('saluva-spin-wheel');
   const form = document.getElementById('saluva-spin-form');
   const btn = document.getElementById('saluva-spin-btn');
@@ -2092,31 +2104,37 @@ function initSpinToWin() {
     return N - 1;
   }
 
-  /* Registra al lead como suscriptor de marketing usando el FORMULARIO NATIVO de
-     Shopify (#saluva-spin-newsletter) enviado a un iframe oculto. Un fetch a mano
-     a /contact da 400 (protección anti-bot); el form real sí pasa. El form «customer»
-     solo acepta email + tags, así que nombre, teléfono y premio van como tags y se
-     ven en el Admin (Clientes → filtrar por tag «ruleta»). */
-  function cleanTag(s) {
-    return String(s == null ? '' : s).replace(/,/g, ' ').trim().slice(0, 40);
+  /* Guarda el lead en el formulario NATIVO de Shopify Forms (componente
+     shop-lead-capture). Un fetch/form a mano a /contact da 400 por la protección
+     anti-bot; Shopify Forms sí guarda porque usa su propia API con tokens válidos.
+     Sus campos son controlados por React, así que hay que setear el value con el
+     setter nativo + disparar input/change para que el componente registre el dato. */
+  function setReactValue(el, value) {
+    if (!el) return;
+    const proto = Object.getPrototypeOf(el);
+    const desc = Object.getOwnPropertyDescriptor(proto, 'value');
+    if (desc && desc.set) desc.set.call(el, value); else el.value = value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    el.dispatchEvent(new Event('blur', { bubbles: true }));
+  }
+  function getLeadForm() {
+    const lc = document.querySelector('shop-lead-capture');
+    return lc ? lc.closest('form') : document.querySelector('form[data-testid="form"]');
   }
   function submitLead(name, email, phone, prize) {
-    const f = document.getElementById('saluva-spin-newsletter');
-    const emailInput = document.getElementById('saluva-spin-lead-email');
-    const tagsInput = document.getElementById('saluva-spin-lead-tags');
-    if (!f || !emailInput || !tagsInput) {
-      console.warn('[ruleta] no se encontró el formulario de lead');
-      return;
-    }
-    const tags = ['ruleta', 'nombre:' + cleanTag(name), 'tel:' + cleanTag(phone)];
-    if (prize) tags.push('premio:' + cleanTag(prize));
-    emailInput.value = email;
-    tagsInput.value = tags.join(',');
-    try {
-      f.submit();
-      console.log('[ruleta] lead enviado:', email);
-    } catch (err) {
-      console.warn('[ruleta] error al enviar lead:', err);
+    const f = getLeadForm();
+    if (!f) { console.warn('[ruleta] no se encontró el formulario de Shopify Forms'); return; }
+    setReactValue(f.querySelector('[data-testid="field-first_name"]'), name);
+    setReactValue(f.querySelector('[data-testid="field-email"]'), email);
+    setReactValue(f.querySelector('[data-testid="field-phone_number"]'), phone);
+    if (prize) setReactValue(f.querySelector('[data-testid="field-custom#premio"]'), prize);
+    const submitBtn = f.querySelector('[data-testid="btn-form-submit"]');
+    if (submitBtn) {
+      submitBtn.click();
+      console.log('[ruleta] lead enviado a Shopify Forms:', email);
+    } else {
+      console.warn('[ruleta] no se encontró el botón de envío del formulario');
     }
   }
 
