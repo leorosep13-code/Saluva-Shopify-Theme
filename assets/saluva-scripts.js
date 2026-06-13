@@ -2092,30 +2092,32 @@ function initSpinToWin() {
     return N - 1;
   }
 
-  /* Registra al lead como suscriptor de marketing (form de newsletter nativo).
-     El form «customer» de Shopify SOLO acepta email + tags (mandar first_name
-     da 400 Bad Request). Por eso nombre, teléfono y premio se guardan como tags
-     y se ven en el Admin (Clientes → filtrar por tag «ruleta»). */
+  /* Registra al lead como suscriptor de marketing usando el FORMULARIO NATIVO de
+     Shopify (#saluva-spin-newsletter) enviado a un iframe oculto. Un fetch a mano
+     a /contact da 400 (protección anti-bot); el form real sí pasa. El form «customer»
+     solo acepta email + tags, así que nombre, teléfono y premio van como tags y se
+     ven en el Admin (Clientes → filtrar por tag «ruleta»). */
   function cleanTag(s) {
     return String(s == null ? '' : s).replace(/,/g, ' ').trim().slice(0, 40);
   }
   function submitLead(name, email, phone, prize) {
+    const f = document.getElementById('saluva-spin-newsletter');
+    const emailInput = document.getElementById('saluva-spin-lead-email');
+    const tagsInput = document.getElementById('saluva-spin-lead-tags');
+    if (!f || !emailInput || !tagsInput) {
+      console.warn('[ruleta] no se encontró el formulario de lead');
+      return;
+    }
     const tags = ['ruleta', 'nombre:' + cleanTag(name), 'tel:' + cleanTag(phone)];
     if (prize) tags.push('premio:' + cleanTag(prize));
-    const fd = new FormData();
-    fd.append('form_type', 'customer');
-    fd.append('utf8', '✓');
-    fd.append('contact[email]', email);
-    fd.append('contact[tags]', tags.join(','));
-    fetch('/contact', { method: 'POST', body: fd, headers: { 'Accept': 'text/html' } })
-      .then((r) => {
-        if (r.ok || r.redirected) {
-          console.log('[ruleta] lead guardado:', email);
-        } else {
-          console.warn('[ruleta] Shopify rechazó el lead. Status:', r.status);
-        }
-      })
-      .catch((err) => console.warn('[ruleta] error al guardar lead:', err));
+    emailInput.value = email;
+    tagsInput.value = tags.join(',');
+    try {
+      f.submit();
+      console.log('[ruleta] lead enviado:', email);
+    } catch (err) {
+      console.warn('[ruleta] error al enviar lead:', err);
+    }
   }
 
   function spinTo(index) {

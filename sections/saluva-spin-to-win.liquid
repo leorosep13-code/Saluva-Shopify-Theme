@@ -87,6 +87,18 @@
       </div>
 
       <script type="application/json" id="saluva-spin-data">{{ prizes_json }}</script>
+
+      {%- comment -%}
+        Formulario NATIVO de Shopify (newsletter) enviado a un iframe invisible.
+        Se usa el form real para pasar la protección anti-bot de /contact (un fetch
+        a mano devuelve 400). El JS rellena email + tags y hace submit; la respuesta
+        cae en el iframe oculto, así la página no se recarga.
+      {%- endcomment -%}
+      <iframe name="saluva-spin-sink" id="saluva-spin-sink" title="lead" tabindex="-1" aria-hidden="true" style="display:none"></iframe>
+      {%- form 'customer', id: 'saluva-spin-newsletter', target: 'saluva-spin-sink' -%}
+        <input type="hidden" name="contact[email]" id="saluva-spin-lead-email">
+        <input type="hidden" name="contact[tags]" id="saluva-spin-lead-tags" value="ruleta">
+      {%- endform -%}
     </div>
 
   {%- endif -%}
