@@ -2033,18 +2033,6 @@ function initSpinToWin() {
   try { prizes = JSON.parse(dataEl.textContent); } catch (e) { return; }
   if (!Array.isArray(prizes) || prizes.length < 2) return;
 
-  /* Oculta el formulario de Shopify Forms (solo lo usamos por detrás para guardar
-     el lead). Lo dejamos fuera de pantalla pero funcional, no display:none. */
-  (function hideLeadForm() {
-    const lc = document.querySelector('shop-lead-capture');
-    if (!lc) return;
-    const form = lc.closest('form');
-    const host = lc.closest('.shopify-section') || (form && form.parentElement) || form;
-    if (host) {
-      host.style.cssText += ';position:absolute!important;left:-9999px!important;top:0!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important;';
-    }
-  })();
-
   const wheel = document.getElementById('saluva-spin-wheel');
   const form = document.getElementById('saluva-spin-form');
   const btn = document.getElementById('saluva-spin-btn');
@@ -2104,38 +2092,27 @@ function initSpinToWin() {
     return N - 1;
   }
 
-  /* Guarda el lead en el formulario NATIVO de Shopify Forms (componente
-     shop-lead-capture). Un fetch/form a mano a /contact da 400 por la protección
-     anti-bot; Shopify Forms sí guarda porque usa su propia API con tokens válidos.
-     Sus campos son controlados por React, así que hay que setear el value con el
-     setter nativo + disparar input/change para que el componente registre el dato. */
-  function setReactValue(el, value) {
-    if (!el) return;
-    const proto = Object.getPrototypeOf(el);
-    const desc = Object.getOwnPropertyDescriptor(proto, 'value');
-    if (desc && desc.set) desc.set.call(el, value); else el.value = value;
-    el.dispatchEvent(new Event('input', { bubbles: true }));
-    el.dispatchEvent(new Event('change', { bubbles: true }));
-    el.dispatchEvent(new Event('blur', { bubbles: true }));
-  }
-  function getLeadForm() {
-    const lc = document.querySelector('shop-lead-capture');
-    return lc ? lc.closest('form') : document.querySelector('form[data-testid="form"]');
-  }
+  /* Guarda el lead en Google Sheets vía un web app de Apps Script. La tienda tiene
+     hCaptcha que bloquea los envíos automáticos a Shopify (/contact da 400), así que
+     mandamos los datos a una hoja externa sin captcha. La URL del web app se configura
+     en el editor de la sección (data-leads-url). Se usa mode:'no-cors' para evitar el
+     preflight CORS (no leemos la respuesta, pero el dato sí se guarda). */
   function submitLead(name, email, phone, prize) {
-    const f = getLeadForm();
-    if (!f) { console.warn('[ruleta] no se encontró el formulario de Shopify Forms'); return; }
-    setReactValue(f.querySelector('[data-testid="field-first_name"]'), name);
-    setReactValue(f.querySelector('[data-testid="field-email"]'), email);
-    setReactValue(f.querySelector('[data-testid="field-phone_number"]'), phone);
-    if (prize) setReactValue(f.querySelector('[data-testid="field-custom#premio"]'), prize);
-    const submitBtn = f.querySelector('[data-testid="btn-form-submit"]');
-    if (submitBtn) {
-      submitBtn.click();
-      console.log('[ruleta] lead enviado a Shopify Forms:', email);
-    } else {
-      console.warn('[ruleta] no se encontró el botón de envío del formulario');
+    const url = root.getAttribute('data-leads-url');
+    if (!url) {
+      console.warn('[ruleta] falta la URL de Google Sheets. Configúrala en el editor de la sección «Ruleta de premios».');
+      return;
     }
+    const payload = {
+      nombre: name,
+      email: email,
+      telefono: phone,
+      premio: prize || '',
+      producto: root.getAttribute('data-product') || ''
+    };
+    fetch(url, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
+      .then(() => console.log('[ruleta] lead enviado a Google Sheets:', email))
+      .catch((err) => console.warn('[ruleta] error al enviar lead:', err));
   }
 
   function spinTo(index) {
