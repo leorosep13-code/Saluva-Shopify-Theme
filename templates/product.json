@@ -241,13 +241,13 @@
       "name": "Ruleta de premios",
       "settings": {}
     },
-    "178138763586ed5f81": {
+    "1781390728b8ef06e6": {
       "type": "apps",
       "blocks": {
-        "forms_inline_VDX3fx": {
+        "forms_inline_3KANab": {
           "type": "shopify://apps/forms/blocks/inline/8744a304-fcb1-4347-b211-bb6b4759a76a",
           "settings": {
-            "form_id": "Ruleta Leads",
+            "form_id": "1029950",
             "text_color": "#202020",
             "button_background_color": "#202020",
             "button_label_color": "#FFFFFF",
@@ -263,7 +263,7 @@
         }
       },
       "block_order": [
-        "forms_inline_VDX3fx"
+        "forms_inline_3KANab"
       ],
       "settings": {}
     }
@@ -281,6 +281,6 @@
     "pdp_reviews",
     "pdp_related",
     "saluva_spin_to_win_WhmrFd",
-    "178138763586ed5f81"
+    "1781390728b8ef06e6"
   ]
 }
