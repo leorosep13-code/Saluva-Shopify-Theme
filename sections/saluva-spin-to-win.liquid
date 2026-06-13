@@ -1,0 +1,108 @@
+{%- comment -%}
+  MISOJI — Ruleta de premios (Spin to Win)
+  Popup en la ficha de producto que pide nombre, email y teléfono, gira una
+  ruleta y entrega un premio. Se activa por producto mediante METAOBJETO.
+
+  ── Configuración en Shopify Admin (Settings → Custom data) ──
+
+  1) Metaobjeto «Premio de ruleta» (tipo: premio_ruleta) con campos:
+       - etiqueta        → Texto 1 línea   (lo que se ve en la rueda, ej. «25% OFF»)
+       - tipo            → Texto 1 línea   (descuento_inmediato | cupon | regalo | nada)
+       - codigo          → Texto 1 línea   (código de descuento que TÚ creas en Shopify)
+       - producto_regalo → Referencia de producto (solo para tipo «regalo»)
+       - mensaje         → Texto 1 línea   (mensaje al ganar, opcional)
+       - peso            → Entero          (probabilidad relativa; mayor = más probable)
+       - color           → Color           (color del gajo, opcional)
+
+  2) Metaobjeto «Ruleta» (tipo: ruleta) con campos:
+       - activo      → Verdadero/Falso
+       - etiqueta    → Texto 1 línea   (ej. «OFERTA POR TIEMPO LIMITADO»)
+       - titulo      → Texto 1 línea   (ej. «¡GIRA Y GANA!»)
+       - subtitulo   → Texto 1 línea
+       - texto_boton → Texto 1 línea   (ej. «Girar ahora»)
+       - premios     → Lista de referencias de metaobjeto → premio_ruleta
+
+  3) Metafield de producto:
+       custom.ruleta → Referencia de metaobjeto (a «Ruleta»)
+
+  Solo aparece en los productos que tengan asignado el metafield con la ruleta «activa».
+{%- endcomment -%}
+
+{%- assign rl = product.metafields.custom.ruleta.value | default: product.metafields.saluva.ruleta.value -%}
+{%- comment -%} Soporta el metafield como referencia simple o como lista (toma el primero) {%- endcomment -%}
+{%- if rl.first != blank -%}{%- assign rl = rl.first -%}{%- endif -%}
+
+{%- if rl != blank and rl.activo.value != false -%}
+  {%- assign premios = rl.premios.value -%}
+  {%- if premios != blank and premios.size > 1 -%}
+
+    {%- capture prizes_json -%}
+[
+{%- for p in premios -%}
+  {%- assign gift = p.producto_regalo.value -%}
+  {%- assign gv = gift.selected_or_first_available_variant -%}
+{"label":{{ p.etiqueta.value | default: '' | json }},"tipo":{{ p.tipo.value | default: 'nada' | strip | downcase | json }},"codigo":{{ p.codigo.value | default: '' | strip | json }},"mensaje":{{ p.mensaje.value | default: '' | json }},"peso":{{ p.peso.value | default: 1 }},"color":{{ p.color.value | default: '' | json }},"giftVariant":{% if gv %}{{ gv.id }}{% else %}null{% endif %},"giftTitle":{{ gift.title | default: '' | json }},"giftImg":{% if gift.featured_image %}{{ gift.featured_image | image_url: width: 240 | json }}{% else %}null{% endif %}}{%- unless forloop.last -%},{%- endunless -%}
+{%- endfor -%}
+]
+    {%- endcapture -%}
+
+    <div class="saluva-spin" id="saluva-spin" hidden>
+      <div class="saluva-spin__overlay" data-spin-close></div>
+
+      <div class="saluva-spin__modal" role="dialog" aria-modal="true" aria-label="{{ rl.titulo.value | default: '¡Gira y gana!' | escape }}">
+        <button type="button" class="saluva-spin__close" data-spin-close aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        {%- if rl.etiqueta.value != blank -%}
+          <p class="saluva-spin__eyebrow">{{ rl.etiqueta.value }}</p>
+        {%- endif -%}
+        <h2 class="saluva-spin__title">{{ rl.titulo.value | default: '¡GIRA Y GANA!' }}</h2>
+        {%- if rl.subtitulo.value != blank -%}
+          <p class="saluva-spin__sub">{{ rl.subtitulo.value }}</p>
+        {%- endif -%}
+
+        <div class="saluva-spin__wheel-wrap">
+          <div class="saluva-spin__pointer" aria-hidden="true"></div>
+          <svg class="saluva-spin__wheel" id="saluva-spin-wheel" viewBox="0 0 300 300" aria-hidden="true"></svg>
+          <div class="saluva-spin__hub" aria-hidden="true"></div>
+        </div>
+
+        <form class="saluva-spin__form" id="saluva-spin-form" novalidate>
+          <div class="saluva-spin__field">
+            <input type="text" id="saluva-spin-name" name="spin_name" placeholder="Tu nombre" autocomplete="name" required>
+          </div>
+          <div class="saluva-spin__field">
+            <input type="email" id="saluva-spin-email" name="spin_email" placeholder="Tu correo electrónico" autocomplete="email" required>
+          </div>
+          <div class="saluva-spin__field">
+            <input type="tel" id="saluva-spin-phone" name="spin_phone" placeholder="Tu teléfono" autocomplete="tel" required>
+          </div>
+          <p class="saluva-spin__error" id="saluva-spin-error" hidden>Completa nombre, correo y teléfono.</p>
+          <button type="submit" class="saluva-spin__btn" id="saluva-spin-btn">{{ rl.texto_boton.value | default: 'Girar ahora' }}</button>
+          <p class="saluva-spin__legal">Al participar aceptas recibir comunicaciones de marketing.</p>
+        </form>
+
+        <div class="saluva-spin__result" id="saluva-spin-result" hidden></div>
+      </div>
+
+      <script type="application/json" id="saluva-spin-data">{{ prizes_json }}</script>
+    </div>
+
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Ruleta de premios",
+  "settings": [
+    { "type": "paragraph", "content": "Popup «Gira y gana» para la ficha de producto. Se configura por producto con el metafield «custom.ruleta» (metaobjeto «ruleta» con campos: activo, etiqueta, titulo, subtitulo, texto_boton, premios). Cada premio es un metaobjeto «premio_ruleta» (etiqueta, tipo, codigo, producto_regalo, mensaje, peso, color). Los descuentos usan códigos que TÚ creas en Shopify. Si el producto no tiene ruleta activa, no aparece nada." }
+  ],
+  "presets": [
+    { "name": "Ruleta de premios" }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initBeforeAfter();
   initStats();
   initReviewImages();
+  initSpinToWin();
 });
 
 /* ── Ofertas rail (scroll horizontal con navegación) ── */
@@ -2015,3 +2016,211 @@ function initVideoReels() {
 }
 
 document.addEventListener('DOMContentLoaded', initVideoReels);
+
+/* ───────────────────────────────────────────
+   Ruleta de premios (Spin to Win) — PDP
+   Pide nombre/email/teléfono, registra al suscriptor (form de cliente de
+   Shopify), gira la ruleta (premio ponderado) y aplica el premio:
+   descuento inmediato (/discount/CODE), cupón (mostrar/copiar) o regalo
+   (/cart/add.js). Los premios vienen del metaobjeto «ruleta» del producto.
+   ─────────────────────────────────────────── */
+function initSpinToWin() {
+  const root = document.getElementById('saluva-spin');
+  if (!root) return;
+
+  const dataEl = document.getElementById('saluva-spin-data');
+  let prizes = [];
+  try { prizes = JSON.parse(dataEl.textContent); } catch (e) { return; }
+  if (!Array.isArray(prizes) || prizes.length < 2) return;
+
+  const wheel = document.getElementById('saluva-spin-wheel');
+  const form = document.getElementById('saluva-spin-form');
+  const btn = document.getElementById('saluva-spin-btn');
+  const errEl = document.getElementById('saluva-spin-error');
+  const resultEl = document.getElementById('saluva-spin-result');
+  const nameEl = document.getElementById('saluva-spin-name');
+  const emailEl = document.getElementById('saluva-spin-email');
+  const phoneEl = document.getElementById('saluva-spin-phone');
+
+  const N = prizes.length;
+  const seg = 360 / N;
+  const altColors = ['#d9b8ff', '#ffffff']; /* lila claro / blanco (paleta Aurora) */
+  let spinning = false;
+  let rotation = 0;
+
+  function escapeXml(s) {
+    return String(s == null ? '' : s).replace(/[<>&'"]/g, (c) => (
+      { '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c]
+    ));
+  }
+
+  /* Dibuja la ruleta como SVG a partir de los premios */
+  (function drawWheel() {
+    const cx = 150, cy = 150, r = 146;
+    let html = '';
+    prizes.forEach((p, i) => {
+      const a0 = (i * seg - 90) * Math.PI / 180;
+      const a1 = ((i + 1) * seg - 90) * Math.PI / 180;
+      const x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0);
+      const x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+      const large = seg > 180 ? 1 : 0;
+      const fill = p.color || altColors[i % altColors.length];
+      html += '<path d="M' + cx + ' ' + cy + ' L' + x0.toFixed(2) + ' ' + y0.toFixed(2) +
+              ' A' + r + ' ' + r + ' 0 ' + large + ' 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
+              ' Z" fill="' + fill + '" stroke="#2a1430" stroke-width="1.5"/>';
+      const mid = (i * seg) + (seg / 2);
+      const midR = (mid - 90) * Math.PI / 180;
+      const lr = r * 0.60;
+      const lx = cx + lr * Math.cos(midR), ly = cy + lr * Math.sin(midR);
+      const label = (p.label || '').toString().slice(0, 16);
+      html += '<text x="' + lx.toFixed(2) + '" y="' + ly.toFixed(2) + '" fill="#2a1430" ' +
+              'font-size="13" font-weight="700" text-anchor="middle" dominant-baseline="middle" ' +
+              'transform="rotate(' + mid.toFixed(2) + ' ' + lx.toFixed(2) + ' ' + ly.toFixed(2) + ')">' +
+              escapeXml(label) + '</text>';
+    });
+    wheel.innerHTML = html;
+  })();
+
+  function weightedPick() {
+    let total = 0;
+    for (let i = 0; i < N; i++) total += prizes[i].peso > 0 ? prizes[i].peso : 1;
+    let rnd = Math.random() * total;
+    for (let i = 0; i < N; i++) {
+      rnd -= prizes[i].peso > 0 ? prizes[i].peso : 1;
+      if (rnd < 0) return i;
+    }
+    return N - 1;
+  }
+
+  /* Registra al lead como suscriptor de marketing (form de cliente nativo).
+     El teléfono se guarda como tag para que sea visible en el Admin. */
+  function submitLead(name, email, phone) {
+    const fd = new FormData();
+    fd.append('form_type', 'customer');
+    fd.append('utf8', '✓');
+    fd.append('contact[email]', email);
+    fd.append('contact[first_name]', name);
+    fd.append('contact[tags]', 'ruleta, tel:' + phone);
+    fetch('/contact', { method: 'POST', body: fd }).catch(() => {});
+  }
+
+  function spinTo(index) {
+    spinning = true;
+    const center = index * seg + seg / 2;          /* centro del gajo, horario desde arriba */
+    const jitter = (Math.random() - 0.5) * seg * 0.6;
+    const base = 360 * 6;                            /* 6 vueltas completas */
+    /* lleva el centro del gajo al puntero (arriba) */
+    const target = base + (360 - center) - jitter;
+    rotation += target;
+    wheel.style.transition = 'transform 4.4s cubic-bezier(0.16, 1, 0.3, 1)';
+    wheel.style.transform = 'rotate(' + rotation + 'deg)';
+  }
+
+  function revealPrize(p) {
+    spinning = false;
+    form.hidden = true;
+    resultEl.hidden = false;
+
+    const tipo = (p.tipo || 'nada').toLowerCase();
+    const code = (p.codigo || '').trim();
+    let html = '';
+
+    if (tipo === 'descuento_inmediato') {
+      html += '<h3 class="saluva-spin__win">¡Ganaste ' + escapeXml(p.label) + '!</h3>';
+      html += '<p class="saluva-spin__msg">' + escapeXml(p.mensaje || 'Tu descuento se aplica en este pedido.') + '</p>';
+      if (code) {
+        fetch('/discount/' + encodeURIComponent(code)).catch(() => {}); /* pre-aplica al carrito */
+        html += '<div class="saluva-spin__code">' + escapeXml(code) + '</div>';
+        html += '<a class="saluva-spin__claim" href="/discount/' + encodeURIComponent(code) + '?redirect=/cart">Aplicar y comprar</a>';
+      }
+    } else if (tipo === 'cupon') {
+      html += '<h3 class="saluva-spin__win">¡Ganaste ' + escapeXml(p.label) + '!</h3>';
+      html += '<p class="saluva-spin__msg">' + escapeXml(p.mensaje || 'Usa este código en tu próxima compra.') + '</p>';
+      if (code) {
+        html += '<div class="saluva-spin__code">' + escapeXml(code) + '</div>';
+        html += '<button type="button" class="saluva-spin__claim" data-spin-copy="' + escapeXml(code) + '">Copiar código</button>';
+      }
+    } else if (tipo === 'regalo') {
+      html += '<h3 class="saluva-spin__win">¡Ganaste un regalo! 🎁</h3>';
+      html += '<p class="saluva-spin__msg">' + escapeXml(p.mensaje || (p.giftTitle ? p.giftTitle + ' de regalo con tu compra.' : 'Regalo con tu compra.')) + '</p>';
+      if (p.giftImg) html += '<img class="saluva-spin__gift-img" src="' + p.giftImg + '" alt="" loading="lazy">';
+      if (p.giftVariant) {
+        html += '<button type="button" class="saluva-spin__claim" data-spin-gift>Agregar regalo al carrito</button>';
+      }
+    } else {
+      html += '<h3 class="saluva-spin__win">¡Casi! 🙈</h3>';
+      html += '<p class="saluva-spin__msg">' + escapeXml(p.mensaje || 'No hubo premio esta vez. ¡Gracias por participar!') + '</p>';
+      html += '<button type="button" class="saluva-spin__claim" data-spin-close>Seguir comprando</button>';
+    }
+
+    resultEl.innerHTML = html;
+
+    const copyBtn = resultEl.querySelector('[data-spin-copy]');
+    if (copyBtn) copyBtn.addEventListener('click', () => {
+      const txt = copyBtn.getAttribute('data-spin-copy');
+      if (navigator.clipboard) navigator.clipboard.writeText(txt).catch(() => {});
+      copyBtn.textContent = '¡Copiado!';
+    });
+
+    const giftBtn = resultEl.querySelector('[data-spin-gift]');
+    if (giftBtn) giftBtn.addEventListener('click', () => {
+      giftBtn.disabled = true;
+      giftBtn.textContent = 'Agregando…';
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ items: [{ id: p.giftVariant, quantity: 1, properties: { '_regalo': 'Ruleta' } }] })
+      })
+        .then((r) => r.json())
+        .then(() => {
+          if (code) fetch('/discount/' + encodeURIComponent(code)).catch(() => {});
+          giftBtn.textContent = '¡Regalo agregado! 🎁';
+          const countEl = document.getElementById('cart-count');
+          fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
+            .then((r) => r.json())
+            .then((cart) => { if (countEl) countEl.textContent = cart.item_count; })
+            .catch(() => {});
+        })
+        .catch(() => { giftBtn.disabled = false; giftBtn.textContent = 'Reintentar'; });
+    });
+
+    resultEl.querySelectorAll('[data-spin-close]').forEach((el) => el.addEventListener('click', closeModal));
+  }
+
+  function openModal() {
+    root.hidden = false;
+    document.body.classList.add('saluva-spin-open');
+  }
+  function closeModal() {
+    root.hidden = true;
+    document.body.classList.remove('saluva-spin-open');
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (spinning) return;
+    const name = nameEl.value.trim();
+    const email = emailEl.value.trim();
+    const phone = phoneEl.value.trim();
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!name || !emailOk || phone.length < 6) {
+      errEl.hidden = false;
+      return;
+    }
+    errEl.hidden = true;
+    submitLead(name, email, phone);
+    btn.disabled = true;
+    btn.textContent = 'Girando…';
+    const index = weightedPick();
+    spinTo(index);
+    wheel.addEventListener('transitionend', () => revealPrize(prizes[index]), { once: true });
+  });
+
+  root.querySelectorAll('[data-spin-close]').forEach((el) => el.addEventListener('click', closeModal));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !root.hidden) closeModal();
+  });
+
+  /* Aparece cada vez que se abre el producto (con un pequeño retraso) */
+  setTimeout(openModal, 900);
+}

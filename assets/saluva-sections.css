@@ -6878,3 +6878,221 @@ body.cart-drawer-open { overflow: hidden; }
 @media (max-width: 640px) {
   .pdp-reviews__summary { gap: 20px; }
 }
+
+/* ═══════════════════════════════════════════
+   Ruleta de premios (Spin to Win) — popup PDP
+   ═══════════════════════════════════════════ */
+body.saluva-spin-open { overflow: hidden; }
+
+.saluva-spin {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.saluva-spin[hidden] { display: none; }
+
+.saluva-spin__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(28, 16, 38, 0.62);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: saluva-spin-fade 0.25s ease;
+}
+
+.saluva-spin__modal {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  max-height: 94vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 22px;
+  padding: 30px 24px 26px;
+  text-align: center;
+  box-shadow: 0 24px 70px rgba(28, 16, 38, 0.4);
+  animation: saluva-spin-pop 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes saluva-spin-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes saluva-spin-pop {
+  from { opacity: 0; transform: translateY(18px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+.saluva-spin__close {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-bg-soft, #f3eef7);
+  color: var(--color-text, #2a1430);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.saluva-spin__close:hover { background: #e7ddf0; }
+
+.saluva-spin__eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-primary, #8b5cf6);
+  margin: 4px 0 6px;
+}
+.saluva-spin__title {
+  font-family: var(--font-heading, inherit);
+  font-size: clamp(26px, 7vw, 34px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+  margin: 0 0 6px;
+  color: var(--color-text, #2a1430);
+}
+.saluva-spin__sub {
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--color-text-light, #6b5b78);
+  margin: 0 auto 14px;
+  max-width: 320px;
+}
+
+.saluva-spin__wheel-wrap {
+  position: relative;
+  width: min(280px, 78vw);
+  aspect-ratio: 1 / 1;
+  margin: 8px auto 18px;
+}
+.saluva-spin__wheel {
+  width: 100%; height: 100%;
+  display: block;
+  border-radius: 50%;
+  border: 6px solid var(--color-primary, #8b5cf6);
+  box-shadow: 0 10px 30px rgba(28, 16, 38, 0.22);
+  transform: rotate(0deg);
+  will-change: transform;
+}
+.saluva-spin__hub {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 54px; height: 54px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--color-text, #2a1430);
+  border: 4px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+/* Puntero (arriba, apuntando hacia abajo al gajo ganador) */
+.saluva-spin__pointer {
+  position: absolute;
+  top: -6px; left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 24px solid var(--color-text, #2a1430);
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.25));
+  z-index: 2;
+}
+
+.saluva-spin__form { display: flex; flex-direction: column; gap: 9px; }
+.saluva-spin__field { display: flex; }
+.saluva-spin__field input {
+  width: 100%;
+  padding: 13px 16px;
+  font-size: 15px;
+  border: 1.5px solid var(--color-border, #e3d9ec);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--color-text, #2a1430);
+  transition: border-color 0.2s;
+}
+.saluva-spin__field input:focus {
+  outline: none;
+  border-color: var(--color-primary, #8b5cf6);
+}
+.saluva-spin__error {
+  font-size: 13px;
+  color: #d6336c;
+  margin: 0;
+}
+.saluva-spin__btn {
+  margin-top: 4px;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--color-primary, #8b5cf6), var(--color-secondary, #c084fc));
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.35);
+}
+.saluva-spin__btn:hover { transform: translateY(-1px); }
+.saluva-spin__btn:disabled { opacity: 0.7; cursor: default; transform: none; }
+.saluva-spin__legal {
+  font-size: 11px;
+  color: var(--color-text-light, #9486a0);
+  margin: 8px 0 0;
+}
+
+.saluva-spin__result { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.saluva-spin__win {
+  font-family: var(--font-heading, inherit);
+  font-size: 24px;
+  font-weight: 800;
+  margin: 4px 0 0;
+  color: var(--color-text, #2a1430);
+}
+.saluva-spin__msg {
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--color-text-light, #6b5b78);
+  margin: 0;
+  max-width: 320px;
+}
+.saluva-spin__code {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  padding: 12px 20px;
+  border: 2px dashed var(--color-primary, #8b5cf6);
+  border-radius: 12px;
+  color: var(--color-primary-dark, #6d28d9);
+  background: var(--color-primary-10, #f4ecfe);
+}
+.saluva-spin__gift-img {
+  width: 120px; height: 120px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: var(--color-bg-soft, #f3eef7);
+}
+.saluva-spin__claim {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 14px 26px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  border-radius: 13px;
+  background: linear-gradient(135deg, var(--color-primary, #8b5cf6), var(--color-secondary, #c084fc));
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.saluva-spin__claim:hover { transform: translateY(-1px); }
+.saluva-spin__claim:disabled { opacity: 0.75; cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+  .saluva-spin__wheel { transition: transform 0.8s linear !important; }
+  .saluva-spin__overlay, .saluva-spin__modal { animation: none; }
+}
