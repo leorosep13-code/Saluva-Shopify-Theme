@@ -75,6 +75,15 @@
         "bg_aurora": true
       }
     },
+    "saluva_modelo_3d_dGaLfF": {
+      "type": "saluva-modelo-3d",
+      "name": "Modelo 3D",
+      "settings": {
+        "label": "EXPLÓRALO EN 3D",
+        "hint": "Arrastra para girar · pellizca para acercar",
+        "bg_aurora": false
+      }
+    },
     "stats": {
       "type": "saluva-stats",
       "blocks": {
@@ -227,14 +236,10 @@
       "type": "saluva-pdp-related",
       "settings": {}
     },
-    "saluva_modelo_3d_dGaLfF": {
-      "type": "saluva-modelo-3d",
-      "name": "Modelo 3D",
-      "settings": {
-        "label": "EXPLÓRALO EN 3D",
-        "hint": "Arrastra para girar · pellizca para acercar",
-        "bg_aurora": false
-      }
+    "saluva_spin_to_win_WhmrFd": {
+      "type": "saluva-spin-to-win",
+      "name": "Ruleta de premios",
+      "settings": {}
     }
   },
   "order": [
@@ -248,6 +253,7 @@
     "steps",
     "faq",
     "pdp_reviews",
-    "pdp_related"
+    "pdp_related",
+    "saluva_spin_to_win_WhmrFd"
   ]
 }
