@@ -2092,17 +2092,20 @@ function initSpinToWin() {
     return N - 1;
   }
 
-  /* Registra al lead como suscriptor de marketing (form de cliente nativo).
-     El nombre va en first_name; el teléfono y el premio se guardan como tags
-     para que sean visibles en el Admin (Clientes → filtrar por tag «ruleta»). */
+  /* Registra al lead como suscriptor de marketing (form de newsletter nativo).
+     El form «customer» de Shopify SOLO acepta email + tags (mandar first_name
+     da 400 Bad Request). Por eso nombre, teléfono y premio se guardan como tags
+     y se ven en el Admin (Clientes → filtrar por tag «ruleta»). */
+  function cleanTag(s) {
+    return String(s == null ? '' : s).replace(/,/g, ' ').trim().slice(0, 40);
+  }
   function submitLead(name, email, phone, prize) {
-    const tags = ['ruleta', 'tel:' + phone];
-    if (prize) tags.push('premio:' + String(prize).slice(0, 40));
+    const tags = ['ruleta', 'nombre:' + cleanTag(name), 'tel:' + cleanTag(phone)];
+    if (prize) tags.push('premio:' + cleanTag(prize));
     const fd = new FormData();
     fd.append('form_type', 'customer');
     fd.append('utf8', '✓');
     fd.append('contact[email]', email);
-    fd.append('contact[first_name]', name);
     fd.append('contact[tags]', tags.join(','));
     fetch('/contact', { method: 'POST', body: fd, headers: { 'Accept': 'text/html' } })
       .then((r) => {
