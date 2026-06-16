@@ -46,9 +46,7 @@
 ]
     {%- endcapture -%}
 
-    <div class="saluva-spin" id="saluva-spin" hidden
-         data-leads-url="{{ section.settings.sheets_url | escape }}"
-         data-product="{{ product.title | escape }}">
+    <div class="saluva-spin" id="saluva-spin" hidden>
       <div class="saluva-spin__overlay" data-spin-close></div>
 
       <div class="saluva-spin__modal" role="dialog" aria-modal="true" aria-label="{{ rl.titulo.value | default: '¡Gira y gana!' | escape }}">
@@ -70,20 +68,12 @@
           <div class="saluva-spin__hub" aria-hidden="true"></div>
         </div>
 
-        <form class="saluva-spin__form" id="saluva-spin-form" novalidate>
-          <div class="saluva-spin__field">
-            <input type="text" id="saluva-spin-name" name="spin_name" placeholder="Tu nombre" autocomplete="name" required>
-          </div>
-          <div class="saluva-spin__field">
-            <input type="email" id="saluva-spin-email" name="spin_email" placeholder="Tu correo electrónico" autocomplete="email" required>
-          </div>
-          <div class="saluva-spin__field">
-            <input type="tel" id="saluva-spin-phone" name="spin_phone" placeholder="Tu teléfono" autocomplete="tel" required>
-          </div>
-          <p class="saluva-spin__error" id="saluva-spin-error" hidden>Completa nombre, correo y teléfono.</p>
-          <button type="submit" class="saluva-spin__btn" id="saluva-spin-btn">{{ rl.texto_boton.value | default: 'Girar ahora' }}</button>
+        <div class="saluva-spin__form" id="saluva-spin-form">
+          <p class="saluva-spin__hint" id="saluva-spin-hint">Completa tus datos para girar la ruleta 👇</p>
+          <div class="saluva-spin__leadform" id="saluva-spin-leadform"></div>
+          <button type="button" class="saluva-spin__btn" id="saluva-spin-btn" disabled>{{ rl.texto_boton.value | default: 'Girar ahora' }}</button>
           <p class="saluva-spin__legal">Al participar aceptas recibir comunicaciones de marketing.</p>
-        </form>
+        </div>
 
         <div class="saluva-spin__result" id="saluva-spin-result" hidden></div>
       </div>
@@ -99,8 +89,7 @@
   "name": "Ruleta de premios",
   "settings": [
     { "type": "paragraph", "content": "Popup «Gira y gana» para la ficha de producto. Se configura por producto con el metafield «custom.ruleta» (metaobjeto «ruleta» con campos: activo, etiqueta, titulo, subtitulo, texto_boton, premios). Cada premio es un metaobjeto «premio_ruleta» (etiqueta, tipo, codigo, producto_regalo, mensaje, peso, color). Los descuentos usan códigos que TÚ creas en Shopify. Si el producto no tiene ruleta activa, no aparece nada." },
-    { "type": "header", "content": "Guardado de datos (leads)" },
-    { "type": "text", "id": "sheets_url", "label": "URL de Google Sheets (Apps Script)", "info": "Pega aquí la URL del web app de Apps Script (termina en /exec). Cada giro guarda fecha, nombre, email, teléfono, premio y producto en tu hoja de cálculo." }
+    { "type": "paragraph", "content": "Captura de datos: agrega tu formulario de Shopify Forms (Nombre, Correo, Teléfono) a la página del producto. El popup lo embebe automáticamente y solo deja girar cuando el cliente lo envía." }
   ],
   "presets": [
     { "name": "Ruleta de premios" }

@@ -2034,13 +2034,11 @@ function initSpinToWin() {
   if (!Array.isArray(prizes) || prizes.length < 2) return;
 
   const wheel = document.getElementById('saluva-spin-wheel');
-  const form = document.getElementById('saluva-spin-form');
+  const form = document.getElementById('saluva-spin-form');     /* contenedor del paso de datos */
   const btn = document.getElementById('saluva-spin-btn');
-  const errEl = document.getElementById('saluva-spin-error');
   const resultEl = document.getElementById('saluva-spin-result');
-  const nameEl = document.getElementById('saluva-spin-name');
-  const emailEl = document.getElementById('saluva-spin-email');
-  const phoneEl = document.getElementById('saluva-spin-phone');
+  const hintEl = document.getElementById('saluva-spin-hint');
+  const leadSlot = document.getElementById('saluva-spin-leadform');
 
   const N = prizes.length;
   const seg = 360 / N;
@@ -2092,27 +2090,42 @@ function initSpinToWin() {
     return N - 1;
   }
 
-  /* Guarda el lead en Google Sheets vía un web app de Apps Script. La tienda tiene
-     hCaptcha que bloquea los envíos automáticos a Shopify (/contact da 400), así que
-     mandamos los datos a una hoja externa sin captcha. La URL del web app se configura
-     en el editor de la sección (data-leads-url). Se usa mode:'no-cors' para evitar el
-     preflight CORS (no leemos la respuesta, pero el dato sí se guarda). */
-  function submitLead(name, email, phone, prize) {
-    const url = root.getAttribute('data-leads-url');
-    if (!url) {
-      console.warn('[ruleta] falta la URL de Google Sheets. Configúrala en el editor de la sección «Ruleta de premios».');
+  /* Embebe el formulario REAL de Shopify Forms dentro del popup. El cliente lo llena
+     y lo envía con su propio clic, así resuelve el hCaptcha y el lead se guarda en
+     Shopify (Clientes/Marketing). La ruleta queda bloqueada hasta que el formulario
+     se envía con éxito (detectado cuando su botón de envío desaparece). */
+  function findLeadForm() {
+    const lc = document.querySelector('shop-lead-capture');
+    return lc ? lc.closest('form') : document.querySelector('form[data-testid="form"]');
+  }
+  function onLeadSuccess() {
+    btn.disabled = false;
+    btn.classList.add('is-ready');
+    if (hintEl) hintEl.textContent = '¡Listo! Ahora gira la ruleta 🎉';
+    console.log('[ruleta] datos enviados a Shopify Forms; ruleta habilitada');
+  }
+  function watchLeadSuccess() {
+    let done = false, sawButton = false;
+    const mo = new MutationObserver(() => {
+      if (done) return;
+      const hasSubmit = !!leadSlot.querySelector('[data-testid="btn-form-submit"]');
+      if (hasSubmit) sawButton = true;
+      if (sawButton && !hasSubmit) { done = true; mo.disconnect(); onLeadSuccess(); }
+    });
+    mo.observe(leadSlot, { childList: true, subtree: true });
+  }
+  function setupLead(attempt) {
+    const leadForm = findLeadForm();
+    if (leadForm) {
+      leadSlot.appendChild(leadForm);   /* mueve el formulario real al popup */
+      watchLeadSuccess();
+      console.log('[ruleta] formulario de Shopify Forms embebido en el popup');
       return;
     }
-    const payload = {
-      nombre: name,
-      email: email,
-      telefono: phone,
-      premio: prize || '',
-      producto: root.getAttribute('data-product') || ''
-    };
-    fetch(url, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
-      .then(() => console.log('[ruleta] lead enviado a Google Sheets:', email))
-      .catch((err) => console.warn('[ruleta] error al enviar lead:', err));
+    if (attempt < 20) { setTimeout(() => setupLead(attempt + 1), 250); return; }
+    console.warn('[ruleta] No se encontró el formulario de Shopify Forms en la página. Agrégalo al producto desde el editor. Por ahora la ruleta gira sin captura.');
+    btn.disabled = false;
+    if (hintEl) hintEl.textContent = '';
   }
 
   function spinTo(index) {
@@ -2207,25 +2220,16 @@ function initSpinToWin() {
     document.body.classList.remove('saluva-spin-open');
   }
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (spinning) return;
-    const name = nameEl.value.trim();
-    const email = emailEl.value.trim();
-    const phone = phoneEl.value.trim();
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if (!name || !emailOk || phone.length < 6) {
-      errEl.hidden = false;
-      return;
-    }
-    errEl.hidden = true;
+  btn.addEventListener('click', () => {
+    if (spinning || btn.disabled) return;
     btn.disabled = true;
     btn.textContent = 'Girando…';
     const index = weightedPick();
-    submitLead(name, email, phone, prizes[index] && prizes[index].label);
     spinTo(index);
     wheel.addEventListener('transitionend', () => revealPrize(prizes[index]), { once: true });
   });
+
+  setupLead(0);   /* embebe el formulario de Shopify Forms y habilita la ruleta al enviarlo */
 
   root.querySelectorAll('[data-spin-close]').forEach((el) => el.addEventListener('click', closeModal));
   document.addEventListener('keydown', (e) => {

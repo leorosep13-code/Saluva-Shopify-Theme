@@ -7017,6 +7017,31 @@ body.saluva-spin-open { overflow: hidden; }
   outline: none;
   border-color: var(--color-primary, #8b5cf6);
 }
+.saluva-spin__hint {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text, #2a1430);
+  margin: 0 0 2px;
+  text-align: center;
+}
+.saluva-spin__leadform { display: flex; flex-direction: column; }
+/* Formulario de Shopify Forms: oculto en la página, visible solo dentro del popup */
+form[data-testid="form"] {
+  position: absolute !important;
+  left: -9999px !important;
+  top: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}
+#saluva-spin form[data-testid="form"] {
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  width: 100% !important;
+  height: auto !important;
+  overflow: visible !important;
+}
 .saluva-spin__error {
   font-size: 13px;
   color: #d6336c;
