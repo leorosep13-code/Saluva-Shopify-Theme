@@ -2094,9 +2094,9 @@ function initSpinToWin() {
      y lo envía con su propio clic, así resuelve el hCaptcha y el lead se guarda en
      Shopify (Clientes/Marketing). La ruleta queda bloqueada hasta que el formulario
      se envía con éxito (detectado cuando su botón de envío desaparece). */
-  function findLeadForm() {
-    const lc = document.querySelector('shop-lead-capture');
-    return lc ? lc.closest('form') : document.querySelector('form[data-testid="form"]');
+  function findLeadEmbed() {
+    return document.querySelector('[data-form-root]')
+        || document.querySelector('shopify-forms-embed');
   }
   function onLeadSuccess() {
     btn.disabled = false;
@@ -2104,25 +2104,38 @@ function initSpinToWin() {
     if (hintEl) hintEl.textContent = '¡Listo! Ahora gira la ruleta 🎉';
     console.log('[ruleta] datos enviados a Shopify Forms; ruleta habilitada');
   }
+  /* El formulario vive dentro de <shopify-forms-embed> (posible Shadow DOM). Intentamos
+     detectar el envío por varias vías: eventos de Shopify Forms y la desaparición del
+     botón de envío (observando el shadow root si es accesible, o el embed). */
   function watchLeadSuccess() {
-    let done = false, sawButton = false;
+    let done = false, sawBtn = false;
+    function succeed(reason) {
+      if (done) return;
+      done = true;
+      console.log('[ruleta] envío detectado:', reason);
+      onLeadSuccess();
+    }
+    ['shopify-forms:success', 'shopify_forms:success', 'shopifyForms:success', 'forms:submit:success', 'shopify:forms:success']
+      .forEach((ev) => document.addEventListener(ev, () => succeed('evento ' + ev), true));
+    const embedEl = document.querySelector('shopify-forms-embed');
+    const target = (embedEl && embedEl.shadowRoot) || leadSlot;
     const mo = new MutationObserver(() => {
       if (done) return;
-      const hasSubmit = !!leadSlot.querySelector('[data-testid="btn-form-submit"]');
-      if (hasSubmit) sawButton = true;
-      if (sawButton && !hasSubmit) { done = true; mo.disconnect(); onLeadSuccess(); }
+      const btns = target.querySelectorAll('button[type="submit"], [data-testid="btn-form-submit"]');
+      if (btns.length) sawBtn = true;
+      if (sawBtn && btns.length === 0) succeed('botón de envío desapareció');
     });
-    mo.observe(leadSlot, { childList: true, subtree: true });
+    try { mo.observe(target, { childList: true, subtree: true }); } catch (e) {}
   }
   function setupLead(attempt) {
-    const leadForm = findLeadForm();
-    if (leadForm) {
-      leadSlot.appendChild(leadForm);   /* mueve el formulario real al popup */
+    const embed = findLeadEmbed();
+    if (embed) {
+      leadSlot.appendChild(embed);   /* mueve el formulario real (data-form-root) al popup */
       watchLeadSuccess();
       console.log('[ruleta] formulario de Shopify Forms embebido en el popup');
       return;
     }
-    if (attempt < 20) { setTimeout(() => setupLead(attempt + 1), 250); return; }
+    if (attempt < 30) { setTimeout(() => setupLead(attempt + 1), 250); return; }
     console.warn('[ruleta] No se encontró el formulario de Shopify Forms en la página. Agrégalo al producto desde el editor. Por ahora la ruleta gira sin captura.');
     btn.disabled = false;
     if (hintEl) hintEl.textContent = '';
