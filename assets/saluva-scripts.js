@@ -2104,9 +2104,12 @@ function initSpinToWin() {
     if (hintEl) hintEl.textContent = '¡Listo! Ahora gira la ruleta 🎉';
     console.log('[ruleta] datos enviados a Shopify Forms; ruleta habilitada');
   }
-  /* El formulario vive dentro de <shopify-forms-embed> (posible Shadow DOM). Intentamos
-     detectar el envío por varias vías: eventos de Shopify Forms y la desaparición del
-     botón de envío (observando el shadow root si es accesible, o el embed). */
+  /* El formulario vive dentro de <shopify-forms-embed> (Shadow DOM encapsulado), así que
+     no podemos observar su interior ni hay un evento público. Detectamos el envío
+     interceptando la PETICIÓN DE RED que hace Shopify Forms al guardar el lead (POST a
+     su API). Esto funciona sin importar el encapsulamiento. Como respaldo, también
+     escuchamos posibles eventos y observamos el shadow root si llegara a estar abierto. */
+  var SPIN_LEAD_PATTERN = /forms|lead|submission|subscriptions|1029950/i;
   function watchLeadSuccess() {
     let done = false, sawBtn = false;
     function succeed(reason) {
@@ -2115,17 +2118,70 @@ function initSpinToWin() {
       console.log('[ruleta] envío detectado:', reason);
       onLeadSuccess();
     }
-    ['shopify-forms:success', 'shopify_forms:success', 'shopifyForms:success', 'forms:submit:success', 'shopify:forms:success']
+
+    /* 1) Intercepta fetch */
+    const origFetch = window.fetch;
+    if (origFetch && !origFetch.__spinPatched) {
+      const patched = function (input, init) {
+        const url = (typeof input === 'string' ? input : (input && input.url)) || '';
+        const method = ((init && init.method) || (input && input.method) || 'GET').toUpperCase();
+        const p = origFetch.apply(this, arguments);
+        if (method === 'POST' && SPIN_LEAD_PATTERN.test(url)) {
+          console.log('[ruleta] POST de formulario detectado:', url);
+          p.then((r) => { if (r && (r.ok || r.status === 200 || r.status === 0)) succeed('red(fetch) ' + url); }).catch(() => {});
+        }
+        return p;
+      };
+      patched.__spinPatched = true;
+      window.fetch = patched;
+    }
+
+    /* 2) Intercepta XMLHttpRequest */
+    if (!XMLHttpRequest.prototype.__spinPatched) {
+      const XOpen = XMLHttpRequest.prototype.open;
+      const XSend = XMLHttpRequest.prototype.send;
+      XMLHttpRequest.prototype.open = function (method, url) {
+        this.__spinMethod = (method || '').toUpperCase();
+        this.__spinUrl = url || '';
+        return XOpen.apply(this, arguments);
+      };
+      XMLHttpRequest.prototype.send = function () {
+        if (this.__spinMethod === 'POST' && SPIN_LEAD_PATTERN.test(this.__spinUrl)) {
+          console.log('[ruleta] XHR POST de formulario detectado:', this.__spinUrl);
+          this.addEventListener('load', () => { if (this.status >= 200 && this.status < 400) succeed('red(xhr) ' + this.__spinUrl); });
+        }
+        return XSend.apply(this, arguments);
+      };
+      XMLHttpRequest.prototype.__spinPatched = true;
+    }
+
+    /* 3) Intercepta navigator.sendBeacon */
+    if (navigator.sendBeacon && !navigator.sendBeacon.__spinPatched) {
+      const origBeacon = navigator.sendBeacon.bind(navigator);
+      const patchedBeacon = function (url, data) {
+        if (SPIN_LEAD_PATTERN.test(url || '')) {
+          console.log('[ruleta] sendBeacon de formulario detectado:', url);
+          succeed('beacon ' + url);
+        }
+        return origBeacon(url, data);
+      };
+      patchedBeacon.__spinPatched = true;
+      navigator.sendBeacon = patchedBeacon;
+    }
+
+    /* 4) Respaldo: eventos + shadow root abierto */
+    ['shopify-forms:success', 'shopify_forms:success', 'shopifyForms:success', 'shopify:forms:success']
       .forEach((ev) => document.addEventListener(ev, () => succeed('evento ' + ev), true));
     const embedEl = document.querySelector('shopify-forms-embed');
-    const target = (embedEl && embedEl.shadowRoot) || leadSlot;
-    const mo = new MutationObserver(() => {
-      if (done) return;
-      const btns = target.querySelectorAll('button[type="submit"], [data-testid="btn-form-submit"]');
-      if (btns.length) sawBtn = true;
-      if (sawBtn && btns.length === 0) succeed('botón de envío desapareció');
-    });
-    try { mo.observe(target, { childList: true, subtree: true }); } catch (e) {}
+    if (embedEl && embedEl.shadowRoot) {
+      const mo = new MutationObserver(() => {
+        if (done) return;
+        const btns = embedEl.shadowRoot.querySelectorAll('button[type="submit"], [data-testid="btn-form-submit"]');
+        if (btns.length) sawBtn = true;
+        if (sawBtn && btns.length === 0) succeed('botón desapareció (shadow)');
+      });
+      try { mo.observe(embedEl.shadowRoot, { childList: true, subtree: true }); } catch (e) {}
+    }
   }
   function setupLead(attempt) {
     const embed = findLeadEmbed();
