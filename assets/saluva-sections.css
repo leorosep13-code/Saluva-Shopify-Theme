@@ -6908,11 +6908,11 @@ body.saluva-spin-open { overflow: hidden; }
   position: relative;
   width: 100%;
   max-width: 420px;
-  max-height: 94vh;
+  max-height: 96vh;
   overflow-y: auto;
   background: #fff;
   border-radius: 22px;
-  padding: 30px 24px 26px;
+  padding: 18px 22px 16px;
   text-align: center;
   box-shadow: 0 24px 70px rgba(28, 16, 38, 0.4);
   animation: saluva-spin-pop 0.32s cubic-bezier(0.16, 1, 0.3, 1);
@@ -6944,30 +6944,30 @@ body.saluva-spin-open { overflow: hidden; }
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--color-primary, #8b5cf6);
-  margin: 4px 0 6px;
+  margin: 0 0 3px;
 }
 .saluva-spin__title {
   font-family: var(--font-heading, inherit);
-  font-size: clamp(26px, 7vw, 34px);
+  font-size: clamp(22px, 6vw, 28px);
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.5px;
-  margin: 0 0 6px;
+  margin: 0 0 3px;
   color: var(--color-text, #2a1430);
 }
 .saluva-spin__sub {
-  font-size: 14.5px;
-  line-height: 1.45;
+  font-size: 13.5px;
+  line-height: 1.4;
   color: var(--color-text-light, #6b5b78);
-  margin: 0 auto 14px;
+  margin: 0 auto 8px;
   max-width: 320px;
 }
 
 .saluva-spin__wheel-wrap {
   position: relative;
-  width: min(280px, 78vw);
+  width: min(230px, 66vw, 36vh);
   aspect-ratio: 1 / 1;
-  margin: 8px auto 18px;
+  margin: 2px auto 12px;
 }
 .saluva-spin__wheel {
   width: 100%; height: 100%;
@@ -7001,7 +7001,7 @@ body.saluva-spin-open { overflow: hidden; }
   z-index: 2;
 }
 
-.saluva-spin__form { display: flex; flex-direction: column; gap: 9px; }
+.saluva-spin__form { display: flex; flex-direction: column; gap: 6px; }
 .saluva-spin__field { display: flex; }
 .saluva-spin__field input {
   width: 100%;
@@ -7040,6 +7040,8 @@ body.saluva-spin-open { overflow: hidden; }
   top: auto !important;
   width: 100% !important;
   height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;            /* quita el espacio extra del bloque de Shopify */
   overflow: visible !important;
 }
 .saluva-spin__error {
@@ -7048,8 +7050,8 @@ body.saluva-spin-open { overflow: hidden; }
   margin: 0;
 }
 .saluva-spin__btn {
-  margin-top: 4px;
-  padding: 15px 20px;
+  margin-top: 2px;
+  padding: 13px 20px;
   font-size: 16px;
   font-weight: 800;
   letter-spacing: 0.3px;
@@ -7061,12 +7063,25 @@ body.saluva-spin-open { overflow: hidden; }
   transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
   box-shadow: 0 8px 20px rgba(139, 92, 246, 0.35);
 }
-.saluva-spin__btn:hover { transform: translateY(-1px); }
-.saluva-spin__btn:disabled { opacity: 0.7; cursor: default; transform: none; }
+.saluva-spin__btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(139, 92, 246, 0.5); }
+.saluva-spin__btn:disabled {
+  background: #d7d2dc;            /* gris apagado: claramente no presionable */
+  color: #f3f0f6;
+  box-shadow: none;
+  opacity: 1;
+  cursor: not-allowed;
+  transform: none;
+}
+/* Al habilitarse, llama la atención con un pulso y queda en color vivo */
+.saluva-spin__btn.is-ready { animation: saluva-spin-btn-pulse 1.3s ease-in-out 3; }
+@keyframes saluva-spin-btn-pulse {
+  0%, 100% { box-shadow: 0 8px 20px rgba(139, 92, 246, 0.45); transform: scale(1); }
+  50% { box-shadow: 0 12px 32px rgba(139, 92, 246, 0.7); transform: scale(1.04); }
+}
 .saluva-spin__legal {
   font-size: 11px;
   color: var(--color-text-light, #9486a0);
-  margin: 8px 0 0;
+  margin: 5px 0 0;
 }
 
 .saluva-spin__result { display: flex; flex-direction: column; align-items: center; gap: 10px; }
