@@ -2370,7 +2370,7 @@ function initSpinToWin() {
       html += '<h3 class="saluva-spin__win">¡Casi! 🙈</h3>';
       html += '<p class="saluva-spin__msg">' + escapeXml(p.mensaje || 'No hubo premio esta vez. ¡Gracias por participar!') + '</p>';
       html += '<button type="button" class="saluva-spin__claim" data-spin-close>Seguir comprando</button>';
-      markClaimed();  /* sin premio: nada que reclamar, no reaparece al recargar */
+      /* Sin premio: no se bloquea; la ruleta volverá a salir en la próxima visita. */
     }
 
     resultEl.innerHTML = html;
@@ -2435,11 +2435,12 @@ function initSpinToWin() {
 
   btn.addEventListener('click', () => {
     if (spinning || btn.disabled) return;
-    if (getSpinState()) { btn.disabled = true; return; }   /* anti-trampa: ya jugó */
+    if (getSpinState()) { btn.disabled = true; return; }   /* ya reclamó un premio antes */
     btn.disabled = true;
     btn.textContent = 'Girando…';
     const index = weightedPick();
-    setSpinState({ i: index, claimed: 0 });                /* registra el giro (una sola vez) */
+    /* NO se persiste el giro: solo reclamar un premio bloquea. Si gira y no
+       reclama (cierra/recarga), el premio se pierde y la ruleta vuelve a salir. */
     spinTo(index);
     wheel.addEventListener('transitionend', () => revealPrize(prizes[index]), { once: true });
   });
@@ -2452,17 +2453,13 @@ function initSpinToWin() {
 
   setupLead(0);   /* mueve el formulario de Shopify Forms al popup (aunque quede oculto) */
 
-  const prior = getSpinState();
-  if (prior && typeof prior.i === 'number' && prizes[prior.i]) {
-    /* Ya giró antes: no puede volver a girar. Si no reclamó su premio, se lo
-       mostramos para reclamarlo una sola vez; si ya lo reclamó, no reabrimos. */
+  if (getSpinState()) {
+    /* Ya reclamó un premio antes: la ruleta no se vuelve a mostrar. */
     btn.disabled = true;
-    if (!prior.claimed) {
-      revealPrize(prizes[prior.i]);
-      setTimeout(openModal, 900);
-    }
     return;
   }
+
+  /* Aún no ha reclamado nada: la ruleta aparece (o reaparece) para girar. */
 
   /* Primera vez: aparece con un pequeño retraso */
   setTimeout(openModal, 900);
