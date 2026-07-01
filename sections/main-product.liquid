@@ -5,6 +5,9 @@
 {% endcomment %}
 
 {%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- comment -%} Producto de regalo ($0): la cantidad se bloquea a 1 en toda la web {%- endcomment -%}
+{%- assign is_free_product = false -%}
+{%- if current_variant.price == 0 -%}{%- assign is_free_product = true -%}{%- endif -%}
 
 {%- comment -%} ── Resumen de rating para la cabecera (reseñas en product.metafields.custom.resenas) ── {%- endcomment -%}
 {%- liquid
@@ -165,6 +168,12 @@
     <div class="pdp__add-row pdp__add-row--desktop">
       {% form 'product', product, id: 'pdp-form-desktop' %}
         <input type="hidden" name="id" value="{{ current_variant.id }}" id="pdp-variant-id-desktop">
+        {%- if is_free_product -%}
+          <div class="pdp__qty pdp__qty--locked" title="Regalo: solo puedes llevar 1">
+            <span class="pdp__qty-fixed" aria-label="Cantidad fija: 1">1</span>
+            <input type="hidden" name="quantity" value="1">
+          </div>
+        {%- else -%}
         <div class="pdp__qty">
           <button type="button" class="qty-btn pdp__qty-btn" data-action="minus" aria-label="Menos">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -174,6 +183,7 @@
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </button>
         </div>
+        {%- endif -%}
         <button type="submit" class="btn btn--primary pdp__add-btn product-add-btn" {% unless current_variant.available %}disabled{% endunless %}>
           {% if current_variant.available %}Agregar al Carrito{% else %}Agotado{% endif %}
         </button>
@@ -220,6 +230,12 @@
   {% form 'product', product, id: 'pdp-form-mobile' %}
     <input type="hidden" name="id" value="{{ current_variant.id }}" id="pdp-variant-id-mobile">
     <div class="pdp__sticky-row pdp__sticky-row--top">
+      {%- if is_free_product -%}
+        <div class="pdp__qty pdp__qty--sticky pdp__qty--locked" title="Regalo: solo puedes llevar 1">
+          <span class="pdp__qty-fixed" aria-label="Cantidad fija: 1">1</span>
+          <input type="hidden" name="quantity" value="1">
+        </div>
+      {%- else -%}
       <div class="pdp__qty pdp__qty--sticky">
         <button type="button" class="qty-btn pdp__qty-btn" data-action="minus" aria-label="Menos">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -229,6 +245,7 @@
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
       </div>
+      {%- endif -%}
       <button type="submit" class="btn btn--primary pdp__add-btn pdp__add-btn--sticky product-add-btn" {% unless current_variant.available %}disabled{% endunless %}>
         {% if current_variant.available %}Agregar al Carrito{% else %}Agotado{% endif %}
       </button>

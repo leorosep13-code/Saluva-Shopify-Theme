@@ -484,6 +484,36 @@ input[type="number"]::-webkit-outer-spin-button {
 @keyframes toastIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(12px); } }
 
+/* ── Aviso superior centrado (cupón de la ruleta) ── */
+.top-notice {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%, -24px);
+  z-index: 3000;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  background: var(--color-primary, #C8B7FF);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+  border-radius: 999px;
+  box-shadow: var(--shadow-lg, 0 10px 30px rgba(0,0,0,0.18));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.top-notice.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.top-notice__icon { font-size: 16px; }
+
 /* ── Skeleton Loading ── */
 .skeleton {
   background: linear-gradient(90deg, var(--color-border) 25%, var(--color-bg-soft) 50%, var(--color-border) 75%);

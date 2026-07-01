@@ -12,6 +12,11 @@
     {% render 'cart-shipping-banner' %}
 
     {% if cart.item_count > 0 %}
+      {%- comment -%} Cuenta productos pagados: sin al menos 1, no se permite el checkout (evita pedidos solo de regalos) {%- endcomment -%}
+      {%- assign paid_count = 0 -%}
+      {%- for item in cart.items -%}
+        {%- if item.final_line_price > 0 -%}{%- assign paid_count = paid_count | plus: 1 -%}{%- endif -%}
+      {%- endfor -%}
       <form action="/cart" method="post">
         {% for item in cart.items %}
           <div style="display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--color-border); align-items: center;">
@@ -28,11 +33,21 @@
               {% if item.variant.title != 'Default Title' %}
                 <p style="font-size: 13px; color: var(--color-text-muted);">{{ item.variant.title }}</p>
               {% endif %}
-              <p style="font-size: 15px; font-weight: 700; margin-top: 4px;">{{ item.final_line_price | money }}</p>
+              {% if item.final_line_price == 0 %}
+                <p style="font-size: 15px; font-weight: 700; margin-top: 4px; color: #16a34a;">🎁 Regalo gratis</p>
+              {% else %}
+                <p style="font-size: 15px; font-weight: 700; margin-top: 4px;">{{ item.final_line_price | money }}</p>
+              {% endif %}
             </div>
             <div style="display: flex; align-items: center; gap: 10px;">
+              {% if item.final_line_price == 0 %}
+                <span title="Regalo: solo puedes llevar 1"
+                      style="display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 38px; border: 1px solid var(--color-border); border-radius: 8px; background: #f3f4f6; color: var(--color-text-muted); font-weight: 700; cursor: not-allowed;">1</span>
+                <input type="hidden" name="updates[]" value="1">
+              {% else %}
               <input type="number" name="updates[]" value="{{ item.quantity }}" min="0"
                      style="width: 60px; padding: 8px; border: 1px solid var(--color-border); border-radius: 8px; text-align: center; font-family: var(--font-family);">
+              {% endif %}
               <a href="/cart/change?id={{ item.key }}&quantity=0"
                  class="cart-remove-btn"
                  aria-label="Eliminar {{ item.product.title }}"
@@ -55,11 +70,23 @@
             <button type="submit" name="update" class="btn btn--outline btn--md">
               Actualizar
             </button>
+            {% if paid_count > 0 %}
             <button type="submit" name="checkout" class="btn btn--primary btn--lg" style="display: inline-flex; align-items: center; gap: 10px; letter-spacing: 1px; font-weight: 800;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
               PAGAR
             </button>
+            {% else %}
+            <button type="button" disabled aria-disabled="true" class="btn btn--primary btn--lg" style="display: inline-flex; align-items: center; gap: 10px; letter-spacing: 1px; font-weight: 800; opacity: 0.5; cursor: not-allowed;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              PAGAR
+            </button>
+            {% endif %}
           </div>
+          {% if paid_count == 0 %}
+            <p style="margin-top: 14px; font-size: 14px; color: #b45309; background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 16px; text-align: left;">
+              🎁 Tu regalo se suma al comprar. Agrega al menos un producto para poder pagar.
+            </p>
+          {% endif %}
         </div>
       </form>
     {% else %}

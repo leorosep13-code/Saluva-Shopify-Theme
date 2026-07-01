@@ -1083,6 +1083,7 @@ function updateFloatingCheckout(count) {
     fetch('/cart.js')
       .then(r => r.json())
       .then(cart => {
+        if (typeof applyCheckoutGate === 'function') applyCheckoutGate(cart);
         updateFloatingCheckout(cart.item_count);
       });
     return;
@@ -1297,6 +1298,21 @@ function showToast(message, type) {
     toast.classList.add('toast-out');
     setTimeout(() => toast.remove(), 300);
   }, 3000);
+}
+
+/* Aviso centrado en la parte superior de la pantalla (p. ej. cupón de la ruleta) */
+function showTopNotice(message) {
+  document.querySelectorAll('.top-notice').forEach((el) => el.remove());
+  const notice = document.createElement('div');
+  notice.className = 'top-notice';
+  notice.setAttribute('role', 'status');
+  notice.innerHTML = '<span class="top-notice__icon">🎉</span>' + message;
+  document.body.appendChild(notice);
+  requestAnimationFrame(() => notice.classList.add('is-visible'));
+  setTimeout(() => {
+    notice.classList.remove('is-visible');
+    setTimeout(() => notice.remove(), 350);
+  }, 5000);
 }
 
 /* ── Hero Parallax (desktop only — móvil estático para evitar bandas negras) ── */
@@ -1816,8 +1832,17 @@ function renderCartDrawer(cart) {
     return;
   }
 
+  // Corrige regalos con cantidad > 1 (solo se puede llevar 1)
+  const overGift = cart.items.find((it) => isFreeLine(it) && it.quantity > 1);
+  if (overGift) {
+    const line = cart.items.indexOf(overGift) + 1;
+    changeCartLine(line, 1);
+    return;
+  }
+
   const items = cart.items.map((item, index) => {
     const lineNumber = index + 1;
+    const isFree = isFreeLine(item);
     const img = item.image
       ? `<img src="${item.image.replace(/_(pico|icon|thumb|small|compact|medium|large|grande|original)\./, '_200x.')}" alt="" class="cart-drawer__item-img" loading="lazy">`
       : '<div class="cart-drawer__item-img"></div>';
@@ -1827,19 +1852,26 @@ function renderCartDrawer(cart) {
     const compare = (item.original_line_price && item.original_line_price > item.line_price)
       ? `<del>${formatMoney(item.original_price)}</del>`
       : '';
+    const priceHtml = isFree
+      ? '<span class="cart-drawer__gift-tag">🎁 Regalo gratis</span>'
+      : `${compare}${formatMoney(item.final_price)}`;
+    // Regalos ($0): cantidad fija en 1, sin botones +/−
+    const qtyHtml = isFree
+      ? `<div class="cart-drawer__qty cart-drawer__qty--locked" title="Regalo: solo puedes llevar 1"><span class="cart-drawer__qty-value">1</span></div>`
+      : `<div class="cart-drawer__qty">
+              <button type="button" class="cart-drawer__qty-btn" data-action="minus" aria-label="Disminuir">−</button>
+              <span class="cart-drawer__qty-value">${item.quantity}</span>
+              <button type="button" class="cart-drawer__qty-btn" data-action="plus" aria-label="Aumentar">+</button>
+            </div>`;
     return `
       <li class="cart-drawer__item" data-line="${lineNumber}" data-key="${item.key}">
         <a href="${item.url}">${img}</a>
         <div class="cart-drawer__item-info">
           <a href="${item.url}" class="cart-drawer__item-title">${item.product_title}</a>
           ${variant}
-          <div class="cart-drawer__item-price">${compare}${formatMoney(item.final_price)}</div>
+          <div class="cart-drawer__item-price">${priceHtml}</div>
           <div class="cart-drawer__item-controls">
-            <div class="cart-drawer__qty">
-              <button type="button" class="cart-drawer__qty-btn" data-action="minus" aria-label="Disminuir">−</button>
-              <span class="cart-drawer__qty-value">${item.quantity}</span>
-              <button type="button" class="cart-drawer__qty-btn" data-action="plus" aria-label="Aumentar">+</button>
-            </div>
+            ${qtyHtml}
             <button type="button" class="cart-drawer__remove" aria-label="Eliminar">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
             </button>
@@ -1851,6 +1883,35 @@ function renderCartDrawer(cart) {
   body.innerHTML = `<ul class="cart-drawer__items">${items}</ul>`;
   if (subtotalEl) subtotalEl.textContent = formatMoney(cart.items_subtotal_price || cart.total_price);
   if (footer) footer.hidden = false;
+
+  // Bloquea el pago si solo hay regalos (ningún producto pagado)
+  applyCheckoutGate(cart);
+  if (!cartHasPaidItem(cart)) {
+    body.insertAdjacentHTML('beforeend', '<p class="cart-drawer__gift-note">🎁 Tu regalo se suma al comprar. Agrega al menos un producto para poder pagar.</p>');
+  }
+}
+
+/* ¿Es una línea "gratis"? Regalo de la ruleta (propiedad _regalo) o precio $0. */
+function isFreeLine(item) {
+  return !!(item && (item.final_price === 0 || (item.properties && item.properties._regalo)));
+}
+
+/* ¿El carrito tiene al menos un producto pagado (no regalo)? */
+function cartHasPaidItem(cart) {
+  return !!(cart && cart.items && cart.items.some((it) => it.final_line_price > 0));
+}
+
+/* Habilita/bloquea todos los accesos al checkout según el estado del carrito */
+function applyCheckoutGate(cart) {
+  const hasPaid = cartHasPaidItem(cart);
+  window.__cartHasPaidItem = hasPaid;
+  ['cart-drawer-pay', 'pdp-sticky-pay'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('is-disabled', !hasPaid);
+    if (hasPaid) el.removeAttribute('aria-disabled');
+    else el.setAttribute('aria-disabled', 'true');
+  });
 }
 
 function changeCartLine(lineNumber, quantity) {
@@ -1910,6 +1971,50 @@ function initCartDrawer() {
     });
   });
 }
+
+/* ── Cupón de la ruleta: se guarda al ganar y se aplica SOLO al pagar ──
+   No toca el carrito durante la navegación. Al ir a pagar, se redirige por
+   /discount/CODE?redirect=/checkout para que el descuento entre en el checkout. */
+function saveSpinDiscount(code) {
+  try { localStorage.setItem('saluva_spin_discount', code); } catch (e) {}
+}
+function getSpinDiscount() {
+  try { return localStorage.getItem('saluva_spin_discount') || ''; } catch (e) { return ''; }
+}
+/* Si hay cupón guardado, lleva al checkout aplicándolo. Devuelve true si redirigió. */
+function checkoutWithSpinDiscount(e) {
+  const code = getSpinDiscount();
+  if (!code) return false;
+  if (e) e.preventDefault();
+  window.location.href = '/discount/' + encodeURIComponent(code) + '?redirect=/checkout';
+  return true;
+}
+
+/* Bloquea los accesos directos al checkout (/checkout) si solo hay regalos.
+   Cubre el botón PAGAR del drawer y el botón PAGAR sticky del PDP.
+   Si pasa el bloqueo y hay cupón guardado, lo aplica en el checkout. */
+document.addEventListener('click', (e) => {
+  const payLink = e.target.closest('#cart-drawer-pay, #pdp-sticky-pay');
+  if (!payLink) return;
+  if (window.__cartHasPaidItem === false) {
+    e.preventDefault();
+    if (typeof showToast === 'function') {
+      showToast('Agrega al menos un producto (además del regalo) para poder pagar.', 'error');
+    }
+    return;
+  }
+  checkoutWithSpinDiscount(e);
+}, true);
+
+/* Página del carrito: el botón PAGAR es un submit del formulario. Si hay cupón
+   guardado, lo aplicamos en el checkout. */
+document.addEventListener('submit', (e) => {
+  const form = e.target;
+  if (!form || !form.matches('form[action="/cart"]')) return;
+  if (e.submitter && e.submitter.name === 'checkout') {
+    checkoutWithSpinDiscount(e);
+  }
+}, true);
 
 document.addEventListener('DOMContentLoaded', initCartDrawer);
 
@@ -2046,6 +2151,25 @@ function initSpinToWin() {
   let spinning = false;
   let rotation = 0;
 
+  /* ── Anti-trampa: un solo giro por navegador ──
+     Guardamos el resultado en localStorage. Al recargar la página NO se puede
+     volver a girar; si el premio aún no se reclamó, se muestra para reclamarlo
+     una sola vez. Importante: esto frena el abuso por recarga, pero el blindaje
+     definitivo es limitar el uso del código de descuento en Shopify (una vez por
+     cliente / límite de usos). */
+  var SPIN_KEY = 'saluva_spin_v1';
+  function getSpinState() {
+    try { return JSON.parse(localStorage.getItem(SPIN_KEY) || 'null'); } catch (e) { return null; }
+  }
+  function setSpinState(s) {
+    try { localStorage.setItem(SPIN_KEY, JSON.stringify(s)); } catch (e) {}
+  }
+  function markClaimed() {
+    var s = getSpinState() || {};
+    s.claimed = 1;
+    setSpinState(s);
+  }
+
   function escapeXml(s) {
     return String(s == null ? '' : s).replace(/[<>&'"]/g, (c) => (
       { '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c]
@@ -2099,6 +2223,7 @@ function initSpinToWin() {
         || document.querySelector('shopify-forms-embed');
   }
   function onLeadSuccess() {
+    if (getSpinState()) { btn.disabled = true; return; }  /* ya jugó: no rehabilitar */
     btn.disabled = false;
     btn.classList.add('is-ready');
     if (hintEl) hintEl.textContent = '¡Listo! Ahora gira la ruleta 🎉';
@@ -2193,8 +2318,10 @@ function initSpinToWin() {
     }
     if (attempt < 30) { setTimeout(() => setupLead(attempt + 1), 250); return; }
     console.warn('[ruleta] No se encontró el formulario de Shopify Forms en la página. Agrégalo al producto desde el editor. Por ahora la ruleta gira sin captura.');
-    btn.disabled = false;
-    if (hintEl) hintEl.textContent = '';
+    if (!getSpinState()) {   /* no reactivar el giro si ya jugó (anti-trampa) */
+      btn.disabled = false;
+      if (hintEl) hintEl.textContent = '';
+    }
   }
 
   function spinTo(index) {
@@ -2222,9 +2349,8 @@ function initSpinToWin() {
       html += '<h3 class="saluva-spin__win">¡Ganaste ' + escapeXml(p.label) + '!</h3>';
       html += '<p class="saluva-spin__msg">' + escapeXml(p.mensaje || 'Tu descuento se aplica en este pedido.') + '</p>';
       if (code) {
-        fetch('/discount/' + encodeURIComponent(code)).catch(() => {}); /* pre-aplica al carrito */
         html += '<div class="saluva-spin__code">' + escapeXml(code) + '</div>';
-        html += '<a class="saluva-spin__claim" href="/discount/' + encodeURIComponent(code) + '?redirect=/cart">Aplicar y comprar</a>';
+        html += '<button type="button" class="saluva-spin__claim" data-spin-apply="' + escapeXml(code) + '">Aplicar cupón</button>';
       }
     } else if (tipo === 'cupon') {
       html += '<h3 class="saluva-spin__win">¡Ganaste ' + escapeXml(p.label) + '!</h3>';
@@ -2244,6 +2370,7 @@ function initSpinToWin() {
       html += '<h3 class="saluva-spin__win">¡Casi! 🙈</h3>';
       html += '<p class="saluva-spin__msg">' + escapeXml(p.mensaje || 'No hubo premio esta vez. ¡Gracias por participar!') + '</p>';
       html += '<button type="button" class="saluva-spin__claim" data-spin-close>Seguir comprando</button>';
+      markClaimed();  /* sin premio: nada que reclamar, no reaparece al recargar */
     }
 
     resultEl.innerHTML = html;
@@ -2253,6 +2380,20 @@ function initSpinToWin() {
       const txt = copyBtn.getAttribute('data-spin-copy');
       if (navigator.clipboard) navigator.clipboard.writeText(txt).catch(() => {});
       copyBtn.textContent = '¡Copiado!';
+      markClaimed();
+    });
+
+    /* Descuento inmediato: NO toca el carrito. Solo guarda el cupón para
+       aplicarlo automáticamente a la hora del pago, cierra el popup y avisa. */
+    const applyBtn = resultEl.querySelector('[data-spin-apply]');
+    if (applyBtn) applyBtn.addEventListener('click', () => {
+      const c = applyBtn.getAttribute('data-spin-apply');
+      if (c && typeof saveSpinDiscount === 'function') saveSpinDiscount(c);
+      markClaimed();
+      closeModal();
+      if (typeof showTopNotice === 'function') {
+        showTopNotice('Tu cupón será aplicado una vez selecciones tu compra');
+      }
     });
 
     const giftBtn = resultEl.querySelector('[data-spin-gift]');
@@ -2266,13 +2407,14 @@ function initSpinToWin() {
       })
         .then((r) => r.json())
         .then(() => {
+          /* Cierra el popup de inmediato (antes de cualquier otra cosa) y marca reclamado */
+          markClaimed();
+          closeModal();
           if (code) fetch('/discount/' + encodeURIComponent(code)).catch(() => {});
-          giftBtn.textContent = '¡Regalo agregado! 🎁';
-          const countEl = document.getElementById('cart-count');
-          fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
-            .then((r) => r.json())
-            .then((cart) => { if (countEl) countEl.textContent = cart.item_count; })
-            .catch(() => {});
+          if (typeof updateCartCount === 'function') updateCartCount();
+          if (typeof updateFloatingCheckout === 'function') updateFloatingCheckout();
+          /* Abre el carrito para que vea su regalo */
+          if (typeof openCartDrawer === 'function') openCartDrawer();
         })
         .catch(() => { giftBtn.disabled = false; giftBtn.textContent = 'Reintentar'; });
     });
@@ -2282,29 +2424,46 @@ function initSpinToWin() {
 
   function openModal() {
     root.hidden = false;
+    root.style.display = '';
     document.body.classList.add('saluva-spin-open');
   }
   function closeModal() {
     root.hidden = true;
+    root.style.display = 'none';   /* refuerzo por si algún estilo pisa [hidden] */
     document.body.classList.remove('saluva-spin-open');
   }
 
   btn.addEventListener('click', () => {
     if (spinning || btn.disabled) return;
+    if (getSpinState()) { btn.disabled = true; return; }   /* anti-trampa: ya jugó */
     btn.disabled = true;
     btn.textContent = 'Girando…';
     const index = weightedPick();
+    setSpinState({ i: index, claimed: 0 });                /* registra el giro (una sola vez) */
     spinTo(index);
     wheel.addEventListener('transitionend', () => revealPrize(prizes[index]), { once: true });
   });
 
-  setupLead(0);   /* embebe el formulario de Shopify Forms y habilita la ruleta al enviarlo */
-
+  /* Cierre y teclado (siempre disponibles) */
   root.querySelectorAll('[data-spin-close]').forEach((el) => el.addEventListener('click', closeModal));
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !root.hidden) closeModal();
   });
 
-  /* Aparece cada vez que se abre el producto (con un pequeño retraso) */
+  setupLead(0);   /* mueve el formulario de Shopify Forms al popup (aunque quede oculto) */
+
+  const prior = getSpinState();
+  if (prior && typeof prior.i === 'number' && prizes[prior.i]) {
+    /* Ya giró antes: no puede volver a girar. Si no reclamó su premio, se lo
+       mostramos para reclamarlo una sola vez; si ya lo reclamó, no reabrimos. */
+    btn.disabled = true;
+    if (!prior.claimed) {
+      revealPrize(prizes[prior.i]);
+      setTimeout(openModal, 900);
+    }
+    return;
+  }
+
+  /* Primera vez: aparece con un pequeño retraso */
   setTimeout(openModal, 900);
 }
