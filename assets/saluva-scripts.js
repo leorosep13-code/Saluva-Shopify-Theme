@@ -1972,15 +1972,14 @@ function initCartDrawer() {
   });
 }
 
-/* ── Cupón de la ruleta: se guarda al ganar y se aplica SOLO al pagar ──
-   No toca el carrito durante la navegación. Al ir a pagar, se redirige por
-   /discount/CODE?redirect=/checkout para que el descuento entre en el checkout. */
-function saveSpinDiscount(code) {
-  try { localStorage.setItem('saluva_spin_discount', code); } catch (e) {}
-}
-function getSpinDiscount() {
-  try { return localStorage.getItem('saluva_spin_discount') || ''; } catch (e) { return ''; }
-}
+/* ── Cupón de la ruleta: vive SOLO en la sesión/página vigente ──
+   Se guarda en memoria (no en localStorage) al ganar y se aplica al pagar
+   redirigiendo por /discount/CODE?redirect=/checkout. Si el cliente recarga,
+   cierra la sesión o sale del navegador, el cupón se pierde: el premio siempre
+   queda atado a una compra en curso y no se puede "guardar para después". */
+var __saluvaSpinDiscount = '';
+function saveSpinDiscount(code) { __saluvaSpinDiscount = code || ''; }
+function getSpinDiscount() { return __saluvaSpinDiscount || ''; }
 /* Si hay cupón guardado, lleva al checkout aplicándolo. Devuelve true si redirigió. */
 function checkoutWithSpinDiscount(e) {
   const code = getSpinDiscount();
@@ -2151,24 +2150,18 @@ function initSpinToWin() {
   let spinning = false;
   let rotation = 0;
 
-  /* ── Anti-trampa: un solo giro por navegador ──
-     Guardamos el resultado en localStorage. Al recargar la página NO se puede
-     volver a girar; si el premio aún no se reclamó, se muestra para reclamarlo
-     una sola vez. Importante: esto frena el abuso por recarga, pero el blindaje
-     definitivo es limitar el uso del código de descuento en Shopify (una vez por
-     cliente / límite de usos). */
-  var SPIN_KEY = 'saluva_spin_v1';
-  function getSpinState() {
-    try { return JSON.parse(localStorage.getItem(SPIN_KEY) || 'null'); } catch (e) { return null; }
-  }
-  function setSpinState(s) {
-    try { localStorage.setItem(SPIN_KEY, JSON.stringify(s)); } catch (e) {}
-  }
-  function markClaimed() {
-    var s = getSpinState() || {};
-    s.claimed = 1;
-    setSpinState(s);
-  }
+  /* ── Premio atado a la sesión/página vigente (sin persistencia) ──
+     El estado "ya reclamó" vive SOLO en memoria (variable `claimed`). Si el
+     cliente recarga la página, cierra la sesión o sale del navegador, el premio
+     se pierde y debe volver a llenar sus datos y girar de nuevo. Así el premio
+     SIEMPRE se sostiene contra una compra en curso y no queda "guardado" para
+     después. El blindaje definitivo contra abuso es limitar el uso del código de
+     descuento en Shopify (una vez por cliente / límite de usos).
+     Limpiamos cualquier estado viejo que versiones anteriores dejaran en
+     localStorage para que a los usuarios que ya jugaron les vuelva a salir. */
+  try { localStorage.removeItem('saluva_spin_v1'); localStorage.removeItem('saluva_spin_discount'); } catch (e) {}
+  var claimed = false;
+  function markClaimed() { claimed = true; }
 
   function escapeXml(s) {
     return String(s == null ? '' : s).replace(/[<>&'"]/g, (c) => (
@@ -2223,7 +2216,7 @@ function initSpinToWin() {
         || document.querySelector('shopify-forms-embed');
   }
   function onLeadSuccess() {
-    if (getSpinState()) { btn.disabled = true; return; }  /* ya jugó: no rehabilitar */
+    if (claimed) { btn.disabled = true; return; }  /* ya reclamó en esta sesión: no rehabilitar */
     btn.disabled = false;
     btn.classList.add('is-ready');
     if (hintEl) hintEl.textContent = '¡Listo! Ahora gira la ruleta 🎉';
@@ -2318,7 +2311,7 @@ function initSpinToWin() {
     }
     if (attempt < 30) { setTimeout(() => setupLead(attempt + 1), 250); return; }
     console.warn('[ruleta] No se encontró el formulario de Shopify Forms en la página. Agrégalo al producto desde el editor. Por ahora la ruleta gira sin captura.');
-    if (!getSpinState()) {   /* no reactivar el giro si ya jugó (anti-trampa) */
+    if (!claimed) {   /* no reactivar el giro si ya reclamó en esta sesión */
       btn.disabled = false;
       if (hintEl) hintEl.textContent = '';
     }
@@ -2381,6 +2374,12 @@ function initSpinToWin() {
       if (navigator.clipboard) navigator.clipboard.writeText(txt).catch(() => {});
       copyBtn.textContent = '¡Copiado!';
       markClaimed();
+      /* Cierra el popup solo (sin dar clic en cerrar) y recuerda el código con un
+         aviso arriba, para que quede a la vista después de cerrarse. */
+      if (typeof showTopNotice === 'function') {
+        showTopNotice('Código copiado: ' + txt + ' — úsalo al pagar');
+      }
+      setTimeout(closeModal, 900);
     });
 
     /* Descuento inmediato: NO toca el carrito. Solo guarda el cupón para
@@ -2435,7 +2434,7 @@ function initSpinToWin() {
 
   btn.addEventListener('click', () => {
     if (spinning || btn.disabled) return;
-    if (getSpinState()) { btn.disabled = true; return; }   /* ya reclamó un premio antes */
+    if (claimed) { btn.disabled = true; return; }   /* ya reclamó un premio en esta sesión */
     btn.disabled = true;
     btn.textContent = 'Girando…';
     const index = weightedPick();
@@ -2453,14 +2452,8 @@ function initSpinToWin() {
 
   setupLead(0);   /* mueve el formulario de Shopify Forms al popup (aunque quede oculto) */
 
-  if (getSpinState()) {
-    /* Ya reclamó un premio antes: la ruleta no se vuelve a mostrar. */
-    btn.disabled = true;
-    return;
-  }
-
-  /* Aún no ha reclamado nada: la ruleta aparece (o reaparece) para girar. */
-
-  /* Primera vez: aparece con un pequeño retraso */
+  /* Cada carga de página empieza sin premio (estado en memoria): la ruleta
+     siempre aparece para que el cliente llene sus datos y gire. Si recarga o
+     vuelve, tendrá que llenar de nuevo y el premio anterior ya no existe. */
   setTimeout(openModal, 900);
 }
